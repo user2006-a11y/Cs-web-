@@ -22,8 +22,11 @@ h2.ttl{text-align:center;font-size:1.25rem;letter-spacing:.5px;margin-bottom:6px
 .sub{color:var(--mut);margin:4px 0 12px;font-size:.9rem}
 .card{background:var(--card);border:1px solid rgba(255,255,255,.75);border-radius:16px;padding:20px 18px;margin-bottom:14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 10px 40px rgba(10,21,48,.28);animation:rise .55s ease both}
 label{display:block;font-size:.86rem;color:var(--mut);margin:14px 0 0}
-input{width:100%;padding:8px 2px 8px;border:0;border-bottom:1.5px solid rgba(12,31,74,.55);border-radius:0;background:transparent;color:var(--tx);font:inherit;transition:.2s}
-input:focus{outline:none;border-bottom-color:#3f72cf;box-shadow:0 2px 0 0 #3f72cf}
+input,select{width:100%;padding:8px 2px 8px;border:0;border-bottom:1.5px solid rgba(12,31,74,.55);border-radius:0;background:transparent;color:var(--tx);font:inherit;transition:.2s}
+input:focus,select:focus{outline:none;border-bottom-color:#3f72cf;box-shadow:0 2px 0 0 #3f72cf}
+.pw-box{position:relative;display:flex;align-items:center}
+.pw-box input{padding-inline-end:36px}
+.eye{position:absolute;inset-inline-end:4px;background:transparent;border:0;color:var(--mut);cursor:pointer;font-size:1rem;padding:4px}
 .btn{border:0;border-radius:6px;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#6b9aee,#3f72cf);color:#fff;transition:transform .15s,box-shadow .25s}
 .btn:hover{box-shadow:0 4px 16px rgba(63,114,207,.5)}.btn:active{transform:scale(.97)}
 .btn.full{width:100%;margin-top:22px}
@@ -81,6 +84,7 @@ const firebaseConfig = {
 const MAIN_USER = "abdo";
 const ADMIN_DOMAIN = "@platform.local";
 const STUDENT_DOMAIN = "@students.platform.local";
+const LAST_ID_KEY = "cs_platform_last_id";
 
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp), db = getFirestore(fbApp);
@@ -92,16 +96,27 @@ const setNote=(t,k)=>{note=t?{t,k:k||"err"}:null};
 const noteHtml=()=>note?`<div class="note ${note.k}">${esc(note.t)}</div>`:"";
 const count=st=>students.filter(s=>s.status===st).length;
 const clearSubs=()=>{unsubs.forEach(u=>u());unsubs=[]};
+const savedId=()=>{try{return localStorage.getItem(LAST_ID_KEY)||""}catch(_e){return ""}};
+const saveId=v=>{try{if(v)localStorage.setItem(LAST_ID_KEY,v)}catch(_e){}};
+const pwField=(id,label,ph="")=>`<label>${label}</label><div class="pw-box"><input id="${id}" type="password" placeholder="${esc(ph)}" autocomplete="off"><button type="button" class="eye" data-eye="${id}" aria-label="إظهار كلمة السر">👁️</button></div>`;
 
 function render(){({auth:rAuth,welcome:rWelcome,admin:rAdmin,home:rHome,wait:rWait})[view]()}
 const header=()=>'<div class="hero"><div class="logo">🎓</div><h1>منصة طلاب علوم الحاسوب</h1><div class="code" dir="ltr"><span id="typed"></span><i class="caret"></i></div><p class="sub">مساحة لزملاء التخصص في الجامعة</p></div>';
 
 function rAuth(){
   const login=tab==="login";
+  const last=esc(savedId());
   app.innerHTML=header()+`<div class="card"><h2 class="ttl">${login?"تسجيل الدخول":"إنشاء حساب جديد"}</h2>`
   +(login
-   ?'<label>الرقم الجامعي أو اسم المسؤول</label><input id="f1" autocomplete="off"><label>كلمة السر</label><input id="f2" type="password" autocomplete="off"><button class="btn full" data-act="login">دخول</button><div class="swt"><span>ليس لديك حساب؟</span><a data-act="tab" data-v="reg">إنشاء حساب</a></div>'
-   :'<label>الاسم</label><input id="f1" autocomplete="off"><label>الرقم الجامعي</label><input id="f2" inputmode="numeric" autocomplete="off"><label>كلمة السر (6 أحرف على الأقل)</label><input id="f3" type="password" autocomplete="off"><button class="btn full" data-act="reg">إرسال طلب الانضمام</button><div class="swt"><span>لديك حساب؟</span><a data-act="tab" data-v="login">تسجيل الدخول</a></div><p class="sub" style="margin:10px 0 0">سيصل طلبك إلى المسؤول وتدخل بعد موافقته.</p>')
+   ?`<label>الرقم الجامعي أو اسم المسؤول</label><input id="f1" value="${last}" autocomplete="off">`
+     +pwField("f2","كلمة السر")
+     +`<button class="btn full" data-act="login">دخول</button><div class="swt"><span>ليس لديك حساب؟</span><a data-act="tab" data-v="reg">إنشاء حساب</a></div>`
+   :`<label>الاسم الكامل</label><input id="f1" autocomplete="off">
+     <label>الرقم الجامعي</label><input id="f2" inputmode="numeric" autocomplete="off">
+     <label>المستوى الدراسي</label><select id="f3"><option value="المستوى الأول">المستوى الأول</option><option value="المستوى الثاني">المستوى الثاني</option><option value="المستوى الثالث">المستوى الثالث</option><option value="المستوى الرابع">المستوى الرابع</option></select>`
+     +pwField("f4","كلمة السر (6 أحرف على الأقل)")
+     +pwField("f5","تأكيد كلمة السر")
+     +`<button class="btn full" data-act="reg">إرسال طلب الانضمام</button><div class="swt"><span>لديك حساب؟</span><a data-act="tab" data-v="login">تسجيل الدخول</a></div><p class="sub" style="margin:10px 0 0">سيصل طلبك إلى المسؤول وتدخل بعد موافقته.</p>`)
   +noteHtml()+"</div>";
 }
 function rWait(){
@@ -120,7 +135,7 @@ function rHome(){
 function rAdmin(){
   const pend=students.filter(s=>s.status==="pending").sort((a,b)=>a.at-b.at);
   const appr=students.filter(s=>s.status==="approved"),rej=students.filter(s=>s.status==="rejected"),cap=cfg.capacity;
-  const rows=(l,b)=>l.length?l.map(s=>`<div class="row"><div><b>${esc(s.name)}</b><small>الرقم: ${esc(s.num)}${s.acceptedRules?" • متعهد":""}</small></div><div class="acts">${b(s)}</div></div>`).join(""):'<div class="empty">لا يوجد</div>';
+  const rows=(l,b)=>l.length?l.map(s=>`<div class="row"><div><b>${esc(s.name)}</b><small>الرقم: ${esc(s.num)}${s.level?" • "+esc(s.level):""}${s.acceptedRules?" • متعهد":""}</small></div><div class="acts">${b(s)}</div></div>`).join(""):'<div class="empty">لا يوجد</div>';
   const ok=s=>`<button class="btn ok" data-act="approve" data-id="${esc(s.id)}">موافقة</button>`;
   const del=s=>`<button class="btn ghost" data-act="del" data-id="${esc(s.id)}">حذف</button>`;
   const no=(s,t)=>`<button class="btn no" data-act="reject" data-id="${esc(s.id)}">${t}</button>`;
@@ -152,8 +167,14 @@ async function adminLogin(user,pw){
 }
 
 app.addEventListener("click",async ev=>{
+  const eye=ev.target.closest("[data-eye]");
+  if(eye){
+    const inp=document.getElementById(eye.dataset.eye);
+    if(inp){inp.type=inp.type==="password"?"text":"password";eye.textContent=inp.type==="password"?"👁️":"🙈"}
+    return;
+  }
   const el=ev.target.closest("[data-act]");if(!el||busy)return;
-  const a=el.dataset.act,f1=document.getElementById("f1"),f2=document.getElementById("f2"),f3=document.getElementById("f3");
+  const a=el.dataset.act,f1=document.getElementById("f1"),f2=document.getElementById("f2"),f3=document.getElementById("f3"),f4=document.getElementById("f4"),f5=document.getElementById("f5");
   setNote(null);busy=true;
   try{
     if(a==="tab"){tab=el.dataset.v;render()}
@@ -166,13 +187,15 @@ app.addEventListener("click",async ev=>{
       view="home";render();
     }
     else if(a==="reg"){
-      const n=f1.value.trim(),num=f2.value.trim(),pw=f3.value.trim();
-      if(!n||!num||!pw){setNote("أدخل الاسم والرقم الجامعي وكلمة السر.");return render()}
+      const n=f1.value.trim(),num=f2.value.trim(),lvl=f3.value,pw=f4.value.trim(),pw2=f5.value.trim();
+      if(!n||!num||!pw||!pw2){setNote("أدخل الاسم والرقم الجامعي وكلمة السر وتأكيدها.");return render()}
       if(!/^[A-Za-z0-9_.-]+$/.test(num)){setNote("الرقم يجب أن يحتوي أرقاماً أو حروفاً إنجليزية فقط.");return render()}
       if(pw.length<6){setNote("كلمة السر يجب أن تكون 6 أحرف على الأقل.");return render()}
+      if(pw!==pw2){setNote("كلمتا السر غير متطابقتين.");return render()}
       const cr=await createUserWithEmailAndPassword(auth,num+STUDENT_DOMAIN,pw);
-      const data={uid:cr.user.uid,name:n,num,status:"pending",acceptedRules:false,at:Date.now()};
+      const data={uid:cr.user.uid,name:n,num,level:lvl,status:"pending",acceptedRules:false,at:Date.now()};
       await setDoc(doc(db,"students",cr.user.uid),data);
+      saveId(num);
       me=data;view="wait";watchStudent(cr.user.uid);render();
     }
     else if(a==="login"){
@@ -184,6 +207,7 @@ app.addEventListener("click",async ev=>{
           const snap=await getDoc(doc(db,"students",cr.user.uid));
           if(snap.exists()){
             const s=snap.data();
+            saveId(n);
             me=s;
             if(s.status==="approved"){view=s.acceptedRules?"home":"welcome"}
             else{view="wait";watchStudent(cr.user.uid)}
