@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>منصة طلاب علوم الحاسوب</title>
 <style>
-:root{box-sizing:border-box;color-scheme:light;--bg:transparent;--card:rgba(255,255,255,.58);--tx:#0c1f4a;--mut:#3c5688;--bd:rgba(12,31,74,.25);--pri:#3f72cf;--pt:#fff;--ok:#146c43;--okb:rgba(255,255,255,.75);--no:#b3261e;--nob:rgba(255,255,255,.8);--wr:#7a4f00;--wrb:rgba(255,248,225,.85)}
+:root{box-sizing:border-box;color-scheme:light;--bg:transparent;--card:rgba(255,255,255,.62);--tx:#0c1f4a;--mut:#3c5688;--bd:rgba(12,31,74,.22);--pri:#3f72cf;--pt:#fff;--ok:#146c43;--okb:rgba(255,255,255,.78);--no:#b3261e;--nob:rgba(255,255,255,.82);--wr:#7a4f00;--wrb:rgba(255,248,225,.88)}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
 body{background:#d7e5ff;color:var(--tx);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.6;min-height:100vh;overflow-x:hidden}
 .scene{position:fixed;inset:0;z-index:0}
 .scene svg{width:100%;height:100%;display:block}
-.wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:22px 14px 40px}
+.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:22px 14px 44px}
 .hero{text-align:center;margin:6px 0 22px;animation:rise .6s ease both}
 .logo{font-size:2.2rem;display:inline-block;animation:float 3.2s ease-in-out infinite}
 h1{font-size:1.3rem;margin:4px 0 2px;color:#0c1f4a}
@@ -20,32 +20,36 @@ h2.ttl{text-align:center;font-size:1.25rem;letter-spacing:.5px;margin-bottom:6px
 .code{font-family:ui-monospace,Menlo,Consolas,monospace;color:#1e4fb0;font-size:.88rem;min-height:1.5em}
 .caret{display:inline-block;width:7px;height:1em;background:#1e4fb0;margin-inline-start:2px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
 .sub{color:var(--mut);margin:4px 0 12px;font-size:.9rem}
-.card{background:var(--card);border:1px solid rgba(255,255,255,.75);border-radius:16px;padding:20px 18px;margin-bottom:14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 10px 40px rgba(10,21,48,.28);animation:rise .55s ease both}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.78);border-radius:16px;padding:20px 18px;margin-bottom:14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 10px 40px rgba(10,21,48,.24);animation:rise .55s ease both}
 label{display:block;font-size:.86rem;color:var(--mut);margin:14px 0 0}
-input,select{width:100%;padding:8px 2px 8px;border:0;border-bottom:1.5px solid rgba(12,31,74,.55);border-radius:0;background:transparent;color:var(--tx);font:inherit;transition:.2s}
-input:focus,select:focus{outline:none;border-bottom-color:#3f72cf;box-shadow:0 2px 0 0 #3f72cf}
+input,select,textarea{width:100%;padding:8px 2px 8px;border:0;border-bottom:1.5px solid rgba(12,31,74,.5);border-radius:0;background:transparent;color:var(--tx);font:inherit;transition:.2s}
+textarea{min-height:76px;resize:vertical;border:1px solid rgba(12,31,74,.25);border-radius:8px;padding:8px 10px;background:rgba(255,255,255,.45);margin-top:6px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#3f72cf;box-shadow:0 2px 0 0 #3f72cf}
 .pw-box{position:relative;display:flex;align-items:center}
 .pw-box input{padding-inline-end:36px}
 .eye{position:absolute;inset-inline-end:4px;background:transparent;border:0;color:var(--mut);cursor:pointer;font-size:1rem;padding:4px}
-.btn{border:0;border-radius:6px;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#6b9aee,#3f72cf);color:#fff;transition:transform .15s,box-shadow .25s}
-.btn:hover{box-shadow:0 4px 16px rgba(63,114,207,.5)}.btn:active{transform:scale(.97)}
-.btn.full{width:100%;margin-top:22px}
+.btn{border:0;border-radius:6px;padding:10px 15px;font:inherit;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#6b9aee,#3f72cf);color:#fff;transition:transform .15s,box-shadow .25s}
+.btn:hover:not(:disabled){box-shadow:0 4px 16px rgba(63,114,207,.5)}
+.btn:active:not(:disabled){transform:scale(.97)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.full{width:100%;margin-top:20px}
 .btn.ok{background:#1f7a4d;color:#fff}.btn.no{background:#c0392b;color:#fff}
-.btn.ghost{background:rgba(255,255,255,.6);color:#0c1f4a;border:1px solid rgba(12,31,74,.25)}
-.swt{display:flex;justify-content:space-between;gap:8px;margin-top:14px;font-size:.88rem;color:var(--mut)}
+.btn.ghost{background:rgba(255,255,255,.65);color:#0c1f4a;border:1px solid rgba(12,31,74,.25)}
+.swt{display:flex;justify-content:space-between;gap:8px;margin-top:14px;font-size:.88rem;color:var(--mut);flex-wrap:wrap}
 .swt a{color:#0c1f4a;font-weight:700;cursor:pointer}
 .note{padding:10px 12px;border-radius:8px;margin-top:12px;font-size:.92rem;animation:rise .4s ease both}
 .note.err{background:var(--nob);color:var(--no)}.note.good{background:var(--okb);color:var(--ok)}.note.warn{background:var(--wrb);color:var(--wr)}
-.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;color:#0c1f4a}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;color:#0c1f4a;flex-wrap:wrap}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--bd);flex-wrap:wrap}
 .row:first-of-type{border-top:0}
 .row b{display:block}.row small{color:var(--mut)}
-.acts{display:flex;gap:6px}.acts .btn{padding:8px 12px;font-size:.88rem}
+.acts{display:flex;gap:6px;flex-wrap:wrap}.acts .btn{padding:7px 11px;font-size:.86rem}
 .stats{display:flex;gap:8px;margin-bottom:12px}
-.stat{flex:1;background:var(--card);border:1px solid rgba(255,255,255,.75);border-radius:12px;padding:10px;text-align:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.stat{flex:1;background:var(--card);border:1px solid rgba(255,255,255,.78);border-radius:12px;padding:10px;text-align:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .stat b{font-size:1.3rem;display:block;color:#3f72cf}.stat span{font-size:.78rem;color:var(--mut)}
 .inl{display:flex;gap:8px;align-items:end}.inl>div{flex:1}
 .empty{color:var(--mut);text-align:center;padding:10px}
+.tag{display:inline-block;font-size:.76rem;background:rgba(63,114,207,.14);color:#1e4fb0;padding:2px 8px;border-radius:99px;margin-inline-start:6px}
 ul.warn{margin:8px 0 0;padding-inline-start:20px}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
@@ -70,7 +74,7 @@ ul.warn{margin:8px 0 0;padding-inline-start:20px}
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,signInWithEmailAndPassword,signOut,createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,doc,getDoc,setDoc,updateDoc,deleteDoc,collection,onSnapshot,runTransaction} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getFirestore,doc,getDoc,setDoc,addDoc,updateDoc,deleteDoc,collection,onSnapshot,runTransaction} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBPyYR--LMGnRWDk5ZfTv81pDqYgPVQnUw",
@@ -89,63 +93,146 @@ const LAST_ID_KEY = "cs_platform_last_id";
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp), db = getFirestore(fbApp);
 
-let students=[],admins=[],cfg={capacity:15},me=null,view="auth",tab="login",note=null,unsubs=[],busy=false;
+let students=[],admins=[],announcements=[],resources=[],messages=[],cfg={capacity:15},me=null,view="auth",tab="login",note=null,unsubs=[],busy=false;
+let failCount=0,lockUntil=0;
 const app=document.getElementById("app");
 const esc=s=>{const d=document.createElement("div");d.textContent=String(s==null?"":s);return d.innerHTML};
+const fmtDate=t=>t?new Date(t).toLocaleString("ar-EG",{dateStyle:"short",timeStyle:"short"}):"";
 const setNote=(t,k)=>{note=t?{t,k:k||"err"}:null};
 const noteHtml=()=>note?`<div class="note ${note.k}">${esc(note.t)}</div>`:"";
 const count=st=>students.filter(s=>s.status===st).length;
 const clearSubs=()=>{unsubs.forEach(u=>u());unsubs=[]};
 const savedId=()=>{try{return localStorage.getItem(LAST_ID_KEY)||""}catch(_e){return ""}};
-const saveId=v=>{try{if(v)localStorage.setItem(LAST_ID_KEY,v)}catch(_e){}};
+const saveId=v=>{try{if(v)localStorage.setItem(LAST_ID_KEY,v);else localStorage.removeItem(LAST_ID_KEY)}catch(_e){}};
 const pwField=(id,label,ph="")=>`<label>${label}</label><div class="pw-box"><input id="${id}" type="password" placeholder="${esc(ph)}" autocomplete="off"><button type="button" class="eye" data-eye="${id}" aria-label="إظهار كلمة السر">👁️</button></div>`;
+const isLocked=()=>Date.now()<lockUntil;
+
+setInterval(()=>{
+  if(view==="auth" && tab==="login" && lockUntil>0){
+    const btn=document.getElementById("loginBtn");
+    const rem=Math.ceil((lockUntil-Date.now())/1000);
+    if(rem>0 && btn){btn.disabled=true;btn.textContent=`انتظر ${rem} ثانية…`}
+    else if(rem<=0){lockUntil=0;failCount=0;if(btn){btn.disabled=false;btn.textContent="دخول"}}
+  }
+},1000);
+
+function friendlyAuthError(e){
+  const c=e?.code||"";
+  if(c==="auth/invalid-credential"||c==="auth/user-not-found"||c==="auth/wrong-password")return "الرقم الجامعي أو اسم المسؤول أو كلمة السر غير صحيحة.";
+  if(c==="auth/email-already-in-use")return "هذا الرقم الجامعي مسجل مسبقاً، جرّب تسجيل الدخول.";
+  if(c==="auth/weak-password")return "كلمة السر ضعيفة، يجب أن تكون 6 أحرف على الأقل.";
+  if(c==="auth/network-request-failed")return "تعذّر الاتصال بالإنترنت، تحقّق من شبكتك.";
+  if(c==="auth/too-many-requests")return "تم إرسال طلبات كثيرة مؤقتاً، انتظر قليلاً ثم أعد المحاولة.";
+  return e?.message||c||"حدث خطأ غير متوقع.";
+}
 
 function render(){({auth:rAuth,welcome:rWelcome,admin:rAdmin,home:rHome,wait:rWait})[view]()}
 const header=()=>'<div class="hero"><div class="logo">🎓</div><h1>منصة طلاب علوم الحاسوب</h1><div class="code" dir="ltr"><span id="typed"></span><i class="caret"></i></div><p class="sub">مساحة لزملاء التخصص في الجامعة</p></div>';
 
 function rAuth(){
   const login=tab==="login";
-  const last=esc(savedId());
+  const last=savedId();
+  const rem=Math.ceil((lockUntil-Date.now())/1000);
   app.innerHTML=header()+`<div class="card"><h2 class="ttl">${login?"تسجيل الدخول":"إنشاء حساب جديد"}</h2>`
   +(login
-   ?`<label>الرقم الجامعي أو اسم المسؤول</label><input id="f1" value="${last}" autocomplete="off">`
+   ?`<label>الرقم الجامعي أو اسم المسؤول</label><input id="f1" value="${esc(last)}" autocomplete="off">`
      +pwField("f2","كلمة السر")
-     +`<button class="btn full" data-act="login">دخول</button><div class="swt"><span>ليس لديك حساب؟</span><a data-act="tab" data-v="reg">إنشاء حساب</a></div>`
+     +`<button id="loginBtn" class="btn full" data-act="login" ${rem>0?"disabled":""}>${rem>0?`انتظر ${rem} ثانية…`:"دخول"}</button>
+      <div class="swt"><span>ليس لديك حساب؟</span><a data-act="tab" data-v="reg">إنشاء حساب</a>${last?`<a data-act="clearid">مسح الرقم المحفوظ</a>`:""}</div>`
    :`<label>الاسم الكامل</label><input id="f1" autocomplete="off">
      <label>الرقم الجامعي</label><input id="f2" inputmode="numeric" autocomplete="off">
      <label>المستوى الدراسي</label><select id="f3"><option value="المستوى الأول">المستوى الأول</option><option value="المستوى الثاني">المستوى الثاني</option><option value="المستوى الثالث">المستوى الثالث</option><option value="المستوى الرابع">المستوى الرابع</option></select>`
      +pwField("f4","كلمة السر (6 أحرف على الأقل)")
      +pwField("f5","تأكيد كلمة السر")
-     +`<button class="btn full" data-act="reg">إرسال طلب الانضمام</button><div class="swt"><span>لديك حساب؟</span><a data-act="tab" data-v="login">تسجيل الدخول</a></div><p class="sub" style="margin:10px 0 0">سيصل طلبك إلى المسؤول وتدخل بعد موافقته.</p>`)
+     +`<button class="btn full" data-act="reg">إرسال طلب الانضمام</button>
+      <div class="swt"><span>لديك حساب؟</span><a data-act="tab" data-v="login">تسجيل الدخول</a></div>
+      <p class="sub" style="margin:10px 0 0">سيصل طلبك إلى المسؤول وتدخل بعد موافقته.</p>`)
   +noteHtml()+"</div>";
 }
+
 function rWait(){
   const st=me.status;
-  const m=st==="approved"?["تمت الموافقة على طلبك! سجّل الدخول الآن.","good"]:st==="rejected"?["تم رفض طلبك من المسؤول.","err"]:["تم إرسال طلبك إلى المسؤول، بانتظار الموافقة…","warn"];
+  const m=st==="approved"?["تمت الموافقة على طلبك! سجّل الدخول الآن.","good"]:st==="rejected"?["تم رفض أو إيقاف حسابك من المسؤول. يمكنك التواصل عبر الإدارة.","err"]:["تم إرسال طلبك إلى المسؤول، بانتظار الموافقة…","warn"];
   app.innerHTML=header()+`<div class="card"><h2>مرحباً ${esc(me.name)}</h2><div class="note ${m[1]}" style="margin-top:0">${m[0]}</div><button class="btn ghost full" data-act="out">العودة لتسجيل الدخول</button></div>`;
 }
+
 function rWelcome(){
   app.innerHTML=header()+`<div class="card"><div class="note good" style="margin-top:0"><b>✅ تمت الموافقة على دخولك</b><br>أهلاً بك ${esc(me.name)} في منصة طلاب علوم الحاسوب.</div>
   <div class="note warn"><b>⚠️ تحذير بشأن السلوك</b><ul class="warn"><li>احترم زملاءك وأساتذتك في كل ما تنشره.</li><li>يُمنع التنمر أو الإساءة أو الألفاظ الجارحة.</li><li>يُمنع الغش أو تبادل الحلول في الاختبارات والتقييمات.</li><li>يحق للمسؤول إيقاف أي حساب يخالف هذه القواعد.</li></ul></div>
   <button class="btn full" data-act="agree">أوافق وأتعهد بالالتزام</button><button class="btn ghost full" data-act="out">خروج</button></div>`;
 }
+
 function rHome(){
-  app.innerHTML=`<div class="bar"><h2 style="margin:0">أهلاً ${esc(me.name)}</h2><button class="btn ghost" data-act="out">خروج</button></div><div class="card"><h2>🚧 المنصة قيد البناء</h2><p class="sub">تم تأمين الدخول وحفظ التعهد بنجاح. أخبرني بما تريد إضافته بعد ذلك.</p></div>`;
+  const annHtml=announcements.length
+    ?announcements.map(a=>`<div class="row"><div><b>${esc(a.title)}</b><small>${esc(a.body)}</small><small>${fmtDate(a.at)}</small></div></div>`).join("")
+    :'<div class="empty">لا توجد إعلانات حالياً.</div>';
+  const resHtml=resources.length
+    ?resources.map(r=>`<div class="row"><div><b>${esc(r.title)}<span class="tag">${esc(r.level||"عام")}</span></b><small>${esc(r.desc||"")}</small></div>${r.url?`<div class="acts"><a class="btn ghost" href="${esc(r.url)}" target="_blank" rel="noopener">فتح الرابط</a></div>`:""}</div>`).join("")
+    :'<div class="empty">لا توجد مواد أو ملخصات مضافة بعد.</div>';
+
+  app.innerHTML=`<div class="bar"><h2 style="margin:0">أهلاً ${esc(me.name)}</h2><button class="btn ghost" data-act="out">خروج</button></div>
+  <div class="card"><h2>👤 بيانات الطالب</h2>
+    <p class="sub" style="margin:0"><b>الاسم:</b> ${esc(me.name)} • <b>الرقم:</b> ${esc(me.num)} • <b>المستوى:</b> ${esc(me.level||"غير محدد")}</p>
+    ${me.lastLoginAt?`<small style="color:var(--mut)">آخر دخول: ${fmtDate(me.lastLoginAt)}</small>`:""}
+  </div>
+  ${noteHtml()}
+  <div class="card"><h2>📢 إعلانات القسم</h2>${annHtml}</div>
+  <div class="card"><h2>📚 ملخصات ومصادر المواد</h2>${resHtml}</div>
+  <div class="card"><h2>✉️ إرسال اقتراح أو ملاحظة للمسؤول</h2>
+    <label>الموضوع</label><input id="mTitle" placeholder="مثال: طلب ملخص خوارزميات">
+    <label>الرسالة</label><textarea id="mBody" placeholder="اكتب رسالتك بوضوح…"></textarea>
+    <button class="btn full" data-act="sendmsg">إرسال الرسالة</button>
+  </div>`;
 }
+
 function rAdmin(){
   const pend=students.filter(s=>s.status==="pending").sort((a,b)=>a.at-b.at);
   const appr=students.filter(s=>s.status==="approved"),rej=students.filter(s=>s.status==="rejected"),cap=cfg.capacity;
-  const rows=(l,b)=>l.length?l.map(s=>`<div class="row"><div><b>${esc(s.name)}</b><small>الرقم: ${esc(s.num)}${s.level?" • "+esc(s.level):""}${s.acceptedRules?" • متعهد":""}</small></div><div class="acts">${b(s)}</div></div>`).join(""):'<div class="empty">لا يوجد</div>';
+  const rows=(l,b)=>l.length?l.map(s=>`<div class="row"><div><b>${esc(s.name)}</b><small>الرقم: ${esc(s.num)}${s.level?" • "+esc(s.level):""}${s.acceptedRules?" • متعهد":""}${s.lastLoginAt?" • دخول: "+fmtDate(s.lastLoginAt):""}</small></div><div class="acts">${b(s)}</div></div>`).join(""):'<div class="empty">لا يوجد</div>';
   const ok=s=>`<button class="btn ok" data-act="approve" data-id="${esc(s.id)}">موافقة</button>`;
   const del=s=>`<button class="btn ghost" data-act="del" data-id="${esc(s.id)}">حذف</button>`;
   const no=(s,t)=>`<button class="btn no" data-act="reject" data-id="${esc(s.id)}">${t}</button>`;
+
+  const annRows=announcements.length
+    ?announcements.map(a=>`<div class="row"><div><b>${esc(a.title)}</b><small>${esc(a.body)}</small></div><div class="acts"><button class="btn no" data-act="delann" data-id="${esc(a.id)}">حذف</button></div></div>`).join("")
+    :'<div class="empty">لا توجد إعلانات</div>';
+
+  const resRows=resources.length
+    ?resources.map(r=>`<div class="row"><div><b>${esc(r.title)}<span class="tag">${esc(r.level||"عام")}</span></b><small>${esc(r.url||r.desc||"")}</small></div><div class="acts"><button class="btn no" data-act="delres" data-id="${esc(r.id)}">حذف</button></div></div>`).join("")
+    :'<div class="empty">لا توجد مصادر</div>';
+
+  const msgRows=messages.length
+    ?messages.map(m=>`<div class="row"><div><b>${esc(m.title)}</b><small>من: ${esc(m.senderName)} (${esc(m.senderNum)}) • ${fmtDate(m.at)}</small><small style="display:block;margin-top:4px">${esc(m.body)}</small></div><div class="acts"><button class="btn ghost" data-act="delmsg" data-id="${esc(m.id)}">حذف</button></div></div>`).join("")
+    :'<div class="empty">لا توجد رسائل من الطلاب</div>';
+
   app.innerHTML=`<div class="bar"><h2 style="margin:0">🛡️ لوحة المسؤول (${esc(me.name)})</h2><button class="btn ghost" data-act="out">خروج</button></div>
   <div class="stats"><div class="stat"><b>${pend.length}</b><span>بانتظار القرار</span></div><div class="stat"><b>${appr.length} / ${cap}</b><span>المقبولون / السعة</span></div><div class="stat"><b>${rej.length}</b><span>المرفوضون</span></div></div>${noteHtml()}
   <div class="card"><h2>📨 طلبات التسجيل</h2>${rows(pend,s=>ok(s)+no(s,"منع"))}</div>
   <div class="card"><h2>✅ المقبولون</h2>${rows(appr,s=>no(s,"إيقاف"))}</div>
   <div class="card"><h2>🚫 المرفوضون</h2>${rows(rej,s=>ok(s)+del(s))}${rej.length?'<button class="btn no full" data-act="delall">حذف كل المرفوضين ('+rej.length+')</button>':""}</div>
+  <div class="card"><h2>📢 نشر إعلان جديد</h2>
+    <label>عنوان الإعلان</label><input id="aTitle" autocomplete="off">
+    <label>نص الإعلان</label><textarea id="aBody" autocomplete="off"></textarea>
+    <button class="btn full" data-act="addann">نشر الإعلان</button>
+    <div style="margin-top:12px">${annRows}</div>
+  </div>
+  <div class="card"><h2>📚 إضافة ملخص أو مصدر دراسي</h2>
+    <label>اسم المادة أو الملخص</label><input id="rTitle" autocomplete="off">
+    <label>المستوى</label><select id="rLevel"><option value="عام">عام</option><option value="المستوى الأول">المستوى الأول</option><option value="المستوى الثاني">المستوى الثاني</option><option value="المستوى الثالث">المستوى الثالث</option><option value="المستوى الرابع">المستوى الرابع</option></select>
+    <label>الرابط (اختياري)</label><input id="rUrl" placeholder="https://..." autocomplete="off">
+    <label>وصف مختصر</label><input id="rDesc" autocomplete="off">
+    <button class="btn full" data-act="addres">إضافة المصدر</button>
+    <div style="margin-top:12px">${resRows}</div>
+  </div>
+  <div class="card"><h2>✉️ رسائل واقتراحات الطلاب (${messages.length})</h2>${msgRows}</div>
   <div class="card"><h2>👥 عدد المقبولين الأقصى</h2><div class="inl"><div><input id="cap" type="number" min="1" value="${cap}"></div><button class="btn" data-act="cap">حفظ</button></div></div>`
   +(me.main?`<div class="card"><h2>➕ إضافة مسؤول جديد</h2><p class="sub">هذا الحق خاص بالمسؤول الرئيسي فقط. كلمة السر 6 أحرف على الأقل.</p><label>اسم المستخدم</label><input id="an" autocomplete="off"><label>كلمة السر</label><input id="ap" type="password" autocomplete="off"><button class="btn full" data-act="addadmin">إضافة</button><div style="margin-top:12px"><b>المسؤولون:</b> ${MAIN_USER} (رئيسي)${admins.map(a=>"، "+esc(a.u)).join("")}</div></div>`:"");
+}
+
+function startStudentSubs(){
+  clearSubs();
+  unsubs.push(onSnapshot(collection(db,"announcements"),s=>{announcements=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"resources"),s=>{resources=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
 }
 
 function startAdminSubs(){
@@ -154,11 +241,16 @@ function startAdminSubs(){
   unsubs.push(onSnapshot(collection(db,"students"),s=>{students=s.docs.map(d=>({...d.data(),id:d.id}));if(view==="admin")render()},err));
   unsubs.push(onSnapshot(doc(db,"config","main"),s=>{if(s.exists()&&s.data().capacity)cfg=s.data();if(view==="admin")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"admins"),s=>{admins=s.docs.map(d=>d.data());if(view==="admin")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"announcements"),s=>{announcements=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="admin")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"resources"),s=>{resources=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="admin")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"messages"),s=>{messages=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="admin")render()},()=>{}));
 }
+
 function watchStudent(uid){
   clearSubs();
   unsubs.push(onSnapshot(doc(db,"students",uid),s=>{if(s.exists()){me={...me,...s.data()};if(view==="wait")rWait()}},()=>{}));
 }
+
 async function adminLogin(user,pw){
   const cr=await signInWithEmailAndPassword(auth,user+ADMIN_DOMAIN,pw);
   const main=user===MAIN_USER;
@@ -178,13 +270,14 @@ app.addEventListener("click",async ev=>{
   setNote(null);busy=true;
   try{
     if(a==="tab"){tab=el.dataset.v;render()}
+    else if(a==="clearid"){saveId("");render()}
     else if(a==="out"){clearSubs();await signOut(auth);me=null;view="auth";tab="login";render()}
     else if(a==="agree"){
       if(me?.uid){
         await updateDoc(doc(db,"students",me.uid),{acceptedRules:true,acceptedAt:Date.now()});
         me.acceptedRules=true;
       }
-      view="home";render();
+      view="home";startStudentSubs();render();
     }
     else if(a==="reg"){
       const n=f1.value.trim(),num=f2.value.trim(),lvl=f3.value,pw=f4.value.trim(),pw2=f5.value.trim();
@@ -199,26 +292,64 @@ app.addEventListener("click",async ev=>{
       me=data;view="wait";watchStudent(cr.user.uid);render();
     }
     else if(a==="login"){
+      if(isLocked()){setNote("تم إيقاف المحاولات مؤقتاً بسبب تكرار الخطأ، انتظر قليلاً.");return render()}
       const n=f1.value.trim(),pw=f2.value.trim();
       if(!n||!pw){setNote("أدخل الرقم الجامعي أو اسم المسؤول وكلمة السر.");return render()}
+      let loggedIn=false;
       if(/^[A-Za-z0-9_.-]+$/.test(n) && pw.length>=6){
         try{
           const cr=await signInWithEmailAndPassword(auth,n+STUDENT_DOMAIN,pw);
           const snap=await getDoc(doc(db,"students",cr.user.uid));
           if(snap.exists()){
             const s=snap.data();
+            const now=Date.now();
+            await updateDoc(doc(db,"students",cr.user.uid),{lastLoginAt:now}).catch(()=>{});
             saveId(n);
-            me=s;
-            if(s.status==="approved"){view=s.acceptedRules?"home":"welcome"}
-            else{view="wait";watchStudent(cr.user.uid)}
+            failCount=0;
+            me={...s,lastLoginAt:now};
+            if(s.status==="approved"){
+              if(s.acceptedRules){view="home";startStudentSubs()}
+              else{view="welcome"}
+            }else{view="wait";watchStudent(cr.user.uid)}
+            loggedIn=true;
             return render();
           }
           await signOut(auth);
         }catch(_e){}
       }
-      try{await adminLogin(n.toLowerCase(),pw)}
-      catch(e){setNote("البيانات غير صحيحة، أو لم تسجّل بعد.");render()}
+      if(!loggedIn){
+        try{
+          await adminLogin(n.toLowerCase(),pw);
+          failCount=0;
+        }catch(e){
+          failCount++;
+          if(failCount>=4){lockUntil=Date.now()+20000;setNote("محاولات خاطئة متكررة. تم تفعيل مؤقت تهدئة لمدة 20 ثانية.");}
+          else{setNote(friendlyAuthError(e));}
+          render();
+        }
+      }
     }
+    else if(a==="sendmsg"){
+      const title=document.getElementById("mTitle").value.trim(),body=document.getElementById("mBody").value.trim();
+      if(!title||!body){setNote("اكتب الموضوع ونص الرسالة.");return render()}
+      await addDoc(collection(db,"messages"),{uid:me.uid,senderName:me.name,senderNum:me.num,title,body,at:Date.now()});
+      setNote("تم إرسال رسالتك إلى المسؤول بنجاح.","good");render();
+    }
+    else if(a==="addann"){
+      const title=document.getElementById("aTitle").value.trim(),body=document.getElementById("aBody").value.trim();
+      if(!title||!body){setNote("أدخل عنوان الإعلان ونصه.");return render()}
+      await addDoc(collection(db,"announcements"),{title,body,at:Date.now()});
+      setNote("تم نشر الإعلان.","good");render();
+    }
+    else if(a==="delann"){await deleteDoc(doc(db,"announcements",el.dataset.id))}
+    else if(a==="addres"){
+      const title=document.getElementById("rTitle").value.trim(),level=document.getElementById("rLevel").value,url=document.getElementById("rUrl").value.trim(),desc=document.getElementById("rDesc").value.trim();
+      if(!title){setNote("أدخل اسم المادة أو الملخص.");return render()}
+      await addDoc(collection(db,"resources"),{title,level,url,desc,at:Date.now()});
+      setNote("تمت إضافة المصدر.","good");render();
+    }
+    else if(a==="delres"){await deleteDoc(doc(db,"resources",el.dataset.id))}
+    else if(a==="delmsg"){await deleteDoc(doc(db,"messages",el.dataset.id))}
     else if(a==="approve"){
       const targetId=el.dataset.id;
       const studentRef=doc(db,"students",targetId);
@@ -254,7 +385,7 @@ app.addEventListener("click",async ev=>{
       await setDoc(doc(db,"admins",cr.user.uid),{u,uid:cr.user.uid});
       setNote("تمت إضافة المسؤول "+u,"good");render();
     }
-  }catch(e){setNote("حدث خطأ: "+(e.code||e.message||"غير معروف"));render()}
+  }catch(e){setNote("حدث خطأ: "+friendlyAuthError(e));render()}
   finally{busy=false}
 });
 render();
