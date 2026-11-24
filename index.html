@@ -35,7 +35,6 @@ body{
   overflow-x:hidden;
 }
 
-/* شريط علوي ثابت */
 .topnav{
   position:sticky;
   top:0;
@@ -53,12 +52,7 @@ body{
   justify-content:space-between;
   gap:12px;
 }
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
-}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
 .logo-badge{
   width:42px;
   height:42px;
@@ -71,12 +65,7 @@ body{
   overflow:hidden;
   flex-shrink:0;
 }
-.logo-badge img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  padding:2px;
-}
+.logo-badge img{width:100%;height:100%;object-fit:contain;padding:2px}
 .brand-title{
   font-weight:700;
   font-size:.98rem;
@@ -97,18 +86,12 @@ body{
   font:inherit;
   font-size:.88rem;
 }
-.search-wrap input:focus{
-  outline:none;
-  border-color:var(--blue);
-  background:var(--surface);
-}
+.search-wrap input:focus{outline:none;border-color:var(--blue);background:var(--surface)}
 .top-actions{display:flex;align-items:center;gap:8px}
 
-/* حاويات العرض */
 .auth-wrap{max-width:460px;margin:28px auto;padding:0 14px 40px}
 .dash-wrap{max-width:1280px;margin:16px auto;padding:0 14px 44px}
 
-/* تخطيط الأعمدة مع جعل العمود اليساري على الشمال في RTL */
 .home-layout{
   display:grid;
   grid-template-columns:minmax(0,1fr) 310px;
@@ -122,9 +105,7 @@ body{
   .left-rail{order:1}
   .main-feed{order:2}
 }
-@media (max-width:760px){
-  .search-wrap{display:none}
-}
+@media (max-width:760px){.search-wrap{display:none}}
 
 .admin-layout{
   display:grid;
@@ -132,11 +113,8 @@ body{
   gap:16px;
   align-items:start;
 }
-@media (max-width:1024px){
-  .admin-layout{grid-template-columns:1fr}
-}
+@media (max-width:1024px){.admin-layout{grid-template-columns:1fr}}
 
-/* البطاقات */
 .box{
   background:var(--surface);
   border:1px solid var(--line);
@@ -180,14 +158,7 @@ h2.center{text-align:center;font-size:1.2rem;margin-bottom:8px}
   animation:blink 1s steps(1) infinite;
 }
 
-/* الحقول والأزرار */
-label{
-  display:block;
-  font-size:.84rem;
-  color:var(--muted);
-  margin:12px 0 4px;
-  font-weight:600;
-}
+label{display:block;font-size:.84rem;color:var(--muted);margin:12px 0 4px;font-weight:600}
 input,select,textarea{
   width:100%;
   border:1px solid var(--line);
@@ -199,22 +170,10 @@ input,select,textarea{
   font-size:.92rem;
 }
 textarea{min-height:76px;resize:vertical}
-input:focus,select:focus,textarea:focus{
-  outline:none;
-  border-color:var(--blue);
-  background:var(--surface);
-}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);background:var(--surface)}
 .pw-wrap{position:relative;display:flex;align-items:center}
 .pw-wrap input{padding-inline-end:38px}
-.eye-btn{
-  position:absolute;
-  inset-inline-end:6px;
-  background:transparent;
-  border:0;
-  cursor:pointer;
-  font-size:1rem;
-  padding:4px;
-}
+.eye-btn{position:absolute;inset-inline-end:6px;background:transparent;border:0;cursor:pointer;font-size:1rem;padding:4px}
 .btn{
   border:0;
   border-radius:10px;
@@ -239,7 +198,6 @@ input:focus,select:focus,textarea:focus{
 .btn.ok{background:var(--ok);color:#fff}
 .btn.no{background:var(--no);color:#fff}
 
-/* عناصر القائمة الجانبية اليسرى بأسلوب الصورة */
 .profile-mini{
   display:flex;
   align-items:center;
@@ -281,8 +239,9 @@ input:focus,select:focus,textarea:focus{
   font-weight:600;
   margin-bottom:4px;
   background:transparent;
+  cursor:pointer;
 }
-.rail-item:hover{background:var(--soft);color:var(--blue)}
+.rail-item:hover, .rail-item.active{background:var(--blue-soft);color:var(--blue)}
 .see-more-btn{
   width:100%;
   margin-top:6px;
@@ -356,26 +315,12 @@ input:focus,select:focus,textarea:focus{
 .inl>div{flex:1}
 .empty{text-align:center;color:var(--muted);padding:12px;font-size:.88rem}
 
-.note{
-  padding:10px 12px;
-  border-radius:10px;
-  margin-top:12px;
-  font-size:.88rem;
-  font-weight:600;
-}
+.note{padding:10px 12px;border-radius:10px;margin-top:12px;font-size:.88rem;font-weight:600}
 .note.err{background:var(--no-bg);color:var(--no)}
 .note.good{background:var(--ok-bg);color:var(--ok)}
 .note.warn{background:var(--wr-bg);color:var(--wr)}
 ul.warn{margin:6px 0 0;padding-inline-start:20px;font-weight:400}
-.swt{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  margin-top:14px;
-  font-size:.86rem;
-  color:var(--muted);
-  flex-wrap:wrap;
-}
+.swt{display:flex;justify-content:space-between;gap:8px;margin-top:14px;font-size:.86rem;color:var(--muted);flex-wrap:wrap}
 .swt a{color:var(--blue);font-weight:700;cursor:pointer}
 @keyframes blink{50%{opacity:0}}
 </style>
@@ -405,8 +350,9 @@ const LOGO_SRC = "./logo.png";
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp), db = getFirestore(fbApp);
 
-let students=[],admins=[],announcements=[],resources=[],messages=[],cfg={capacity:15},me=null,view="auth",tab="login",note=null,unsubs=[],busy=false,searchQ="";
-let showAllRes=false,showAllAnn=false,showAllExp=false;
+let students=[],admins=[],announcements=[],resources=[],messages=[],groups=[],groupPosts=[],cfg={capacity:15},me=null,view="auth",tab="login",note=null,unsubs=[],busy=false,searchQ="";
+let selectedGroupId="all";
+let showAllRes=false,showAllAnn=false,showAllGrp=false;
 let failCount=0,lockUntil=0;
 const app=document.getElementById("app");
 const esc=s=>{const d=document.createElement("div");d.textContent=String(s==null?"":s);return d.innerHTML};
@@ -466,7 +412,7 @@ function topNav(title){
         </div>
       </div>
       <div class="search-wrap">
-        <input id="qInput" value="${esc(searchQ)}" placeholder="بحث…">
+        <input id="qInput" value="${esc(searchQ)}" placeholder="بحث في المنشورات والمصادر…">
       </div>
       <div class="top-actions">
         <button class="btn ghost" data-act="out">خروج</button>
@@ -510,20 +456,37 @@ function rWelcome(){
 
 function rHome(){
   const q=searchQ.trim().toLowerCase();
-  const fAnn=q?announcements.filter(a=>`${a.title||""} ${a.body||""}`.toLowerCase().includes(q)):announcements;
-  const fRes=q?resources.filter(r=>`${r.title||""} ${r.desc||""} ${r.level||""}`.toLowerCase().includes(q)):resources;
+  
+  // تصفية منشورات القروبات
+  let filteredPosts = selectedGroupId === "all" ? groupPosts : groupPosts.filter(p => p.groupId === selectedGroupId);
+  if(q) filteredPosts = filteredPosts.filter(p => `${p.authorName||""} ${p.body||""} ${p.groupName||""}`.toLowerCase().includes(q));
 
   const visRes=showAllRes?resources:resources.slice(0,2);
   const visAnn=showAllAnn?announcements:announcements.slice(0,2);
+  const visGrp=showAllGrp?groups:groups.slice(0,3);
   const initial=(me.name||"ط").trim().charAt(0).toUpperCase();
 
-  const annCards=fAnn.length
-    ?fAnn.map(a=>`<div class="feed-card"><div class="feed-head"><span class="feed-title">${esc(a.title)}</span><span class="feed-meta">${fmtDate(a.at)}</span></div><div class="muted" style="margin:0">${esc(a.body)}</div></div>`).join("")
-    :'<div class="empty">لا توجد إعلانات مطابقة حالياً.</div>';
+  const postsHtml = filteredPosts.length
+    ? filteredPosts.map(p => `<div class="feed-card">
+        <div class="feed-head">
+          <div>
+            <span class="feed-title">${esc(p.authorName)}</span>
+            <span class="pill" style="margin-inline-start:6px">${esc(p.groupName||"قروب عام")}</span>
+          </div>
+          <span class="feed-meta">${fmtDate(p.at)}</span>
+        </div>
+        <div class="muted" style="margin:8px 0;white-space:pre-line">${esc(p.body)}</div>
+        ${p.authorUid === me.uid ? `<div class="acts"><button class="btn no" style="padding:4px 8px;font-size:.76rem" data-act="delpost" data-id="${esc(p.id)}">حذف منشورك</button></div>` : ""}
+      </div>`).join("")
+    : '<div class="empty">لا توجد منشورات في هذا القروب حالياً. كن أول من ينشر!</div>';
 
-  const resCards=fRes.length
-    ?fRes.map(r=>`<div class="feed-card"><div class="feed-head"><span class="feed-title">${esc(r.title)}</span><span class="pill">${esc(r.level||"عام")}</span></div><div class="muted" style="margin:0 0 8px">${esc(r.desc||"")}</div>${r.url?`<a class="btn soft" href="${esc(r.url)}" target="_blank" rel="noopener">فتح المصدر</a>`:""}</div>`).join("")
-    :'<div class="empty">لا توجد ملخصات أو مصادر مضافة بعد.</div>';
+  const annCards=announcements.length
+    ?announcements.map(a=>`<div class="feed-card"><div class="feed-head"><span class="feed-title">${esc(a.title)}</span><span class="feed-meta">${fmtDate(a.at)}</span></div><div class="muted" style="margin:0">${esc(a.body)}</div></div>`).join("")
+    :'<div class="empty">لا توجد إعلانات حالياً.</div>';
+
+  const resCards=resources.length
+    ?resources.map(r=>`<div class="feed-card"><div class="feed-head"><span class="feed-title">${esc(r.title)}</span><span class="pill">${esc(r.level||"عام")}</span></div><div class="muted" style="margin:0 0 8px">${esc(r.desc||"")}</div>${r.url?`<a class="btn soft" href="${esc(r.url)}" target="_blank" rel="noopener">فتح المصدر</a>`:""}</div>`).join("")
+    :'<div class="empty">لا توجد مصادر مضافة بعد.</div>';
 
   const leftSideHtml=`<aside class="left-rail">
     <div class="box">
@@ -535,26 +498,53 @@ function rHome(){
         </div>
       </div>
 
+      <div class="rail-sec-title">👥 القروبات والمجتمعات</div>
+      <a class="rail-item ${selectedGroupId==="all"?"active":""}" data-act="selectgrp" data-id="all">
+        <span>🌐 منشورات كل القروبات</span>
+      </a>
+      ${visGrp.map(g => `<a class="rail-item ${selectedGroupId===g.id?"active":""}" data-act="selectgrp" data-id="${esc(g.id)}">
+        <span>📌 ${esc(g.name)}</span>
+      </a>`).join("")}
+      ${groups.length>3?`<button class="see-more-btn" data-act="toggrp">${showAllGrp?"عرض أقل ^":"عرض المزيد v"}</button>`:""}
+
       <div class="rail-sec-title">المصادر والمواد</div>
-      ${visRes.length?visRes.map(r=>`<a class="rail-item" href="#sec-res"><span>📚 ${esc(r.title)}</span><span class="pill">${esc(r.level||"عام")}</span></a>`).join(""):'<div class="feed-meta">لا توجد مواد بعد</div>'}
+      ${visRes.map(r=>`<a class="rail-item" href="#sec-res"><span>📚 ${esc(r.title)}</span><span class="pill">${esc(r.level||"عام")}</span></a>`).join("")}
       ${resources.length>2?`<button class="see-more-btn" data-act="togres">${showAllRes?"عرض أقل ^":"عرض المزيد v"}</button>`:""}
 
       <div class="rail-sec-title">الإعلانات</div>
-      ${visAnn.length?visAnn.map(a=>`<a class="rail-item" href="#sec-ann"><span>📢 ${esc(a.title)}</span></a>`).join(""):'<div class="feed-meta">لا توجد إعلانات بعد</div>'}
+      ${visAnn.map(a=>`<a class="rail-item" href="#sec-ann"><span>📢 ${esc(a.title)}</span></a>`).join("")}
       ${announcements.length>2?`<button class="see-more-btn" data-act="togann">${showAllAnn?"عرض أقل ^":"عرض المزيد v"}</button>`:""}
-
-      <div class="rail-sec-title">استكشاف</div>
-      <a class="rail-item" href="#sec-msg"><span>✉️ إرسال اقتراح للمسؤول</span></a>
-      <a class="rail-item" href="#sec-res"><span>🗂️ كل الملخصات (${resources.length})</span></a>
-      ${showAllExp?`<div class="feed-meta" style="padding:6px 10px">• حالة الحساب: مقبول ومتعهد<br>• آخر دخول: ${me.lastLoginAt?fmtDate(me.lastLoginAt):"الآن"}</div>`:""}
-      <button class="see-more-btn" data-act="togexp">${showAllExp?"عرض أقل ^":"عرض المزيد v"}</button>
     </div>
   </aside>`;
+
+  const activeGroupObj = groups.find(g => g.id === selectedGroupId);
+  const activeGroupName = selectedGroupId === "all" ? "جميع القروبات" : (activeGroupObj ? activeGroupObj.name : "القروب");
 
   app.innerHTML=topNav(`أهلاً ${me.name}`)+`<div class="home-layout">
     ${leftSideHtml}
     <main class="main-feed">
       ${noteHtml()}
+      
+      <!-- صندوق نشر بوست في القروب -->
+      <section class="box">
+        <h2>✍️ شارك سؤالاً أو منشوراً في (${esc(activeGroupName)})</h2>
+        ${selectedGroupId === "all" ? `
+          <label>اختر القروب للنشر فيه</label>
+          <select id="pGroupSelect">
+            ${groups.length ? groups.map(g => `<option value="${esc(g.id)}">${esc(g.name)}</option>`).join("") : '<option value="general">قروب المناقشات العامة</option>'}
+          </select>
+        ` : ''}
+        <label>نص المنشور</label>
+        <textarea id="pBody" placeholder="اكتب سؤالك، استفسارك، أو فائدة لزملاء الكلية…"></textarea>
+        <button class="btn full" data-act="addpost">نشر في القروب</button>
+      </section>
+
+      <!-- تغذية منشورات القروبات -->
+      <section class="box">
+        <h2>👥 منشورات ومناقشات (${esc(activeGroupName)})</h2>
+        ${postsHtml}
+      </section>
+
       <section id="sec-ann" class="box"><h2>📢 إعلانات القسم</h2>${annCards}</section>
       <section id="sec-res" class="box"><h2>📚 ملخصات ومصادر المواد</h2>${resCards}</section>
       <section id="sec-msg" class="box">
@@ -574,6 +564,10 @@ function rAdmin(){
   const ok=s=>`<button class="btn ok" data-act="approve" data-id="${esc(s.id)}">موافقة</button>`;
   const del=s=>`<button class="btn ghost" data-act="del" data-id="${esc(s.id)}">حذف</button>`;
   const no=(s,t)=>`<button class="btn no" data-act="reject" data-id="${esc(s.id)}">${t}</button>`;
+
+  const groupRows = groups.length
+    ? groups.map(g => `<div class="row"><div><b>${esc(g.name)}</b><div class="feed-meta">${esc(g.desc||"")}</div></div><div class="acts"><button class="btn no" data-act="delgrp" data-id="${esc(g.id)}">حذف القروب</button></div></div>`).join("")
+    : '<div class="empty">لا توجد قروبات مضافة</div>';
 
   const annRows=announcements.length
     ?announcements.map(a=>`<div class="row"><div><b>${esc(a.title)}</b><div class="feed-meta">${esc(a.body)}</div></div><div class="acts"><button class="btn no" data-act="delann" data-id="${esc(a.id)}">حذف</button></div></div>`).join("")
@@ -597,6 +591,7 @@ function rAdmin(){
           <div class="mini-stat"><b>${rej.length}</b><span>مرفوض</span></div>
         </div>
         <a class="rail-item" href="#adm-req"><span>📨 طلبات التسجيل</span><span class="pill">${pend.length}</span></a>
+        <a class="rail-item" href="#adm-grp"><span>👥 إدارة القروبات</span><span class="pill">${groups.length}</span></a>
         <a class="rail-item" href="#adm-pub"><span>📢 الإعلانات والمصادر</span><span class="pill">${announcements.length+resources.length}</span></a>
         <a class="rail-item" href="#adm-msg"><span>✉️ رسائل الطلاب</span><span class="pill">${messages.length}</span></a>
       </div>
@@ -606,6 +601,16 @@ function rAdmin(){
       ${noteHtml()}
       <section id="adm-req" class="box"><h2>📨 طلبات التسجيل</h2>${rows(pend,s=>ok(s)+no(s,"منع"))}</section>
       <section class="box"><h2>✅ المقبولون</h2>${rows(appr,s=>no(s,"إيقاف"))}</section>
+      
+      <!-- إنشاء قروب جديد -->
+      <section id="adm-grp" class="box">
+        <h2>➕ إنشاء قروب جديد للطلاب</h2>
+        <label>اسم القروب</label><input id="gName" placeholder="مثال: قروب الخوارزميات، قروب دفعة 2026">
+        <label>وصف القروب</label><input id="gDesc" placeholder="مثال: لمناقشة التكاليف ومواد المستوى الثالث">
+        <button class="btn full" data-act="addgrp">إنشاء القروب</button>
+        <div style="margin-top:12px">${groupRows}</div>
+      </section>
+
       <section class="box"><h2>🚫 المرفوضون</h2>${rows(rej,s=>ok(s)+del(s))}${rej.length?'<button class="btn no full" data-act="delall">حذف كل المرفوضين ('+rej.length+')</button>':""}</section>
       <section id="adm-pub" class="box"><h2>📢 نشر إعلان جديد</h2>
         <label>عنوان الإعلان</label><input id="aTitle" autocomplete="off">
@@ -635,6 +640,8 @@ function startStudentSubs(){
   clearSubs();
   unsubs.push(onSnapshot(collection(db,"announcements"),s=>{announcements=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"resources"),s=>{resources=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"groups"),s=>{groups=s.docs.map(d=>({...d.data(),id:d.id}));if(view==="home")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"group_posts"),s=>{groupPosts=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
 }
 
 function startAdminSubs(){
@@ -646,6 +653,7 @@ function startAdminSubs(){
   unsubs.push(onSnapshot(collection(db,"announcements"),s=>{announcements=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="admin")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"resources"),s=>{resources=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="admin")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"messages"),s=>{messages=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="admin")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"groups"),s=>{groups=s.docs.map(d=>({...d.data(),id:d.id}));if(view==="admin")render()},()=>{}));
 }
 
 function watchStudent(uid){
@@ -678,9 +686,10 @@ app.addEventListener("click",async ev=>{
   const a=el.dataset.act,f1=document.getElementById("f1"),f2=document.getElementById("f2"),f3=document.getElementById("f3"),f4=document.getElementById("f4"),f5=document.getElementById("f5");
   setNote(null);busy=true;
   try{
-    if(a==="togres"){showAllRes=!showAllRes;render()}
+    if(a==="selectgrp"){selectedGroupId=el.dataset.id;render()}
+    else if(a==="togres"){showAllRes=!showAllRes;render()}
     else if(a==="togann"){showAllAnn=!showAllAnn;render()}
-    else if(a==="togexp"){showAllExp=!showAllExp;render()}
+    else if(a==="toggrp"){showAllGrp=!showAllGrp;render()}
     else if(a==="tab"){tab=el.dataset.v;render()}
     else if(a==="clearid"){saveId("");render()}
     else if(a==="out"){clearSubs();await signOut(auth);me=null;view="auth";tab="login";render()}
@@ -740,6 +749,41 @@ app.addEventListener("click",async ev=>{
           render();
         }
       }
+    }
+    else if(a==="addpost"){
+      const body=document.getElementById("pBody").value.trim();
+      let targetGId = selectedGroupId;
+      if(selectedGroupId === "all"){
+        const selEl = document.getElementById("pGroupSelect");
+        targetGId = selEl ? selEl.value : "general";
+      }
+      if(!body){setNote("اكتب نص المنشور قبل النشر.");return render()}
+      const grpObj = groups.find(g => g.id === targetGId);
+      const gName = grpObj ? grpObj.name : "القروب العام";
+      
+      await addDoc(collection(db,"group_posts"),{
+        groupId: targetGId,
+        groupName: gName,
+        authorUid: me.uid,
+        authorName: me.name,
+        authorNum: me.num,
+        body,
+        at: Date.now()
+      });
+      setNote("تم النشر في القروب بنجاح!","good");render();
+    }
+    else if(a==="delpost"){
+      await deleteDoc(doc(db,"group_posts",el.dataset.id));
+      setNote("تم حذف المنشور.","good");render();
+    }
+    else if(a==="addgrp"){
+      const name=document.getElementById("gName").value.trim(),desc=document.getElementById("gDesc").value.trim();
+      if(!name){setNote("أدخل اسم القروب.");return render()}
+      await addDoc(collection(db,"groups"),{name,desc,at:Date.now()});
+      setNote("تم إنشاء القروب بنجاح.","good");render();
+    }
+    else if(a==="delgrp"){
+      if(confirm("حذف هذا القروب نهائياً؟")) await deleteDoc(doc(db,"groups",el.dataset.id));
     }
     else if(a==="sendmsg"){
       const title=document.getElementById("mTitle").value.trim(),body=document.getElementById("mBody").value.trim();
