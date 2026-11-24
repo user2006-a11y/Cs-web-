@@ -17,6 +17,7 @@
   --blue:#1877f2;
   --blue-dark:#125ec4;
   --blue-soft:#e7f1ff;
+  --navy:#0c3b73;
   --ok:#146c43;
   --ok-bg:#e9f7ef;
   --no:#b3261e;
@@ -75,7 +76,7 @@ body{
   text-overflow:ellipsis;
 }
 .brand-sub{font-size:.75rem;color:var(--muted)}
-.search-wrap{flex:1;max-width:320px}
+.search-wrap{flex:1;max-width:300px}
 .search-wrap input{
   width:100%;
   border:1px solid var(--line);
@@ -138,21 +139,85 @@ body{
 }
 @media (max-width:1024px){.admin-layout{grid-template-columns:1fr}}
 
-.subjects-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-  gap:12px;
+/* واجهة المنصة الدراسية بأسلوب Harmash */
+.course-tabs{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  padding-bottom:8px;
+  margin-bottom:14px;
+  border-bottom:1px solid var(--line);
 }
-.subject-card{
+.course-tab{
+  border:1px solid var(--line);
+  background:var(--soft);
+  color:var(--ink);
+  border-radius:8px;
+  padding:8px 12px;
+  font:inherit;
+  font-size:.84rem;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.course-tab.active{
+  background:var(--navy);
+  color:#fff;
+  border-color:var(--navy);
+}
+.course-nav-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin:14px 0;
+  flex-wrap:wrap;
+}
+.course-btn-navy{
+  background:var(--navy);
+  color:#fff;
+  border:0;
+  border-radius:8px;
+  padding:9px 16px;
+  font:inherit;
+  font-weight:700;
+  font-size:.88rem;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.course-btn-navy:hover:not(:disabled){opacity:.92}
+.course-btn-navy:disabled{opacity:.45;cursor:not-allowed}
+.lesson-panel{
   background:var(--soft);
   border:1px solid var(--line);
   border-radius:12px;
   padding:14px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  gap:10px;
+  margin-top:10px;
 }
+.lesson-list-box{
+  background:var(--soft);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px;
+  margin-top:12px;
+}
+.lesson-link-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 12px;
+  border-bottom:1px solid var(--line);
+  cursor:pointer;
+  font-size:.9rem;
+  font-weight:600;
+  color:var(--ink);
+  border-radius:8px;
+}
+.lesson-link-item:last-child{border-bottom:0}
+.lesson-link-item:hover{background:var(--blue-soft);color:var(--blue)}
+.lesson-link-item.active{background:var(--blue-soft);color:var(--blue);font-weight:800}
 
 .box{
   background:var(--surface);
@@ -423,20 +488,92 @@ const STUDENT_DOMAIN = "@students.platform.local";
 const LAST_ID_KEY = "cs_platform_last_id";
 const LOGO_SRC = "./logo.png";
 
+// 7 مواد دراسية بدروس منظمة بأسلوب Harmash
 const SEVEN_SUBJECTS = [
-  { id:"s1", name:"المادة الأولى: البرمجة وهياكل البيانات", desc:"أساسيات البرمجة، القوائم، الأشجار، والبحث والترتيب." },
-  { id:"s2", name:"المادة الثانية: تحليل وتصميم الخوارزميات", desc:"التعقيد الزمني، التقسيم والفتح، والبرمجة الديناميكية." },
-  { id:"s3", name:"المادة الثالثة: قواعد البيانات", desc:"النمذجة العلائقية، لغة SQL، والفهرسة وإدارة المعاملات." },
-  { id:"s4", name:"المادة الرابعة: شبكات الحاسوب", desc:"نماذج OSI وTCP/IP، التوجيه، وبروتوكولات النقل." },
-  { id:"s5", name:"المادة الخامسة: نظم التشغيل", desc:"جدولة العمليات، إدارة الذاكرة، والتزامن وأنظمة الملفات." },
-  { id:"s6", name:"المادة السادسة: هندسة البرمجيات", desc:"دورة حياة النظام، تصميم المعمارية، والاختبار وضمان الجودة." },
-  { id:"s7", name:"المادة السابعة: الذكاء الاصطناعي وتعلم الآلة", desc:"خوارزميات البحث، التصنيف، وشبكات العصبونات الأساسية." }
+  {
+    id:"s1",
+    tab:"قواعد البيانات",
+    title:"تعلم قواعد البيانات",
+    lessons:[
+      { t:"مفهوم البيانات", body:"البيانات هي حقائق أو قياسات أو قيم خام (نصوص، أرقام، تواريخ) يتم تسجيلها ليتم تنظيمها ومعالجتها واستخراج معلومات مفيدة منها." },
+      { t:"مفهوم قواعد البيانات", body:"قاعدة البيانات هي مجموعة منظمة من البيانات المترابطة تُدار عبر نظام إدارة قواعد البيانات (DBMS) لتسهيل الإدخال والاستعلام والحماية والتحديث." },
+      { t:"ما هو SQL", body:"لغة الاستعلام البنيوية (SQL) هي اللغة القياسية للتعامل مع قواعد البيانات العلائقية مثل إنشاء الجداول (CREATE) والاستعلام (SELECT) والإضافة والتعديل والحذف." },
+      { t:"ماذا سأتعلم من هذه الدورة؟", body:"ستتعلم تصميم الجداول والمفاتيح الأساسية والأجنبية، وكتابة استعلامات SELECT وJOIN، وتطبيق مبادئ التسوية (Normalization)." }
+    ]
+  },
+  {
+    id:"s2",
+    tab:"البرمجة وهياكل البيانات",
+    title:"تعلم البرمجة وهياكل البيانات",
+    lessons:[
+      { t:"مفهوم الخوارزمية والبرنامج", body:"الخوارزمية هي سلسلة خطوات واضحة ومحددة لحل مشكلة، والبرنامج هو تنفيذ هذه الخوارزمية بلغة برمجة يفهمها الحاسوب." },
+      { t:"المصفوفات والقوائم", body:"تخزن المصفوفة عناصر متتالية في الذاكرة للوصول السريع بالفهرس، بينما توفر القوائم مرونة أكبر في الإضافة والحذف." },
+      { t:"المكدس والطابور", body:"المكدس (Stack) يعمل بمبدأ LIFO (الداخل أخيراً يخرج أولاً)، بينما الطابور (Queue) يعمل بمبدأ FIFO (الداخل أولاً يخرج أولاً)." },
+      { t:"الأشجار والبحث والترتيب", body:"تُستخدم الأشجار لتمثيل البيانات الهرمية، وتُقاس كفاءة خوارزميات البحث والترتيب بزمن التنفيذ (Big-O)." }
+    ]
+  },
+  {
+    id:"s3",
+    tab:"الخوارزميات",
+    title:"تعلم تحليل وتصميم الخوارزميات",
+    lessons:[
+      { t:"تحليل التعقيد الزمني والمكاني", body:"يساعد تحليل الخوارزميات على مقارنة الحلول من حيث استهلاك الوقت والذاكرة عند زيادة حجم المدخلات." },
+      { t:"التقسيم والفتح (Divide & Conquer)", body:"تقسيم المسألة الكبيرة إلى مسائل فرعية أصغر، وحل كل منها ثم دمج النتائج كما في الترتيب بالدمج (Merge Sort)." },
+      { t:"البرمجة الديناميكية", body:"تخزين نتائج المسائل الفرعية المتكررة لتجنب إعادة حسابها وتحسين الأداء بشكل كبير." },
+      { t:"الخوارزميات الجشعة والرسوم البيانية", body:"اتخاذ أفضل خيار محلي في كل خطوة عند ملاءمته، ودراسة أقصر المسارات في الرسوم البيانية (Graphs)." }
+    ]
+  },
+  {
+    id:"s4",
+    tab:"شبكات الحاسوب",
+    title:"تعلم شبكات الحاسوب",
+    lessons:[
+      { t:"أساسيات الشبكات وأنواعها", body:"ربط الأجهزة لتبادل البيانات والموارد عبر الشبكات المحلية (LAN) والواسعة (WAN)." },
+      { t:"نموذج OSI ونموذج TCP/IP", body:"تقسيم عملية الاتصال إلى طبقات واضحة تبدأ من الطبقة الفيزيائية وتصل إلى طبقة التطبيقات." },
+      { t:"عناوين IP والتوجيه", body:"تحديد هوية الأجهزة على الشبكة وتوجيه الحزم عبر المسارات المناسبة للوصول إلى الوجهة." },
+      { t:"بروتوكولات النقل TCP وUDP", body:"يضمن TCP وصول البيانات بالترتيب وبدون فقدان، بينما يركز UDP على السرعة وانخفاض التأخير." }
+    ]
+  },
+  {
+    id:"s5",
+    tab:"نظم التشغيل",
+    title:"تعلم نظم التشغيل",
+    lessons:[
+      { t:"دور نظام التشغيل", body:"يعمل نظام التشغيل كوسيط بين العتاد والبرمجيات لإدارة المعالج والذاكرة والملفات والأجهزة الطرفية." },
+      { t:"العمليات والخيوط (Processes & Threads)", body:"العملية برنامج قيد التنفيذ، والخيوط وحدات تنفيذ خفيفة داخل العملية لرفع التوازي والاستجابة." },
+      { t:"إدارة الذاكرة والصفحات", body:"تنظيم توزيع الذاكرة العشوائية والذاكرة الافتراضية ومنع تداخل البرامج." },
+      { t:"التزامن والجمود (Deadlock)", body:"تنسيق الوصول للموارد المشتركة وتفادي حالة توقف العمليات بانتظار بعضها إلى الأبد." }
+    ]
+  },
+  {
+    id:"s6",
+    tab:"هندسة البرمجيات",
+    title:"تعلم هندسة البرمجيات",
+    lessons:[
+      { t:"دورة حياة تطوير البرمجيات (SDLC)", body:"مراحل بناء النظام من جمع المتطلبات والتحليل والتصميم والبرمجة إلى الاختبار والصيانة." },
+      { t:"جمع المتطلبات ونمذجة النظام", body:"تحديد المتطلبات الوظيفية وغير الوظيفية وتوثيقها بدقة قبل كتابة الكود." },
+      { t:"معمارية البرمجيات وأنماط التصميم", body:"هيكلة النظام إلى وحدات مستقلة قابلة للتوسع والصيانة." },
+      { t:"الاختبار وضمان الجودة", body:"التحقق من خلو النظام من الأخطاء ومطابقته للمتطلبات قبل وبعد الإطلاق." }
+    ]
+  },
+  {
+    id:"s7",
+    tab:"الذكاء الاصطناعي",
+    title:"تعلم الذكاء الاصطناعي وتعلم الآلة",
+    lessons:[
+      { t:"مقدمة في الذكاء الاصطناعي", body:"بناء أنظمة قادرة على الاستدلال والبحث واتخاذ القرار وحل المشكلات المعقدة." },
+      { t:"خوارزميات البحث وحل المشكلات", body:"استكشاف فضاء الحلول للوصول إلى حالة الهدف بأقل تكلفة ممكنة." },
+      { t:"التعلم الموجه وغير الموجه", body:"تدريب النماذج على بيانات موسومة للتنبؤ والتصنيف، أو اكتشاف الأنماط في البيانات غير الموسومة." },
+      { t:"تقييم النماذج والشبكات العصبونية", body:"قياس دقة النموذج على بيانات اختبار وتجنب فرط التخصيص (Overfitting)." }
+    ]
+  }
 ];
 
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp), db = getFirestore(fbApp);
 
 let students=[],admins=[],announcements=[],resources=[],messages=[],groups=[],groupPosts=[],groupReplies=[],cfg={capacity:15},me=null,view="auth",tab="login",studentPage="posts",note=null,unsubs=[],busy=false,searchQ="";
+let activeSubjectId="s1", activeLessonIdx=0;
 let selectedGroupId="all";
 let showAllRes=false,showAllAnn=false,showAllGrp=false;
 let failCount=0,lockUntil=0;
@@ -487,18 +624,18 @@ function authHero(){
   </div>`;
 }
 
-function topNav(title, showStudentNav=false){
+function topNav(title, showStudentNav=false, hideStudentIdentity=false){
   return `<header class="topnav">
     <div class="topnav-in">
       <div class="brand">
         <div class="logo-badge">${logoImg()}</div>
         <div>
-          <div class="brand-title">${esc(title)}</div>
+          <div class="brand-title">${hideStudentIdentity ? "المنصة الدراسية" : esc(title)}</div>
           <div class="brand-sub">كلية الإمام الهادي • علوم الحاسوب</div>
         </div>
       </div>
       <div class="search-wrap">
-        <input id="qInput" value="${esc(searchQ)}" placeholder="بحث في المنشورات والمواد…">
+        <input id="qInput" value="${esc(searchQ)}" placeholder="بحث في المحتوى والدروس…">
       </div>
       <div class="top-actions">
         ${showStudentNav ? `
@@ -558,7 +695,7 @@ function rChoose(){
       <div class="choice-card" data-act="go_subjects">
         <div class="choice-icon">📚</div>
         <div class="choice-title">المنصة الدراسية</div>
-        <div class="choice-desc">الاطلاع على المواد الدراسية السبع ومصادرها</div>
+        <div class="choice-desc">الاطلاع على المواد الدراسية السبع ودروسها</div>
       </div>
     </div>
     <button class="btn ghost full" data-act="out">خروج</button>
@@ -567,49 +704,67 @@ function rChoose(){
 
 function rSubjectsPage(){
   const q=searchQ.trim().toLowerCase();
-  const filteredSubjects = q
-    ? SEVEN_SUBJECTS.filter(s => `${s.name} ${s.desc}`.toLowerCase().includes(q))
-    : SEVEN_SUBJECTS;
+  const subj = SEVEN_SUBJECTS.find(s => s.id === activeSubjectId) || SEVEN_SUBJECTS[0];
 
-  const cardsHtml = filteredSubjects.length
-    ? filteredSubjects.map((s, idx) => {
-        const matchedRes = resources.filter(r =>
-          `${r.title||""} ${r.desc||""} ${r.level||""}`.toLowerCase().includes(s.name.split(":")[1]?.trim().toLowerCase() || s.name.toLowerCase())
-        );
-        const linksHtml = matchedRes.length
-          ? matchedRes.map(r => r.url
-              ? `<a class="btn soft" href="${esc(r.url)}" target="_blank" rel="noopener">فتح: ${esc(r.title)}</a>`
-              : `<span class="feed-meta">• ${esc(r.title)}</span>`
-            ).join("")
-          : `<span class="feed-meta">لا توجد روابط مرفقة لهذه المادة بعد.</span>`;
+  const baseLessons = [...subj.lessons];
+  const extraRes = resources.filter(r =>
+    `${r.title||""} ${r.desc||""} ${r.level||""}`.toLowerCase().includes(subj.tab.toLowerCase())
+  );
+  extraRes.forEach(r => {
+    baseLessons.push({
+      t: r.title || "مصدر إضافي",
+      body: r.desc || "ملخص أو مصدر مضاف للمادة.",
+      url: r.url || ""
+    });
+  });
 
-        return `<div class="subject-card">
-          <div>
-            <div class="feed-head">
-              <span class="pill">مادة ${idx + 1} من 7</span>
-            </div>
-            <div class="feed-title" style="margin-top:6px">${esc(s.name)}</div>
-            <div class="muted" style="margin:6px 0 0">${esc(s.desc)}</div>
-          </div>
-          <div class="acts">${linksHtml}</div>
-        </div>`;
-      }).join("")
-    : `<div class="empty">لا توجد مواد مطابقة للبحث.</div>`;
+  const lessons = q
+    ? baseLessons.filter(l => `${l.t} ${l.body}`.toLowerCase().includes(q))
+    : baseLessons;
+
+  const safeIdx = lessons.length ? Math.min(activeLessonIdx, lessons.length - 1) : 0;
+  const currentLesson = lessons[safeIdx] || { t:"لا توجد دروس مطابقة", body:"جرّب كلمة بحث أخرى أو عد إلى بداية الدورة.", url:"" };
+
+  const tabsHtml = SEVEN_SUBJECTS.map(s =>
+    `<button class="course-tab ${s.id === subj.id ? "active" : ""}" data-act="pick_subj" data-id="${esc(s.id)}">${esc(s.tab)}</button>`
+  ).join("");
+
+  const listHtml = lessons.map((l, idx) =>
+    `<div class="lesson-link-item ${idx === safeIdx ? "active" : ""}" data-act="pick_lesson" data-idx="${idx}">
+      <span>${esc(l.t)}</span>
+      <span>‹</span>
+    </div>`
+  ).join("");
 
   return `<section class="box">
-    <div class="feed-head" style="margin-bottom:12px">
-      <div>
-        <h2 style="margin:0">📚 المنصة الدراسية — المواد السبعة</h2>
-        <div class="feed-meta">عرض المواد الدراسية السبع والمصادر المرتبطة بها</div>
-      </div>
-      <button class="btn ghost" data-act="go_posts">الذهاب لمكان المنشورات</button>
+    <div class="course-tabs">${tabsHtml}</div>
+
+    <div class="course-nav-bar">
+      <button class="course-btn-navy" data-act="go_posts">‹ الرئيسية</button>
+      <button class="course-btn-navy" data-act="next_lesson" ${safeIdx >= lessons.length - 1 ? "disabled" : ""}>الدرس التالي ‹</button>
     </div>
-    <div class="subjects-grid">${cardsHtml}</div>
+
+    <h2 style="margin:12px 0 6px;font-size:1.3rem">${esc(subj.title)}</h2>
+    <div class="lesson-panel">
+      <div class="feed-meta" style="margin-bottom:4px">الدرس ${safeIdx + 1} من ${lessons.length || 1}</div>
+      <h3 style="margin:0 0 8px;font-size:1.05rem;color:var(--ink)">${esc(currentLesson.t)}</h3>
+      <div style="white-space:pre-line;font-size:.94rem;color:var(--ink)">${esc(currentLesson.body)}</div>
+      ${currentLesson.url ? `<div style="margin-top:12px"><a class="btn soft" href="${esc(currentLesson.url)}" target="_blank" rel="noopener">فتح الملف / المصدر</a></div>` : ""}
+    </div>
+
+    <div class="lesson-list-box">
+      ${listHtml || `<div class="empty">لا توجد دروس مطابقة للبحث.</div>`}
+    </div>
   </section>`;
 }
 
 function rHome(){
   const q=searchQ.trim().toLowerCase();
+
+  if(studentPage === "subjects"){
+    app.innerHTML = topNav("المنصة الدراسية", true, true) + `<main>${noteHtml()}${rSubjectsPage()}</main>`;
+    return;
+  }
 
   let filteredPosts = selectedGroupId === "all" ? groupPosts : groupPosts.filter(p => p.groupId === selectedGroupId);
   if(q) filteredPosts = filteredPosts.filter(p => `${p.authorName||""} ${p.body||""} ${p.groupName||""}`.toLowerCase().includes(q));
@@ -673,19 +828,19 @@ function rHome(){
         </div>
       </div>
 
-      <a class="rail-item ${studentPage==="posts"?"active":""}" data-act="go_posts">
+      <a class="rail-item active" data-act="go_posts">
         <span>💬 مكان المنشورات</span>
       </a>
-      <a class="rail-item ${studentPage==="subjects"?"active":""}" data-act="go_subjects">
+      <a class="rail-item" data-act="go_subjects">
         <span>📚 المنصة الدراسية (7 مواد)</span>
         <span class="pill">7</span>
       </a>
 
       <div class="rail-sec-title">👥 القروبات والمجتمعات</div>
-      <a class="rail-item ${studentPage==="posts" && selectedGroupId==="all"?"active":""}" data-act="selectgrp" data-id="all">
+      <a class="rail-item ${selectedGroupId==="all"?"active":""}" data-act="selectgrp" data-id="all">
         <span>🌐 منشورات كل القروبات</span>
       </a>
-      ${visGrp.map(g => `<a class="rail-item ${studentPage==="posts" && selectedGroupId===g.id?"active":""}" data-act="selectgrp" data-id="${esc(g.id)}">
+      ${visGrp.map(g => `<a class="rail-item ${selectedGroupId===g.id?"active":""}" data-act="selectgrp" data-id="${esc(g.id)}">
         <span>📌 ${esc(g.name)}</span>
       </a>`).join("")}
       ${groups.length>3?`<button class="see-more-btn" data-act="toggrp">${showAllGrp?"عرض أقل ^":"عرض المزيد v"}</button>`:""}
@@ -703,9 +858,10 @@ function rHome(){
   const activeGroupObj = groups.find(g => g.id === selectedGroupId);
   const activeGroupName = selectedGroupId === "all" ? "جميع القروبات" : (activeGroupObj ? activeGroupObj.name : "القروب");
 
-  const mainContentHtml = studentPage === "subjects"
-    ? rSubjectsPage()
-    : `
+  app.innerHTML=topNav(`أهلاً ${me.name}`, true, false)+`<div class="home-layout">
+    ${leftSideHtml}
+    <main class="main-feed">
+      ${noteHtml()}
       <section class="box">
         <h2>✍️ شارك سؤالاً أو منشوراً في (${esc(activeGroupName)})</h2>
         ${selectedGroupId === "all" ? `
@@ -732,13 +888,6 @@ function rHome(){
         <label>الرسالة</label><textarea id="mBody" placeholder="اكتب رسالتك بوضوح…"></textarea>
         <button class="btn full" data-act="sendmsg">إرسال الرسالة</button>
       </section>
-    `;
-
-  app.innerHTML=topNav(`أهلاً ${me.name}`, true)+`<div class="home-layout">
-    ${leftSideHtml}
-    <main class="main-feed">
-      ${noteHtml()}
-      ${mainContentHtml}
     </main>
   </div>`;
 }
@@ -767,7 +916,7 @@ function rAdmin(){
     ?messages.map(m=>`<div class="row"><div><b>${esc(m.title)}</b><div class="feed-meta">من: ${esc(m.senderName)} (${esc(m.senderNum)}) • ${fmtDate(m.at)}</div><div class="muted" style="margin:4px 0 0">${esc(m.body)}</div></div><div class="acts"><button class="btn ghost" data-act="delmsg" data-id="${esc(m.id)}">حذف</button></div></div>`).join("")
     :'<div class="empty">لا توجد رسائل من الطلاب</div>';
 
-  app.innerHTML=topNav(`لوحة المسؤول (${me.name})`, false)+`<div class="admin-layout">
+  app.innerHTML=topNav(`لوحة المسؤول (${me.name})`, false, false)+`<div class="admin-layout">
     <aside>
       <div class="box">
         <h2>📊 ملخص النظام</h2>
@@ -874,7 +1023,10 @@ app.addEventListener("click",async ev=>{
   try{
     if(a==="go_choose"){view="choose";render()}
     else if(a==="go_posts"){studentPage="posts";view="home";startStudentSubs();render()}
-    else if(a==="go_subjects"){studentPage="subjects";view="home";startStudentSubs();render()}
+    else if(a==="go_subjects"){studentPage="subjects";activeLessonIdx=0;view="home";startStudentSubs();render()}
+    else if(a==="pick_subj"){activeSubjectId=el.dataset.id;activeLessonIdx=0;render()}
+    else if(a==="pick_lesson"){activeLessonIdx=parseInt(el.dataset.idx,10)||0;render()}
+    else if(a==="next_lesson"){activeLessonIdx=(activeLessonIdx||0)+1;render()}
     else if(a==="selectgrp"){studentPage="posts";selectedGroupId=el.dataset.id;view="home";startStudentSubs();render()}
     else if(a==="togres"){showAllRes=!showAllRes;render()}
     else if(a==="togann"){showAllAnn=!showAllAnn;render()}
