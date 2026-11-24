@@ -8,31 +8,32 @@
 :root{
   box-sizing:border-box;
   color-scheme:light;
-  --page:#e9eff8;
+  --page:#eef3fa;
   --surface:#ffffff;
-  --soft:#f5f8fc;
-  --ink:#0f234a;
-  --muted:#526994;
-  --line:#dce4f2;
-  --blue:#1877f2;
-  --blue-dark:#125ec4;
-  --blue-soft:#e7f1ff;
-  --navy:#0c3b73;
-  --ok:#146c43;
-  --ok-bg:#e9f7ef;
-  --no:#b3261e;
-  --no-bg:#fdecec;
-  --wr:#7a4f00;
-  --wr-bg:#fff6e0;
-  --shadow:0 2px 10px rgba(15,35,74,.06);
+  --soft:#f6f9fd;
+  --ink:#0d2240;
+  --muted:#566c8d;
+  --line:#dce5f2;
+  --blue:#1d6fd8;
+  --blue-dark:#1557b0;
+  --blue-soft:#e8f1fd;
+  --navy:#0f3968;
+  --accent:#0ea5e9;
+  --ok:#157347;
+  --ok-bg:#e8f6ef;
+  --no:#b42318;
+  --no-bg:#fef3f2;
+  --wr:#854d0e;
+  --wr-bg:#fef9c3;
+  --shadow:0 4px 16px rgba(13,34,64,.05);
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
 body{
-  background:var(--page);
+  background:radial-gradient(circle at top right, #e3eefc 0%, var(--page) 48%, #e8eef7 100%);
   color:var(--ink);
   font-family:"Segoe UI",Tahoma,Arial,sans-serif;
-  line-height:1.55;
+  line-height:1.6;
   overflow-x:hidden;
 }
 
@@ -40,14 +41,15 @@ body{
   position:sticky;
   top:0;
   z-index:30;
-  background:var(--surface);
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(8px);
   border-bottom:1px solid var(--line);
-  box-shadow:0 2px 8px rgba(15,35,74,.05);
+  box-shadow:0 2px 10px rgba(13,34,64,.04);
 }
 .topnav-in{
   max-width:1280px;
   margin:0 auto;
-  padding:8px 16px;
+  padding:9px 16px;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -57,9 +59,9 @@ body{
 .logo-badge{
   width:42px;
   height:42px;
-  border-radius:50%;
+  border-radius:12px;
   background:var(--surface);
-  border:2px solid var(--blue);
+  border:1.5px solid var(--line);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -68,7 +70,7 @@ body{
 }
 .logo-badge img{width:100%;height:100%;object-fit:contain;padding:2px}
 .brand-title{
-  font-weight:700;
+  font-weight:800;
   font-size:.98rem;
   color:var(--ink);
   white-space:nowrap;
@@ -76,7 +78,7 @@ body{
   text-overflow:ellipsis;
 }
 .brand-sub{font-size:.75rem;color:var(--muted)}
-.search-wrap{flex:1;max-width:300px}
+.search-wrap{flex:1;max-width:310px}
 .search-wrap input{
   width:100%;
   border:1px solid var(--line);
@@ -103,17 +105,18 @@ body{
   background:var(--soft);
   border:1.5px solid var(--line);
   border-radius:14px;
-  padding:16px;
+  padding:18px 16px;
   text-align:center;
   cursor:pointer;
-  transition:.15s ease;
+  transition:.18s ease;
 }
 .choice-card:hover{
   border-color:var(--blue);
   background:var(--blue-soft);
+  transform:translateY(-2px);
 }
-.choice-icon{font-size:1.8rem;margin-bottom:6px}
-.choice-title{font-weight:800;font-size:1rem;color:var(--ink);margin-bottom:4px}
+.choice-icon{font-size:1.85rem;margin-bottom:6px}
+.choice-title{font-weight:800;font-size:1.02rem;color:var(--ink);margin-bottom:4px}
 .choice-desc{font-size:.84rem;color:var(--muted)}
 
 .home-layout{
@@ -139,6 +142,7 @@ body{
 }
 @media (max-width:1024px){.admin-layout{grid-template-columns:1fr}}
 
+/* واجهة المنصة الدراسية بأسلوب Harmash */
 .course-tabs{
   display:flex;
   gap:6px;
@@ -152,7 +156,7 @@ body{
   background:var(--soft);
   color:var(--ink);
   border-radius:8px;
-  padding:8px 12px;
+  padding:8px 13px;
   font:inherit;
   font-size:.84rem;
   font-weight:700;
@@ -192,7 +196,7 @@ body{
   background:var(--soft);
   border:1px solid var(--line);
   border-radius:12px;
-  padding:14px;
+  padding:16px;
   margin-top:10px;
 }
 .lesson-list-box{
@@ -221,8 +225,8 @@ body{
 .box{
   background:var(--surface);
   border:1px solid var(--line);
-  border-radius:14px;
-  padding:16px;
+  border-radius:16px;
+  padding:18px;
   margin-bottom:14px;
   box-shadow:var(--shadow);
 }
@@ -231,9 +235,9 @@ body{
   width:84px;
   height:84px;
   margin:0 auto 8px;
-  border-radius:50%;
+  border-radius:22px;
   background:var(--surface);
-  border:2px solid var(--blue);
+  border:1.5px solid var(--line);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -241,8 +245,8 @@ body{
   box-shadow:var(--shadow);
 }
 .hero-auth .big-logo img{width:100%;height:100%;object-fit:contain;padding:4px}
-h1{margin:0;font-size:1.3rem;color:var(--ink)}
-h2{margin:0 0 10px;font-size:1.05rem;color:var(--ink)}
+h1{margin:0;font-size:1.32rem;color:var(--ink)}
+h2{margin:0 0 10px;font-size:1.06rem;color:var(--ink)}
 h2.center{text-align:center;font-size:1.2rem;margin-bottom:8px}
 .muted{color:var(--muted);font-size:.88rem;margin:4px 0 10px}
 .code-line{
@@ -261,7 +265,7 @@ h2.center{text-align:center;font-size:1.2rem;margin-bottom:8px}
   animation:blink 1s steps(1) infinite;
 }
 
-label{display:block;font-size:.84rem;color:var(--muted);margin:12px 0 4px;font-weight:600}
+label{display:block;font-size:.84rem;color:var(--muted);margin:12px 0 4px;font-weight:700}
 input,select,textarea{
   width:100%;
   border:1px solid var(--line);
@@ -283,7 +287,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);ba
   padding:9px 14px;
   font:inherit;
   font-weight:700;
-  font-size:.9rem;
+  font-size:.89rem;
   cursor:pointer;
   background:var(--blue);
   color:#fff;
@@ -590,9 +594,9 @@ function rAuth(){
 }
 
 function rWait(){
-  const st=me.status;
+  const st=me?.status;
   const m=st==="approved"?["تمت الموافقة على طلبك! سجّل الدخول الآن.","good"]:st==="rejected"?["تم رفض أو إيقاف حسابك من المسؤول. يمكنك التواصل عبر الإدارة.","err"]:["تم إرسال طلبك إلى المسؤول، بانتظار الموافقة…","warn"];
-  app.innerHTML=authHero()+`<div class="box"><h2>مرحباً ${esc(me.name)}</h2><div class="note ${m[1]}" style="margin-top:0">${m[0]}</div><button class="btn ghost full" data-act="out">العودة لتسجيل الدخول</button></div>`;
+  app.innerHTML=authHero()+`<div class="box"><h2>مرحباً ${esc(me?.name||"")}</h2><div class="note ${m[1]}" style="margin-top:0">${m[0]}</div><button class="btn ghost full" data-act="out">العودة لتسجيل الدخول</button></div>`;
 }
 
 function rWelcome(){
@@ -946,12 +950,30 @@ function rAdmin(){
 
 function startStudentSubs(){
   clearSubs();
+  if(me?.uid){
+    unsubs.push(onSnapshot(doc(db,"students",me.uid),async s=>{
+      if(!s.exists() || s.data().status!=="approved"){
+        clearSubs();
+        await signOut(auth).catch(()=>{});
+        me=null;studentPage="posts";view="auth";tab="login";
+        setNote("تم إيقاف أو إنهاء صلاحية الجلسة، يرجى مراجعة الإدارة.","err");
+        render();
+      }
+    },()=>{}));
+  }
   unsubs.push(onSnapshot(collection(db,"announcements"),s=>{announcements=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"resources"),s=>{resources=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"groups"),s=>{groups=s.docs.map(d=>({...d.data(),id:d.id}));if(view==="home")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"group_posts"),s=>{groupPosts=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"group_replies"),s=>{groupReplies=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));if(view==="home")render()},()=>{}));
-  unsubs.push(onSnapshot(collection(db,"course_subjects"),s=>{courseSubjects=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));if(!activeSubjectId&&courseSubjects.length)activeSubjectId=courseSubjects[0].id;if(view==="home")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"course_subjects"),s=>{
+    courseSubjects=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));
+    if(!courseSubjects.some(x=>x.id===activeSubjectId)){
+      activeSubjectId=courseSubjects.length?courseSubjects[0].id:"";
+      activeLessonIdx=0;
+    }
+    if(view==="home")render();
+  },()=>{}));
   unsubs.push(onSnapshot(collection(db,"course_lessons"),s=>{courseLessons=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));if(view==="home")render()},()=>{}));
 }
 
