@@ -283,6 +283,44 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);ba
 .feed-title{font-weight:700;color:var(--ink)}
 .feed-meta{font-size:.78rem;color:var(--muted)}
 
+/* الردود على المنشورات */
+.replies-box{
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid var(--line);
+}
+.reply-item{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:8px 10px;
+  margin-bottom:6px;
+  font-size:.86rem;
+}
+.reply-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-bottom:2px;
+}
+.reply-form{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+.reply-form input{
+  flex:1;
+  padding:7px 11px;
+  font-size:.86rem;
+  background:var(--surface);
+}
+.reply-form .btn{
+  padding:7px 12px;
+  font-size:.84rem;
+  white-space:nowrap;
+}
+
 .stats-row{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -350,7 +388,7 @@ const LOGO_SRC = "./logo.png";
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp), db = getFirestore(fbApp);
 
-let students=[],admins=[],announcements=[],resources=[],messages=[],groups=[],groupPosts=[],cfg={capacity:15},me=null,view="auth",tab="login",note=null,unsubs=[],busy=false,searchQ="";
+let students=[],admins=[],announcements=[],resources=[],messages=[],groups=[],groupPosts=[],groupReplies=[],cfg={capacity:15},me=null,view="auth",tab="login",note=null,unsubs=[],busy=false,searchQ="";
 let selectedGroupId="all";
 let showAllRes=false,showAllAnn=false,showAllGrp=false;
 let failCount=0,lockUntil=0;
@@ -456,8 +494,7 @@ function rWelcome(){
 
 function rHome(){
   const q=searchQ.trim().toLowerCase();
-  
-  // تصفية منشورات القروبات
+
   let filteredPosts = selectedGroupId === "all" ? groupPosts : groupPosts.filter(p => p.groupId === selectedGroupId);
   if(q) filteredPosts = filteredPosts.filter(p => `${p.authorName||""} ${p.body||""} ${p.groupName||""}`.toLowerCase().includes(q));
 
@@ -467,17 +504,39 @@ function rHome(){
   const initial=(me.name||"ط").trim().charAt(0).toUpperCase();
 
   const postsHtml = filteredPosts.length
-    ? filteredPosts.map(p => `<div class="feed-card">
-        <div class="feed-head">
-          <div>
-            <span class="feed-title">${esc(p.authorName)}</span>
-            <span class="pill" style="margin-inline-start:6px">${esc(p.groupName||"قروب عام")}</span>
+    ? filteredPosts.map(p => {
+        const replies = groupReplies.filter(r => r.postId === p.id);
+        const repliesHtml = replies.map(r => `
+          <div class="reply-item">
+            <div class="reply-head">
+              <b>${esc(r.authorName)}</b>
+              <span class="feed-meta">${fmtDate(r.at)}</span>
+            </div>
+            <div>${esc(r.body)}</div>
+            ${r.authorUid === me.uid ? `<div style="margin-top:4px"><button class="btn no" style="padding:2px 7px;font-size:.72rem" data-act="delreply" data-id="${esc(r.id)}">حذف الرد</button></div>` : ""}
           </div>
-          <span class="feed-meta">${fmtDate(p.at)}</span>
-        </div>
-        <div class="muted" style="margin:8px 0;white-space:pre-line">${esc(p.body)}</div>
-        ${p.authorUid === me.uid ? `<div class="acts"><button class="btn no" style="padding:4px 8px;font-size:.76rem" data-act="delpost" data-id="${esc(p.id)}">حذف منشورك</button></div>` : ""}
-      </div>`).join("")
+        `).join("");
+
+        return `<div class="feed-card">
+          <div class="feed-head">
+            <div>
+              <span class="feed-title">${esc(p.authorName)}</span>
+              <span class="pill" style="margin-inline-start:6px">${esc(p.groupName||"قروب عام")}</span>
+            </div>
+            <span class="feed-meta">${fmtDate(p.at)}</span>
+          </div>
+          <div class="muted" style="margin:8px 0;white-space:pre-line">${esc(p.body)}</div>
+          ${p.authorUid === me.uid ? `<div class="acts"><button class="btn no" style="padding:4px 8px;font-size:.76rem" data-act="delpost" data-id="${esc(p.id)}">حذف منشورك</button></div>` : ""}
+          <div class="replies-box">
+            <div class="feed-meta" style="margin-bottom:6px">💬 الردود (${replies.length})</div>
+            ${repliesHtml}
+            <div class="reply-form">
+              <input id="rep_${esc(p.id)}" placeholder="اكتب رداً أو تعليقاً…" autocomplete="off">
+              <button class="btn soft" data-act="addreply" data-postid="${esc(p.id)}">رد</button>
+            </div>
+          </div>
+        </div>`;
+      }).join("")
     : '<div class="empty">لا توجد منشورات في هذا القروب حالياً. كن أول من ينشر!</div>';
 
   const annCards=announcements.length
@@ -524,8 +583,7 @@ function rHome(){
     ${leftSideHtml}
     <main class="main-feed">
       ${noteHtml()}
-      
-      <!-- صندوق نشر بوست في القروب -->
+
       <section class="box">
         <h2>✍️ شارك سؤالاً أو منشوراً في (${esc(activeGroupName)})</h2>
         ${selectedGroupId === "all" ? `
@@ -539,7 +597,6 @@ function rHome(){
         <button class="btn full" data-act="addpost">نشر في القروب</button>
       </section>
 
-      <!-- تغذية منشورات القروبات -->
       <section class="box">
         <h2>👥 منشورات ومناقشات (${esc(activeGroupName)})</h2>
         ${postsHtml}
@@ -601,8 +658,7 @@ function rAdmin(){
       ${noteHtml()}
       <section id="adm-req" class="box"><h2>📨 طلبات التسجيل</h2>${rows(pend,s=>ok(s)+no(s,"منع"))}</section>
       <section class="box"><h2>✅ المقبولون</h2>${rows(appr,s=>no(s,"إيقاف"))}</section>
-      
-      <!-- إنشاء قروب جديد -->
+
       <section id="adm-grp" class="box">
         <h2>➕ إنشاء قروب جديد للطلاب</h2>
         <label>اسم القروب</label><input id="gName" placeholder="مثال: قروب الخوارزميات، قروب دفعة 2026">
@@ -642,6 +698,7 @@ function startStudentSubs(){
   unsubs.push(onSnapshot(collection(db,"resources"),s=>{resources=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"groups"),s=>{groups=s.docs.map(d=>({...d.data(),id:d.id}));if(view==="home")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"group_posts"),s=>{groupPosts=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"group_replies"),s=>{groupReplies=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));if(view==="home")render()},()=>{}));
 }
 
 function startAdminSubs(){
@@ -760,7 +817,7 @@ app.addEventListener("click",async ev=>{
       if(!body){setNote("اكتب نص المنشور قبل النشر.");return render()}
       const grpObj = groups.find(g => g.id === targetGId);
       const gName = grpObj ? grpObj.name : "القروب العام";
-      
+
       await addDoc(collection(db,"group_posts"),{
         groupId: targetGId,
         groupName: gName,
@@ -775,6 +832,24 @@ app.addEventListener("click",async ev=>{
     else if(a==="delpost"){
       await deleteDoc(doc(db,"group_posts",el.dataset.id));
       setNote("تم حذف المنشور.","good");render();
+    }
+    else if(a==="addreply"){
+      const postId=el.dataset.postid;
+      const inp=document.getElementById("rep_"+postId);
+      const body=inp?inp.value.trim():"";
+      if(!body){setNote("اكتب نص الرد أولاً.");return render()}
+      await addDoc(collection(db,"group_replies"),{
+        postId,
+        authorUid:me.uid,
+        authorName:me.name,
+        body,
+        at:Date.now()
+      });
+      setNote("تم إضافة ردك.","good");render();
+    }
+    else if(a==="delreply"){
+      await deleteDoc(doc(db,"group_replies",el.dataset.id));
+      setNote("تم حذف الرد.","good");render();
     }
     else if(a==="addgrp"){
       const name=document.getElementById("gName").value.trim(),desc=document.getElementById("gDesc").value.trim();
