@@ -35,7 +35,7 @@ body{
   overflow-x:hidden;
 }
 
-/* شريط علوي ثابت بأسلوب المنصات الاجتماعية */
+/* شريط علوي ثابت */
 .topnav{
   position:sticky;
   top:0;
@@ -85,14 +85,8 @@ body{
   overflow:hidden;
   text-overflow:ellipsis;
 }
-.brand-sub{
-  font-size:.75rem;
-  color:var(--muted);
-}
-.search-wrap{
-  flex:1;
-  max-width:360px;
-}
+.brand-sub{font-size:.75rem;color:var(--muted)}
+.search-wrap{flex:1;max-width:360px}
 .search-wrap input{
   width:100%;
   border:1px solid var(--line);
@@ -108,38 +102,38 @@ body{
   border-color:var(--blue);
   background:var(--surface);
 }
-.top-actions{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
+.top-actions{display:flex;align-items:center;gap:8px}
 
 /* حاويات العرض */
-.auth-wrap{
-  max-width:460px;
-  margin:28px auto;
-  padding:0 14px 40px;
+.auth-wrap{max-width:460px;margin:28px auto;padding:0 14px 40px}
+.dash-wrap{max-width:1280px;margin:16px auto;padding:0 14px 44px}
+
+/* تخطيط الأعمدة مع جعل العمود اليساري على الشمال في RTL */
+.home-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 310px;
+  gap:16px;
+  align-items:start;
 }
-.dash-wrap{
-  max-width:1280px;
-  margin:16px auto;
-  padding:0 14px 44px;
+.left-rail{order:2}
+.main-feed{order:1}
+@media (max-width:920px){
+  .home-layout{grid-template-columns:1fr}
+  .left-rail{order:1}
+  .main-feed{order:2}
+}
+@media (max-width:760px){
+  .search-wrap{display:none}
 }
 
-/* تخطيط الأعمدة الثلاثة */
-.three-col{
+.admin-layout{
   display:grid;
   grid-template-columns:270px minmax(0,1fr) 290px;
   gap:16px;
   align-items:start;
 }
 @media (max-width:1024px){
-  .three-col{grid-template-columns:230px minmax(0,1fr)}
-  .right-rail{grid-column:1 / -1}
-}
-@media (max-width:760px){
-  .three-col{grid-template-columns:1fr}
-  .search-wrap{display:none}
+  .admin-layout{grid-template-columns:1fr}
 }
 
 /* البطاقات */
@@ -151,10 +145,7 @@ body{
   margin-bottom:14px;
   box-shadow:var(--shadow);
 }
-.hero-auth{
-  text-align:center;
-  margin-bottom:16px;
-}
+.hero-auth{text-align:center;margin-bottom:16px}
 .hero-auth .big-logo{
   width:84px;
   height:84px;
@@ -168,12 +159,7 @@ body{
   overflow:hidden;
   box-shadow:var(--shadow);
 }
-.hero-auth .big-logo img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  padding:4px;
-}
+.hero-auth .big-logo img{width:100%;height:100%;object-fit:contain;padding:4px}
 h1{margin:0;font-size:1.3rem;color:var(--ink)}
 h2{margin:0 0 10px;font-size:1.05rem;color:var(--ink)}
 h2.center{text-align:center;font-size:1.2rem;margin-bottom:8px}
@@ -247,29 +233,74 @@ input:focus,select:focus,textarea:focus{
 }
 .btn:hover:not(:disabled){background:var(--blue-dark)}
 .btn:disabled{opacity:.55;cursor:not-allowed}
-.btn.full{width:100%;margin-top:16px}
+.btn.full{width:100%;margin-top:14px}
 .btn.soft{background:var(--blue-soft);color:var(--blue)}
 .btn.ghost{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
 .btn.ok{background:var(--ok);color:#fff}
 .btn.no{background:var(--no);color:#fff}
 
-.nav-item{
+/* عناصر القائمة الجانبية اليسرى بأسلوب الصورة */
+.profile-mini{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding-bottom:12px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:10px;
+}
+.avatar-circle{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:var(--blue-soft);
+  color:var(--blue);
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.rail-sec-title{
+  font-size:.74rem;
+  font-weight:800;
+  letter-spacing:.4px;
+  color:var(--muted);
+  margin:12px 0 6px;
+  text-transform:uppercase;
+}
+.rail-item{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:9px 12px;
+  gap:8px;
+  padding:8px 10px;
   border-radius:10px;
   color:var(--ink);
   text-decoration:none;
-  font-size:.9rem;
+  font-size:.88rem;
   font-weight:600;
   margin-bottom:4px;
+  background:transparent;
 }
-.nav-item:hover{background:var(--blue-soft);color:var(--blue)}
+.rail-item:hover{background:var(--soft);color:var(--blue)}
+.see-more-btn{
+  width:100%;
+  margin-top:6px;
+  padding:7px 10px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:var(--soft);
+  color:var(--ink);
+  font:inherit;
+  font-size:.84rem;
+  font-weight:700;
+  cursor:pointer;
+}
+.see-more-btn:hover{background:var(--blue-soft);color:var(--blue)}
 .pill{
   background:var(--blue-soft);
   color:var(--blue);
-  font-size:.76rem;
+  font-size:.74rem;
   padding:2px 8px;
   border-radius:999px;
   font-weight:700;
@@ -375,6 +406,7 @@ const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp), db = getFirestore(fbApp);
 
 let students=[],admins=[],announcements=[],resources=[],messages=[],cfg={capacity:15},me=null,view="auth",tab="login",note=null,unsubs=[],busy=false,searchQ="";
+let showAllRes=false,showAllAnn=false,showAllExp=false;
 let failCount=0,lockUntil=0;
 const app=document.getElementById("app");
 const esc=s=>{const d=document.createElement("div");d.textContent=String(s==null?"":s);return d.innerHTML};
@@ -434,7 +466,7 @@ function topNav(title){
         </div>
       </div>
       <div class="search-wrap">
-        <input id="qInput" value="${esc(searchQ)}" placeholder="بحث في الإعلانات والمصادر…">
+        <input id="qInput" value="${esc(searchQ)}" placeholder="بحث…">
       </div>
       <div class="top-actions">
         <button class="btn ghost" data-act="out">خروج</button>
@@ -481,6 +513,10 @@ function rHome(){
   const fAnn=q?announcements.filter(a=>`${a.title||""} ${a.body||""}`.toLowerCase().includes(q)):announcements;
   const fRes=q?resources.filter(r=>`${r.title||""} ${r.desc||""} ${r.level||""}`.toLowerCase().includes(q)):resources;
 
+  const visRes=showAllRes?resources:resources.slice(0,2);
+  const visAnn=showAllAnn?announcements:announcements.slice(0,2);
+  const initial=(me.name||"ط").trim().charAt(0).toUpperCase();
+
   const annCards=fAnn.length
     ?fAnn.map(a=>`<div class="feed-card"><div class="feed-head"><span class="feed-title">${esc(a.title)}</span><span class="feed-meta">${fmtDate(a.at)}</span></div><div class="muted" style="margin:0">${esc(a.body)}</div></div>`).join("")
     :'<div class="empty">لا توجد إعلانات مطابقة حالياً.</div>';
@@ -489,41 +525,45 @@ function rHome(){
     ?fRes.map(r=>`<div class="feed-card"><div class="feed-head"><span class="feed-title">${esc(r.title)}</span><span class="pill">${esc(r.level||"عام")}</span></div><div class="muted" style="margin:0 0 8px">${esc(r.desc||"")}</div>${r.url?`<a class="btn soft" href="${esc(r.url)}" target="_blank" rel="noopener">فتح المصدر</a>`:""}</div>`).join("")
     :'<div class="empty">لا توجد ملخصات أو مصادر مضافة بعد.</div>';
 
-  app.innerHTML=topNav(`أهلاً ${me.name}`)+`<div class="three-col">
-    <aside>
-      <div class="box">
-        <h2>👤 بيانات الطالب</h2>
-        <div style="font-weight:700;margin-bottom:4px">${esc(me.name)}</div>
-        <div class="feed-meta">الرقم الجامعي: ${esc(me.num)}</div>
-        <div class="feed-meta">المستوى: ${esc(me.level||"غير محدد")}</div>
-        ${me.lastLoginAt?`<div class="feed-meta" style="margin-top:4px">آخر دخول: ${fmtDate(me.lastLoginAt)}</div>`:""}
+  const leftSideHtml=`<aside class="left-rail">
+    <div class="box">
+      <div class="profile-mini">
+        <div class="avatar-circle">${esc(initial)}</div>
+        <div>
+          <div style="font-weight:700">${esc(me.name)}</div>
+          <div class="feed-meta">${esc(me.num)} • ${esc(me.level||"طالب")}</div>
+        </div>
       </div>
-      <div class="box">
-        <h2>🧭 أقسام المنصة</h2>
-        <a class="nav-item" href="#sec-ann"><span>📢 إعلانات القسم</span><span class="pill">${announcements.length}</span></a>
-        <a class="nav-item" href="#sec-res"><span>📚 ملخصات ومصادر</span><span class="pill">${resources.length}</span></a>
-        <a class="nav-item" href="#sec-msg"><span>✉️ إرسال اقتراح</span><span class="pill">تواصل</span></a>
-      </div>
-    </aside>
 
-    <main>
+      <div class="rail-sec-title">المصادر والمواد</div>
+      ${visRes.length?visRes.map(r=>`<a class="rail-item" href="#sec-res"><span>📚 ${esc(r.title)}</span><span class="pill">${esc(r.level||"عام")}</span></a>`).join(""):'<div class="feed-meta">لا توجد مواد بعد</div>'}
+      ${resources.length>2?`<button class="see-more-btn" data-act="togres">${showAllRes?"عرض أقل ^":"عرض المزيد v"}</button>`:""}
+
+      <div class="rail-sec-title">الإعلانات</div>
+      ${visAnn.length?visAnn.map(a=>`<a class="rail-item" href="#sec-ann"><span>📢 ${esc(a.title)}</span></a>`).join(""):'<div class="feed-meta">لا توجد إعلانات بعد</div>'}
+      ${announcements.length>2?`<button class="see-more-btn" data-act="togann">${showAllAnn?"عرض أقل ^":"عرض المزيد v"}</button>`:""}
+
+      <div class="rail-sec-title">استكشاف</div>
+      <a class="rail-item" href="#sec-msg"><span>✉️ إرسال اقتراح للمسؤول</span></a>
+      <a class="rail-item" href="#sec-res"><span>🗂️ كل الملخصات (${resources.length})</span></a>
+      ${showAllExp?`<div class="feed-meta" style="padding:6px 10px">• حالة الحساب: مقبول ومتعهد<br>• آخر دخول: ${me.lastLoginAt?fmtDate(me.lastLoginAt):"الآن"}</div>`:""}
+      <button class="see-more-btn" data-act="togexp">${showAllExp?"عرض أقل ^":"عرض المزيد v"}</button>
+    </div>
+  </aside>`;
+
+  app.innerHTML=topNav(`أهلاً ${me.name}`)+`<div class="home-layout">
+    ${leftSideHtml}
+    <main class="main-feed">
       ${noteHtml()}
       <section id="sec-ann" class="box"><h2>📢 إعلانات القسم</h2>${annCards}</section>
       <section id="sec-res" class="box"><h2>📚 ملخصات ومصادر المواد</h2>${resCards}</section>
-    </main>
-
-    <aside class="right-rail">
       <section id="sec-msg" class="box">
-        <h2>✉️ إرسال اقتراح أو ملاحظة</h2>
+        <h2>✉️ إرسال اقتراح أو ملاحظة للمسؤول</h2>
         <label>الموضوع</label><input id="mTitle" placeholder="مثال: طلب ملخص خوارزميات">
         <label>الرسالة</label><textarea id="mBody" placeholder="اكتب رسالتك بوضوح…"></textarea>
         <button class="btn full" data-act="sendmsg">إرسال الرسالة</button>
       </section>
-      <div class="box">
-        <h2>📌 تنبيهات التخصص</h2>
-        <p class="muted" style="margin:0">التزم بقواعد السلوك الجامعي وشارك زملاءك المصادر الموثوقة.</p>
-      </div>
-    </aside>
+    </main>
   </div>`;
 }
 
@@ -547,7 +587,7 @@ function rAdmin(){
     ?messages.map(m=>`<div class="row"><div><b>${esc(m.title)}</b><div class="feed-meta">من: ${esc(m.senderName)} (${esc(m.senderNum)}) • ${fmtDate(m.at)}</div><div class="muted" style="margin:4px 0 0">${esc(m.body)}</div></div><div class="acts"><button class="btn ghost" data-act="delmsg" data-id="${esc(m.id)}">حذف</button></div></div>`).join("")
     :'<div class="empty">لا توجد رسائل من الطلاب</div>';
 
-  app.innerHTML=topNav(`لوحة المسؤول (${me.name})`)+`<div class="three-col">
+  app.innerHTML=topNav(`لوحة المسؤول (${me.name})`)+`<div class="admin-layout">
     <aside>
       <div class="box">
         <h2>📊 ملخص النظام</h2>
@@ -556,9 +596,9 @@ function rAdmin(){
           <div class="mini-stat"><b>${appr.length}/${cap}</b><span>السعة</span></div>
           <div class="mini-stat"><b>${rej.length}</b><span>مرفوض</span></div>
         </div>
-        <a class="nav-item" href="#adm-req"><span>📨 طلبات التسجيل</span><span class="pill">${pend.length}</span></a>
-        <a class="nav-item" href="#adm-pub"><span>📢 الإعلانات والمصادر</span><span class="pill">${announcements.length+resources.length}</span></a>
-        <a class="nav-item" href="#adm-msg"><span>✉️ رسائل الطلاب</span><span class="pill">${messages.length}</span></a>
+        <a class="rail-item" href="#adm-req"><span>📨 طلبات التسجيل</span><span class="pill">${pend.length}</span></a>
+        <a class="rail-item" href="#adm-pub"><span>📢 الإعلانات والمصادر</span><span class="pill">${announcements.length+resources.length}</span></a>
+        <a class="rail-item" href="#adm-msg"><span>✉️ رسائل الطلاب</span><span class="pill">${messages.length}</span></a>
       </div>
     </aside>
 
@@ -583,7 +623,7 @@ function rAdmin(){
       </section>
     </main>
 
-    <aside class="right-rail">
+    <aside>
       <section id="adm-msg" class="box"><h2>✉️ رسائل الطلاب (${messages.length})</h2>${msgRows}</section>
       <section class="box"><h2>👥 عدد المقبولين الأقصى</h2><div class="inl"><div><input id="cap" type="number" min="1" value="${cap}"></div><button class="btn" data-act="cap">حفظ</button></div></section>
       ${me.main?`<section class="box"><h2>➕ إضافة مسؤول جديد</h2><p class="muted">هذا الحق خاص بالمسؤول الرئيسي فقط. كلمة السر 6 أحرف على الأقل.</p><label>اسم المستخدم</label><input id="an" autocomplete="off"><label>كلمة السر</label><input id="ap" type="password" autocomplete="off"><button class="btn full" data-act="addadmin">إضافة</button><div style="margin-top:12px"><b>المسؤولون:</b> ${MAIN_USER} (رئيسي)${admins.map(a=>"، "+esc(a.u)).join("")}</div></section>`:""}
@@ -638,7 +678,10 @@ app.addEventListener("click",async ev=>{
   const a=el.dataset.act,f1=document.getElementById("f1"),f2=document.getElementById("f2"),f3=document.getElementById("f3"),f4=document.getElementById("f4"),f5=document.getElementById("f5");
   setNote(null);busy=true;
   try{
-    if(a==="tab"){tab=el.dataset.v;render()}
+    if(a==="togres"){showAllRes=!showAllRes;render()}
+    else if(a==="togann"){showAllAnn=!showAllAnn;render()}
+    else if(a==="togexp"){showAllExp=!showAllExp;render()}
+    else if(a==="tab"){tab=el.dataset.v;render()}
     else if(a==="clearid"){saveId("");render()}
     else if(a==="out"){clearSubs();await signOut(auth);me=null;view="auth";tab="login";render()}
     else if(a==="agree"){
