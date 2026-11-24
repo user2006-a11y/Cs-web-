@@ -75,7 +75,7 @@ body{
   text-overflow:ellipsis;
 }
 .brand-sub{font-size:.75rem;color:var(--muted)}
-.search-wrap{flex:1;max-width:360px}
+.search-wrap{flex:1;max-width:320px}
 .search-wrap input{
   width:100%;
   border:1px solid var(--line);
@@ -87,10 +87,33 @@ body{
   font-size:.88rem;
 }
 .search-wrap input:focus{outline:none;border-color:var(--blue);background:var(--surface)}
-.top-actions{display:flex;align-items:center;gap:8px}
+.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
-.auth-wrap{max-width:460px;margin:28px auto;padding:0 14px 40px}
+.auth-wrap{max-width:520px;margin:28px auto;padding:0 14px 40px}
 .dash-wrap{max-width:1280px;margin:16px auto;padding:0 14px 44px}
+
+.choice-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:12px;
+  margin-top:14px;
+}
+.choice-card{
+  background:var(--soft);
+  border:1.5px solid var(--line);
+  border-radius:14px;
+  padding:16px;
+  text-align:center;
+  cursor:pointer;
+  transition:.15s ease;
+}
+.choice-card:hover{
+  border-color:var(--blue);
+  background:var(--blue-soft);
+}
+.choice-icon{font-size:1.8rem;margin-bottom:6px}
+.choice-title{font-weight:800;font-size:1rem;color:var(--ink);margin-bottom:4px}
+.choice-desc{font-size:.84rem;color:var(--muted)}
 
 .home-layout{
   display:grid;
@@ -114,6 +137,22 @@ body{
   align-items:start;
 }
 @media (max-width:1024px){.admin-layout{grid-template-columns:1fr}}
+
+.subjects-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:12px;
+}
+.subject-card{
+  background:var(--soft);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:10px;
+}
 
 .box{
   background:var(--surface);
@@ -283,7 +322,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);ba
 .feed-title{font-weight:700;color:var(--ink)}
 .feed-meta{font-size:.78rem;color:var(--muted)}
 
-/* الردود على المنشورات */
 .replies-box{
   margin-top:10px;
   padding-top:10px;
@@ -385,10 +423,20 @@ const STUDENT_DOMAIN = "@students.platform.local";
 const LAST_ID_KEY = "cs_platform_last_id";
 const LOGO_SRC = "./logo.png";
 
+const SEVEN_SUBJECTS = [
+  { id:"s1", name:"المادة الأولى: البرمجة وهياكل البيانات", desc:"أساسيات البرمجة، القوائم، الأشجار، والبحث والترتيب." },
+  { id:"s2", name:"المادة الثانية: تحليل وتصميم الخوارزميات", desc:"التعقيد الزمني، التقسيم والفتح، والبرمجة الديناميكية." },
+  { id:"s3", name:"المادة الثالثة: قواعد البيانات", desc:"النمذجة العلائقية، لغة SQL، والفهرسة وإدارة المعاملات." },
+  { id:"s4", name:"المادة الرابعة: شبكات الحاسوب", desc:"نماذج OSI وTCP/IP، التوجيه، وبروتوكولات النقل." },
+  { id:"s5", name:"المادة الخامسة: نظم التشغيل", desc:"جدولة العمليات، إدارة الذاكرة، والتزامن وأنظمة الملفات." },
+  { id:"s6", name:"المادة السادسة: هندسة البرمجيات", desc:"دورة حياة النظام، تصميم المعمارية، والاختبار وضمان الجودة." },
+  { id:"s7", name:"المادة السابعة: الذكاء الاصطناعي وتعلم الآلة", desc:"خوارزميات البحث، التصنيف، وشبكات العصبونات الأساسية." }
+];
+
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp), db = getFirestore(fbApp);
 
-let students=[],admins=[],announcements=[],resources=[],messages=[],groups=[],groupPosts=[],groupReplies=[],cfg={capacity:15},me=null,view="auth",tab="login",note=null,unsubs=[],busy=false,searchQ="";
+let students=[],admins=[],announcements=[],resources=[],messages=[],groups=[],groupPosts=[],groupReplies=[],cfg={capacity:15},me=null,view="auth",tab="login",studentPage="posts",note=null,unsubs=[],busy=false,searchQ="";
 let selectedGroupId="all";
 let showAllRes=false,showAllAnn=false,showAllGrp=false;
 let failCount=0,lockUntil=0;
@@ -427,7 +475,7 @@ function friendlyAuthError(e){
 function render(){
   const isWide = (view==="home"||view==="admin");
   app.className = isWide ? "dash-wrap" : "auth-wrap";
-  ({auth:rAuth,welcome:rWelcome,admin:rAdmin,home:rHome,wait:rWait})[view]();
+  ({auth:rAuth,welcome:rWelcome,choose:rChoose,admin:rAdmin,home:rHome,wait:rWait})[view]();
 }
 
 function authHero(){
@@ -439,7 +487,7 @@ function authHero(){
   </div>`;
 }
 
-function topNav(title){
+function topNav(title, showStudentNav=false){
   return `<header class="topnav">
     <div class="topnav-in">
       <div class="brand">
@@ -450,9 +498,14 @@ function topNav(title){
         </div>
       </div>
       <div class="search-wrap">
-        <input id="qInput" value="${esc(searchQ)}" placeholder="بحث في المنشورات والمصادر…">
+        <input id="qInput" value="${esc(searchQ)}" placeholder="بحث في المنشورات والمواد…">
       </div>
       <div class="top-actions">
+        ${showStudentNav ? `
+          <button class="btn ${studentPage==="posts"?"":"soft"}" data-act="go_posts">مكان المنشورات</button>
+          <button class="btn ${studentPage==="subjects"?"":"soft"}" data-act="go_subjects">المنصة الدراسية</button>
+          <button class="btn ghost" data-act="go_choose">تغيير الوجهة</button>
+        ` : ""}
         <button class="btn ghost" data-act="out">خروج</button>
       </div>
     </div>
@@ -490,6 +543,69 @@ function rWelcome(){
   app.innerHTML=authHero()+`<div class="box"><div class="note good" style="margin-top:0"><b>✅ تمت الموافقة على دخولك</b><br>أهلاً بك ${esc(me.name)} في منصة طلاب علوم الحاسوب.</div>
   <div class="note warn"><b>⚠️ تحذير بشأن السلوك</b><ul class="warn"><li>احترم زملاءك وأساتذتك في كل ما تنشره.</li><li>يُمنع التنمر أو الإساءة أو الألفاظ الجارحة.</li><li>يُمنع الغش أو تبادل الحلول في الاختبارات والتقييمات.</li><li>يحق للمسؤول إيقاف أي حساب يخالف هذه القواعد.</li></ul></div>
   <button class="btn full" data-act="agree">أوافق وأتعهد بالالتزام</button><button class="btn ghost full" data-act="out">خروج</button></div>`;
+}
+
+function rChoose(){
+  app.innerHTML=authHero()+`<div class="box">
+    <h2 class="center">أهلاً بك ${esc(me.name)}</h2>
+    <p class="muted" style="text-align:center">اختر وجهتك لهذا الدخول:</p>
+    <div class="choice-grid">
+      <div class="choice-card" data-act="go_posts">
+        <div class="choice-icon">💬</div>
+        <div class="choice-title">مكان المنشورات</div>
+        <div class="choice-desc">القروبات، منشورات الطلاب، الردود، والإعلانات</div>
+      </div>
+      <div class="choice-card" data-act="go_subjects">
+        <div class="choice-icon">📚</div>
+        <div class="choice-title">المنصة الدراسية</div>
+        <div class="choice-desc">الاطلاع على المواد الدراسية السبع ومصادرها</div>
+      </div>
+    </div>
+    <button class="btn ghost full" data-act="out">خروج</button>
+  </div>`;
+}
+
+function rSubjectsPage(){
+  const q=searchQ.trim().toLowerCase();
+  const filteredSubjects = q
+    ? SEVEN_SUBJECTS.filter(s => `${s.name} ${s.desc}`.toLowerCase().includes(q))
+    : SEVEN_SUBJECTS;
+
+  const cardsHtml = filteredSubjects.length
+    ? filteredSubjects.map((s, idx) => {
+        const matchedRes = resources.filter(r =>
+          `${r.title||""} ${r.desc||""} ${r.level||""}`.toLowerCase().includes(s.name.split(":")[1]?.trim().toLowerCase() || s.name.toLowerCase())
+        );
+        const linksHtml = matchedRes.length
+          ? matchedRes.map(r => r.url
+              ? `<a class="btn soft" href="${esc(r.url)}" target="_blank" rel="noopener">فتح: ${esc(r.title)}</a>`
+              : `<span class="feed-meta">• ${esc(r.title)}</span>`
+            ).join("")
+          : `<span class="feed-meta">لا توجد روابط مرفقة لهذه المادة بعد.</span>`;
+
+        return `<div class="subject-card">
+          <div>
+            <div class="feed-head">
+              <span class="pill">مادة ${idx + 1} من 7</span>
+            </div>
+            <div class="feed-title" style="margin-top:6px">${esc(s.name)}</div>
+            <div class="muted" style="margin:6px 0 0">${esc(s.desc)}</div>
+          </div>
+          <div class="acts">${linksHtml}</div>
+        </div>`;
+      }).join("")
+    : `<div class="empty">لا توجد مواد مطابقة للبحث.</div>`;
+
+  return `<section class="box">
+    <div class="feed-head" style="margin-bottom:12px">
+      <div>
+        <h2 style="margin:0">📚 المنصة الدراسية — المواد السبعة</h2>
+        <div class="feed-meta">عرض المواد الدراسية السبع والمصادر المرتبطة بها</div>
+      </div>
+      <button class="btn ghost" data-act="go_posts">الذهاب لمكان المنشورات</button>
+    </div>
+    <div class="subjects-grid">${cardsHtml}</div>
+  </section>`;
 }
 
 function rHome(){
@@ -557,11 +673,19 @@ function rHome(){
         </div>
       </div>
 
+      <a class="rail-item ${studentPage==="posts"?"active":""}" data-act="go_posts">
+        <span>💬 مكان المنشورات</span>
+      </a>
+      <a class="rail-item ${studentPage==="subjects"?"active":""}" data-act="go_subjects">
+        <span>📚 المنصة الدراسية (7 مواد)</span>
+        <span class="pill">7</span>
+      </a>
+
       <div class="rail-sec-title">👥 القروبات والمجتمعات</div>
-      <a class="rail-item ${selectedGroupId==="all"?"active":""}" data-act="selectgrp" data-id="all">
+      <a class="rail-item ${studentPage==="posts" && selectedGroupId==="all"?"active":""}" data-act="selectgrp" data-id="all">
         <span>🌐 منشورات كل القروبات</span>
       </a>
-      ${visGrp.map(g => `<a class="rail-item ${selectedGroupId===g.id?"active":""}" data-act="selectgrp" data-id="${esc(g.id)}">
+      ${visGrp.map(g => `<a class="rail-item ${studentPage==="posts" && selectedGroupId===g.id?"active":""}" data-act="selectgrp" data-id="${esc(g.id)}">
         <span>📌 ${esc(g.name)}</span>
       </a>`).join("")}
       ${groups.length>3?`<button class="see-more-btn" data-act="toggrp">${showAllGrp?"عرض أقل ^":"عرض المزيد v"}</button>`:""}
@@ -579,11 +703,9 @@ function rHome(){
   const activeGroupObj = groups.find(g => g.id === selectedGroupId);
   const activeGroupName = selectedGroupId === "all" ? "جميع القروبات" : (activeGroupObj ? activeGroupObj.name : "القروب");
 
-  app.innerHTML=topNav(`أهلاً ${me.name}`)+`<div class="home-layout">
-    ${leftSideHtml}
-    <main class="main-feed">
-      ${noteHtml()}
-
+  const mainContentHtml = studentPage === "subjects"
+    ? rSubjectsPage()
+    : `
       <section class="box">
         <h2>✍️ شارك سؤالاً أو منشوراً في (${esc(activeGroupName)})</h2>
         ${selectedGroupId === "all" ? `
@@ -610,6 +732,13 @@ function rHome(){
         <label>الرسالة</label><textarea id="mBody" placeholder="اكتب رسالتك بوضوح…"></textarea>
         <button class="btn full" data-act="sendmsg">إرسال الرسالة</button>
       </section>
+    `;
+
+  app.innerHTML=topNav(`أهلاً ${me.name}`, true)+`<div class="home-layout">
+    ${leftSideHtml}
+    <main class="main-feed">
+      ${noteHtml()}
+      ${mainContentHtml}
     </main>
   </div>`;
 }
@@ -638,7 +767,7 @@ function rAdmin(){
     ?messages.map(m=>`<div class="row"><div><b>${esc(m.title)}</b><div class="feed-meta">من: ${esc(m.senderName)} (${esc(m.senderNum)}) • ${fmtDate(m.at)}</div><div class="muted" style="margin:4px 0 0">${esc(m.body)}</div></div><div class="acts"><button class="btn ghost" data-act="delmsg" data-id="${esc(m.id)}">حذف</button></div></div>`).join("")
     :'<div class="empty">لا توجد رسائل من الطلاب</div>';
 
-  app.innerHTML=topNav(`لوحة المسؤول (${me.name})`)+`<div class="admin-layout">
+  app.innerHTML=topNav(`لوحة المسؤول (${me.name})`, false)+`<div class="admin-layout">
     <aside>
       <div class="box">
         <h2>📊 ملخص النظام</h2>
@@ -743,19 +872,22 @@ app.addEventListener("click",async ev=>{
   const a=el.dataset.act,f1=document.getElementById("f1"),f2=document.getElementById("f2"),f3=document.getElementById("f3"),f4=document.getElementById("f4"),f5=document.getElementById("f5");
   setNote(null);busy=true;
   try{
-    if(a==="selectgrp"){selectedGroupId=el.dataset.id;render()}
+    if(a==="go_choose"){view="choose";render()}
+    else if(a==="go_posts"){studentPage="posts";view="home";startStudentSubs();render()}
+    else if(a==="go_subjects"){studentPage="subjects";view="home";startStudentSubs();render()}
+    else if(a==="selectgrp"){studentPage="posts";selectedGroupId=el.dataset.id;view="home";startStudentSubs();render()}
     else if(a==="togres"){showAllRes=!showAllRes;render()}
     else if(a==="togann"){showAllAnn=!showAllAnn;render()}
     else if(a==="toggrp"){showAllGrp=!showAllGrp;render()}
     else if(a==="tab"){tab=el.dataset.v;render()}
     else if(a==="clearid"){saveId("");render()}
-    else if(a==="out"){clearSubs();await signOut(auth);me=null;view="auth";tab="login";render()}
+    else if(a==="out"){clearSubs();await signOut(auth);me=null;studentPage="posts";view="auth";tab="login";render()}
     else if(a==="agree"){
       if(me?.uid){
         await updateDoc(doc(db,"students",me.uid),{acceptedRules:true,acceptedAt:Date.now()});
         me.acceptedRules=true;
       }
-      view="home";startStudentSubs();render();
+      view="choose";render();
     }
     else if(a==="reg"){
       const n=f1.value.trim(),num=f2.value.trim(),lvl=f3.value,pw=f4.value.trim(),pw2=f5.value.trim();
@@ -786,7 +918,7 @@ app.addEventListener("click",async ev=>{
             failCount=0;
             me={...s,lastLoginAt:now};
             if(s.status==="approved"){
-              if(s.acceptedRules){view="home";startStudentSubs()}
+              if(s.acceptedRules){view="choose"}
               else{view="welcome"}
             }else{view="wait";watchStudent(cr.user.uid)}
             loggedIn=true;
