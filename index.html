@@ -3,135 +3,359 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>منصة طلاب علوم الحاسوب</title>
+<title>منصة طلاب علوم الحاسوب — كلية الإمام الهادي</title>
 <style>
-:root{box-sizing:border-box;color-scheme:light;--bg:transparent;--card:rgba(255,255,255,.58);--tx:#0c1f4a;--mut:#3c5688;--bd:rgba(12,31,74,.25);--pri:#3f72cf;--pt:#fff;--ok:#146c43;--okb:rgba(255,255,255,.75);--no:#b3261e;--nob:rgba(255,255,255,.8);--wr:#7a4f00;--wrb:rgba(255,248,225,.85)}
+:root{
+  box-sizing:border-box;
+  color-scheme:light;
+  --page:#e9eff8;
+  --surface:#ffffff;
+  --soft:#f5f8fc;
+  --ink:#0f234a;
+  --muted:#526994;
+  --line:#dce4f2;
+  --blue:#1877f2;
+  --blue-dark:#125ec4;
+  --blue-soft:#e7f1ff;
+  --ok:#146c43;
+  --ok-bg:#e9f7ef;
+  --no:#b3261e;
+  --no-bg:#fdecec;
+  --wr:#7a4f00;
+  --wr-bg:#fff6e0;
+  --shadow:0 2px 10px rgba(15,35,74,.06);
+}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
-body{background:#d7e5ff;color:var(--tx);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.6;min-height:100vh;overflow-x:hidden}
-.scene{position:fixed;inset:0;z-index:0}
-.scene svg{width:100%;height:100%;display:block}
-.wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:22px 14px 40px}
-.hero{text-align:center;margin:6px 0 22px;animation:rise .6s ease both}
-h1{font-size:1.3rem;margin:4px 0 2px;color:#0c1f4a}
-h2{font-size:1.1rem;margin:0 0 10px;color:#0c1f4a}
-h2.ttl{text-align:center;font-size:1.25rem;letter-spacing:.5px;margin-bottom:6px}
-.code{font-family:ui-monospace,Menlo,Consolas,monospace;color:#1e4fb0;font-size:.88rem;min-height:1.5em}
-.caret{display:inline-block;width:7px;height:1em;background:#1e4fb0;margin-inline-start:2px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
-.sub{color:var(--mut);margin:4px 0 12px;font-size:.9rem}
-.card{background:var(--card);border:1px solid rgba(255,255,255,.75);border-radius:16px;padding:20px 18px;margin-bottom:14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 10px 40px rgba(10,21,48,.28);animation:rise .55s ease both}
-label{display:block;font-size:.86rem;color:var(--mut);margin:14px 0 0}
-input{width:100%;padding:8px 2px 8px;border:0;border-bottom:1.5px solid rgba(12,31,74,.55);border-radius:0;background:transparent;color:var(--tx);font:inherit;transition:.2s}
-input:focus{outline:none;border-bottom-color:#3f72cf;box-shadow:0 2px 0 0 #3f72cf}
-.btn{border:0;border-radius:6px;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#6b9aee,#3f72cf);color:#fff;transition:transform .15s,box-shadow .25s}
-.btn:hover{box-shadow:0 4px 16px rgba(63,114,207,.5)}.btn:active{transform:scale(.97)}
-.btn.full{width:100%;margin-top:22px}
-.btn.ok{background:#1f7a4d;color:#fff}.btn.no{background:#c0392b;color:#fff}
-.btn.ghost{background:rgba(255,255,255,.6);color:#0c1f4a;border:1px solid rgba(12,31,74,.25)}
-.swt{display:flex;justify-content:space-between;gap:8px;margin-top:14px;font-size:.88rem;color:var(--mut)}
-.swt a{color:#0c1f4a;font-weight:700;cursor:pointer}
-.note{padding:10px 12px;border-radius:8px;margin-top:12px;font-size:.92rem;animation:rise .4s ease both}
-.note.err{background:var(--nob);color:var(--no)}.note.good{background:var(--okb);color:var(--ok)}.note.warn{background:var(--wrb);color:var(--wr)}
-.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;color:#0c1f4a}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--bd);flex-wrap:wrap}
-.row:first-of-type{border-top:0}
-.row b{display:block}.row small{color:var(--mut)}
-.acts{display:flex;gap:6px}.acts .btn{padding:8px 12px;font-size:.88rem}
-.stats{display:flex;gap:8px;margin-bottom:12px}
-.stat{flex:1;background:var(--card);border:1px solid rgba(255,255,255,.75);border-radius:12px;padding:10px;text-align:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.stat b{font-size:1.3rem;display:block;color:#3f72cf}.stat span{font-size:.78rem;color:var(--mut)}
-.inl{display:flex;gap:8px;align-items:end}.inl>div{flex:1}
-.empty{color:var(--mut);text-align:center;padding:10px}
-ul.warn{margin:8px 0 0;padding-inline-start:20px}
-@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-@keyframes blink{50%{opacity:0}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-
-body.home{background:#edf2fb}body.home .scene{display:none}
-.home .wrap{max-width:1240px;padding:0 12px 60px}
-.av{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:#fff;font-weight:700;flex:none}
-.home .card{background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid #dbe5f6;border-radius:14px;box-shadow:0 1px 4px rgba(20,50,110,.07);padding:14px;animation:none}
-.topbar{position:sticky;top:0;z-index:20;margin:0 -12px 14px;padding:8px 14px;background:#fff;box-shadow:0 1px 6px rgba(20,50,110,.12);display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
-.tb-start{display:flex;align-items:center;gap:10px;flex:1 1 260px;min-width:0}
-.search{display:flex;align-items:center;gap:6px;background:#eef3fb;border-radius:22px;padding:0 12px;flex:1;min-width:0;color:#5c6f94}
-.search input{border:0;background:none;padding:9px 2px;color:#10244d;font:inherit;min-width:0;border-radius:0}
-.search input:focus{box-shadow:none;border:0}
-.tb-nav{display:flex;gap:4px;order:3;width:100%;justify-content:space-around;border-top:1px solid #e3eaf7;padding-top:4px}
-.tb-nav a,.ib{color:#5c6f94;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
-.tb-nav a{flex:1;height:44px;border-bottom:3px solid transparent}
-.tb-nav a.on{color:#2f6fe4;border-bottom-color:#2f6fe4}
-.tb-end{display:flex;align-items:center;gap:8px;margin-inline-start:auto}
-.ib{width:36px;height:36px;border-radius:50%;background:#eef3fb}
-.dot{position:absolute;top:6px;inset-inline-end:7px;width:8px;height:8px;border-radius:50%;background:#e0457b}
-.home-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
-.center{display:flex;flex-direction:column;gap:14px;order:1;min-width:0}
-.rside{display:flex;flex-direction:column;gap:14px;order:2}
-.side{order:3}
-.me{display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid #e3eaf7;margin-bottom:6px}
-.sd-h{font-size:.72rem;letter-spacing:.5px;color:#7a8bb0;margin:12px 0 4px;font-weight:700}
-.sd-i{display:flex;align-items:center;gap:10px;padding:7px 6px;border-radius:8px;color:#10244d;font-size:.92rem;cursor:pointer}
-.sd-i:hover{background:#eef3fb}
-.sd-ic{width:30px;height:30px;border-radius:8px;background:#e6efff;color:#2f6fe4;display:flex;align-items:center;justify-content:center;flex:none}
-.more{display:block;margin:4px 0;padding:6px 10px;border:1px solid #dbe5f6;border-radius:8px;text-align:center;font-size:.82rem;color:#5c6f94;cursor:pointer}
-.stories{display:flex;gap:10px;overflow-x:auto;padding:12px}
-.story{display:flex;flex-direction:column;align-items:center;gap:4px;flex:none;width:72px}
-.story small{font-size:.76rem;color:#10244d}
-.s-img{position:relative;border-radius:50%;padding:3px}
-.s-img.ring{background:linear-gradient(135deg,#2f6fe4,#22c1c3)}
-.s-img.ring .av{border:3px solid #fff}
-.s-plus{position:absolute;bottom:0;inset-inline-end:0;width:22px;height:22px;border-radius:50%;background:#2f6fe4;color:#fff;border:2px solid #fff;display:flex;align-items:center;justify-content:center}
-.pb-top{display:flex;gap:10px;align-items:center}
-.pb-in{flex:1;background:#eef3fb;border-radius:22px;padding:10px 14px;color:#5c6f94;font-size:.92rem}
-.pb-acts{display:flex;gap:6px;margin-top:10px;border-top:1px solid #e3eaf7;padding-top:10px;flex-wrap:wrap}
-.pa{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-size:.84rem;cursor:pointer}
-.c1{background:#ffe9ef;color:#c2325f}.c2{background:#e5f0ff;color:#2f6fe4}.c3{background:#e2f7ee;color:#0b7a5c}.c4{background:#fff1de;color:#b85f0a}
-.feed-tabs{display:flex;gap:16px;font-size:.82rem;font-weight:700;color:#7a8bb0;padding:0 4px}
-.feed-tabs a{padding-bottom:4px;cursor:pointer}.feed-tabs a.on{color:#2f6fe4;border-bottom:2px solid #2f6fe4}
-.fd-h{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.fd-h b{display:block}.fd-h small{color:#7a8bb0}
-.feed p{margin:6px 0 10px;color:#10244d}
-.fd-f{display:flex;justify-content:space-around;border-top:1px solid #e3eaf7;margin-top:10px;padding-top:8px}
-.fd-f a{display:flex;align-items:center;gap:6px;color:#5c6f94;font-size:.88rem;cursor:pointer}
-.rs-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;color:#10244d}
-.rs-h a{font-size:.78rem;color:#2f6fe4;cursor:pointer}
-.ev-ban{height:84px;border-radius:10px;background:linear-gradient(135deg,#2f6fe4,#22c1c3);display:flex;align-items:center;justify-content:center;color:#fff;margin-bottom:10px}
-.ev-row{display:flex;gap:10px;align-items:center}.ev-row small{display:block;color:#7a8bb0}
-.ev-d{background:#e6efff;border-radius:10px;padding:4px 10px;text-align:center;color:#2f6fe4;flex:none}.ev-d small{color:#2f6fe4}.ev-d b{display:block;font-size:1.2rem}
-.fr{display:flex;gap:10px}.fr small{display:block;color:#7a8bb0}
-.fr-b{display:flex;gap:6px;margin-top:6px}.fr-b .btn{padding:6px 14px;font-size:.82rem}
-.grp{display:flex;align-items:center;gap:10px}.grp div{flex:1}.grp small{display:block;color:#7a8bb0}.grp .btn{padding:6px 14px;font-size:.82rem}
-.ct{display:flex;align-items:center;gap:10px;padding:6px 0}.ct small{display:block;font-size:.76rem}
-.ct small.on{color:#0b7a5c}.ct small.off{color:#9aa8c4}
-.home .btn{background:#2f6fe4;border-radius:8px}.home .btn.ghost{background:#fff;color:#2f6fe4;border:1px solid #cfdcf3}
-@media (min-width:980px){
-  .topbar{flex-wrap:nowrap;padding:8px 20px}
-  .tb-start{flex:0 0 320px}
-  .tb-nav{order:0;width:auto;flex:1;justify-content:center;border:0;padding:0;max-width:460px;margin:0 auto}
-  .home-grid{grid-template-columns:260px minmax(0,1fr) 310px;align-items:start}
-  .side{order:0;position:sticky;top:76px}.center{order:0}.rside{order:0}
+body{
+  background:var(--page);
+  color:var(--ink);
+  font-family:"Segoe UI",Tahoma,Arial,sans-serif;
+  line-height:1.55;
+  overflow-x:hidden;
 }
+
+/* شريط علوي ثابت بأسلوب المنصات الاجتماعية */
+.topnav{
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:var(--surface);
+  border-bottom:1px solid var(--line);
+  box-shadow:0 2px 8px rgba(15,35,74,.05);
+}
+.topnav-in{
+  max-width:1280px;
+  margin:0 auto;
+  padding:8px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.logo-badge{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:var(--surface);
+  border:2px solid var(--blue);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  flex-shrink:0;
+}
+.logo-badge img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  padding:2px;
+}
+.brand-title{
+  font-weight:700;
+  font-size:.98rem;
+  color:var(--ink);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.brand-sub{
+  font-size:.75rem;
+  color:var(--muted);
+}
+.search-wrap{
+  flex:1;
+  max-width:360px;
+}
+.search-wrap input{
+  width:100%;
+  border:1px solid var(--line);
+  background:var(--soft);
+  color:var(--ink);
+  border-radius:999px;
+  padding:8px 14px;
+  font:inherit;
+  font-size:.88rem;
+}
+.search-wrap input:focus{
+  outline:none;
+  border-color:var(--blue);
+  background:var(--surface);
+}
+.top-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* حاويات العرض */
+.auth-wrap{
+  max-width:460px;
+  margin:28px auto;
+  padding:0 14px 40px;
+}
+.dash-wrap{
+  max-width:1280px;
+  margin:16px auto;
+  padding:0 14px 44px;
+}
+
+/* تخطيط الأعمدة الثلاثة */
+.three-col{
+  display:grid;
+  grid-template-columns:270px minmax(0,1fr) 290px;
+  gap:16px;
+  align-items:start;
+}
+@media (max-width:1024px){
+  .three-col{grid-template-columns:230px minmax(0,1fr)}
+  .right-rail{grid-column:1 / -1}
+}
+@media (max-width:760px){
+  .three-col{grid-template-columns:1fr}
+  .search-wrap{display:none}
+}
+
+/* البطاقات */
+.box{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+.hero-auth{
+  text-align:center;
+  margin-bottom:16px;
+}
+.hero-auth .big-logo{
+  width:84px;
+  height:84px;
+  margin:0 auto 8px;
+  border-radius:50%;
+  background:var(--surface);
+  border:2px solid var(--blue);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.hero-auth .big-logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  padding:4px;
+}
+h1{margin:0;font-size:1.3rem;color:var(--ink)}
+h2{margin:0 0 10px;font-size:1.05rem;color:var(--ink)}
+h2.center{text-align:center;font-size:1.2rem;margin-bottom:8px}
+.muted{color:var(--muted);font-size:.88rem;margin:4px 0 10px}
+.code-line{
+  font-family:ui-monospace,Menlo,Consolas,monospace;
+  color:var(--blue);
+  font-size:.85rem;
+  min-height:1.4em;
+}
+.caret{
+  display:inline-block;
+  width:7px;
+  height:1em;
+  background:var(--blue);
+  margin-inline-start:2px;
+  vertical-align:-2px;
+  animation:blink 1s steps(1) infinite;
+}
+
+/* الحقول والأزرار */
+label{
+  display:block;
+  font-size:.84rem;
+  color:var(--muted);
+  margin:12px 0 4px;
+  font-weight:600;
+}
+input,select,textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:var(--soft);
+  color:var(--ink);
+  border-radius:10px;
+  padding:9px 11px;
+  font:inherit;
+  font-size:.92rem;
+}
+textarea{min-height:76px;resize:vertical}
+input:focus,select:focus,textarea:focus{
+  outline:none;
+  border-color:var(--blue);
+  background:var(--surface);
+}
+.pw-wrap{position:relative;display:flex;align-items:center}
+.pw-wrap input{padding-inline-end:38px}
+.eye-btn{
+  position:absolute;
+  inset-inline-end:6px;
+  background:transparent;
+  border:0;
+  cursor:pointer;
+  font-size:1rem;
+  padding:4px;
+}
+.btn{
+  border:0;
+  border-radius:10px;
+  padding:9px 14px;
+  font:inherit;
+  font-weight:700;
+  font-size:.9rem;
+  cursor:pointer;
+  background:var(--blue);
+  color:#fff;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+.btn:hover:not(:disabled){background:var(--blue-dark)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.full{width:100%;margin-top:16px}
+.btn.soft{background:var(--blue-soft);color:var(--blue)}
+.btn.ghost{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+.btn.ok{background:var(--ok);color:#fff}
+.btn.no{background:var(--no);color:#fff}
+
+.nav-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:9px 12px;
+  border-radius:10px;
+  color:var(--ink);
+  text-decoration:none;
+  font-size:.9rem;
+  font-weight:600;
+  margin-bottom:4px;
+}
+.nav-item:hover{background:var(--blue-soft);color:var(--blue)}
+.pill{
+  background:var(--blue-soft);
+  color:var(--blue);
+  font-size:.76rem;
+  padding:2px 8px;
+  border-radius:999px;
+  font-weight:700;
+}
+
+.feed-card{
+  background:var(--soft);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:10px;
+}
+.feed-card:last-child{margin-bottom:0}
+.feed-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-bottom:4px;
+}
+.feed-title{font-weight:700;color:var(--ink)}
+.feed-meta{font-size:.78rem;color:var(--muted)}
+
+.stats-row{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:10px;
+}
+.mini-stat{
+  background:var(--soft);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:8px;
+  text-align:center;
+}
+.mini-stat b{display:block;font-size:1.15rem;color:var(--blue)}
+.mini-stat span{font-size:.75rem;color:var(--muted)}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px 0;
+  border-top:1px solid var(--line);
+  flex-wrap:wrap;
+}
+.row:first-child{border-top:0}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.acts .btn{padding:6px 11px;font-size:.84rem}
+.inl{display:flex;gap:8px;align-items:end}
+.inl>div{flex:1}
+.empty{text-align:center;color:var(--muted);padding:12px;font-size:.88rem}
+
+.note{
+  padding:10px 12px;
+  border-radius:10px;
+  margin-top:12px;
+  font-size:.88rem;
+  font-weight:600;
+}
+.note.err{background:var(--no-bg);color:var(--no)}
+.note.good{background:var(--ok-bg);color:var(--ok)}
+.note.warn{background:var(--wr-bg);color:var(--wr)}
+ul.warn{margin:6px 0 0;padding-inline-start:20px;font-weight:400}
+.swt{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:14px;
+  font-size:.86rem;
+  color:var(--muted);
+  flex-wrap:wrap;
+}
+.swt a{color:var(--blue);font-weight:700;cursor:pointer}
+@keyframes blink{50%{opacity:0}}
 </style>
 </head>
 <body>
-<div class="scene"><svg viewBox="0 0 400 800" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-<rect width="400" height="800" fill="#d7e5ff"/>
-<circle cx="215" cy="150" r="72" fill="#fbfaff"/>
-<g fill="#f3f1ff"><ellipse cx="60" cy="300" rx="90" ry="34"/><ellipse cx="340" cy="270" rx="100" ry="38"/><ellipse cx="200" cy="330" rx="110" ry="30"/></g>
-<path d="M0 430 L90 335 L170 405 L260 305 L400 425 L400 800 L0 800Z" fill="#b3c9f7"/>
-<path d="M0 520 L120 410 L220 505 L330 385 L400 460 L400 800 L0 800Z" fill="#78a4ea"/>
-<path d="M0 610 Q120 510 250 595 T400 565 L400 800 L0 800Z" fill="#2f86b0"/>
-<path d="M0 690 Q150 630 300 695 T400 665 L400 800 L0 800Z" fill="#12506a"/>
-<path d="M0 745 Q200 705 400 745 L400 800 L0 800Z" fill="#0a1530"/>
-<g fill="#07122b"><polygon points="28,570 58,660 42,660 70,740 48,740 86,800 -22,800 14,740 -8,740 18,660 2,660"/><polygon points="372,560 342,655 358,655 330,738 352,738 314,800 422,800 386,738 408,738 382,655 398,655"/><polygon points="80,690 98,745 88,745 106,800 56,800 72,745 62,745"/><polygon points="322,685 304,742 314,742 296,800 346,800 330,742 340,742"/></g>
-<g fill="none" stroke="#0c1f4a" stroke-width="2.5" stroke-linecap="round"><path d="M110 235 q8 -9 16 0 q8 -9 16 0"/><path d="M300 205 q7 -8 14 0 q7 -8 14 0"/></g>
-</svg></div>
-<div class="wrap" id="app"></div>
+<div id="app"></div>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,signInWithEmailAndPassword,signOut,createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,doc,getDoc,setDoc,updateDoc,deleteDoc,collection,onSnapshot} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getFirestore,doc,getDoc,setDoc,addDoc,updateDoc,deleteDoc,collection,onSnapshot,runTransaction} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* ====== الصق هنا إعدادات مشروعك من Firebase (انظر README) ====== */
 const firebaseConfig = {
   apiKey: "AIzaSyBPyYR--LMGnRWDk5ZfTv81pDqYgPVQnUw",
   authDomain: "mywep-65144.firebaseapp.com",
@@ -140,136 +364,237 @@ const firebaseConfig = {
   messagingSenderId: "534570832709",
   appId: "1:534570832709:web:90784f0c546d2a1f6de42c"
 };
-/* ================================================================ */
-const MAIN_USER = "abdo";           // المسؤول الرئيسي
-const DOMAIN = "@platform.local";   // نطاق وهمي لأسماء المسؤولين
+
+const MAIN_USER = "abdo";
+const ADMIN_DOMAIN = "@platform.local";
+const STUDENT_DOMAIN = "@students.platform.local";
+const LAST_ID_KEY = "cs_platform_last_id";
+const LOGO_SRC = "./logo.png";
+
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp), db = getFirestore(fbApp);
 
-let students=[],admins=[],cfg={capacity:15},me=null,view="auth",tab="login",note=null,unsubs=[],busy=false;
+let students=[],admins=[],announcements=[],resources=[],messages=[],cfg={capacity:15},me=null,view="auth",tab="login",note=null,unsubs=[],busy=false,searchQ="";
+let failCount=0,lockUntil=0;
 const app=document.getElementById("app");
 const esc=s=>{const d=document.createElement("div");d.textContent=String(s==null?"":s);return d.innerHTML};
+const fmtDate=t=>t?new Date(t).toLocaleString("ar-EG",{dateStyle:"short",timeStyle:"short"}):"";
 const setNote=(t,k)=>{note=t?{t,k:k||"err"}:null};
 const noteHtml=()=>note?`<div class="note ${note.k}">${esc(note.t)}</div>`:"";
 const count=st=>students.filter(s=>s.status===st).length;
 const clearSubs=()=>{unsubs.forEach(u=>u());unsubs=[]};
+const savedId=()=>{try{return localStorage.getItem(LAST_ID_KEY)||""}catch(_e){return ""}};
+const saveId=v=>{try{if(v)localStorage.setItem(LAST_ID_KEY,v);else localStorage.removeItem(LAST_ID_KEY)}catch(_e){}};
+const pwField=(id,label,ph="")=>`<label>${label}</label><div class="pw-wrap"><input id="${id}" type="password" placeholder="${esc(ph)}" autocomplete="off"><button type="button" class="eye-btn" data-eye="${id}" aria-label="إظهار كلمة السر">👁️</button></div>`;
+const isLocked=()=>Date.now()<lockUntil;
+const logoImg=(alt="شعار كلية الإمام الهادي")=>`<img src="${LOGO_SRC}" alt="${esc(alt)}" onerror="this.outerHTML='<span>🎓</span>'">`;
 
-function render(){document.body.classList.toggle("home",view==="home");({auth:rAuth,welcome:rWelcome,admin:rAdmin,home:rHome,wait:rWait})[view]();window.scrollTo(0,0)}
-const header=()=>`<div class="hero"><h1>منصة طلاب علوم الحاسوب</h1><div class="sub" style="margin:0">كلية الإمام الهادي</div><div class="code" dir="ltr"><span id="typed"></span><i class="caret"></i></div><p class="sub">مساحة لزملاء التخصص في الجامعة</p></div>`;
+setInterval(()=>{
+  if(view==="auth" && tab==="login" && lockUntil>0){
+    const btn=document.getElementById("loginBtn");
+    const rem=Math.ceil((lockUntil-Date.now())/1000);
+    if(rem>0 && btn){btn.disabled=true;btn.textContent=`انتظر ${rem} ثانية…`}
+    else if(rem<=0){lockUntil=0;failCount=0;if(btn){btn.disabled=false;btn.textContent="دخول"}}
+  }
+},1000);
+
+function friendlyAuthError(e){
+  const c=e?.code||"";
+  if(c==="auth/invalid-credential"||c==="auth/user-not-found"||c==="auth/wrong-password")return "الرقم الجامعي أو اسم المسؤول أو كلمة السر غير صحيحة.";
+  if(c==="auth/email-already-in-use")return "هذا الرقم الجامعي مسجل مسبقاً، جرّب تسجيل الدخول.";
+  if(c==="auth/weak-password")return "كلمة السر ضعيفة، يجب أن تكون 6 أحرف على الأقل.";
+  if(c==="auth/network-request-failed")return "تعذّر الاتصال بالإنترنت، تحقّق من شبكتك.";
+  if(c==="auth/too-many-requests")return "تم إرسال طلبات كثيرة مؤقتاً، انتظر قليلاً ثم أعد المحاولة.";
+  return e?.message||c||"حدث خطأ غير متوقع.";
+}
+
+function render(){
+  const isWide = (view==="home"||view==="admin");
+  app.className = isWide ? "dash-wrap" : "auth-wrap";
+  ({auth:rAuth,welcome:rWelcome,admin:rAdmin,home:rHome,wait:rWait})[view]();
+}
+
+function authHero(){
+  return `<div class="hero-auth">
+    <div class="big-logo">${logoImg()}</div>
+    <h1>منصة طلاب علوم الحاسوب</h1>
+    <div class="code-line" dir="ltr"><span id="typed"></span><i class="caret"></i></div>
+    <p class="muted">كلية الإمام الهادي — مساحة لزملاء التخصص</p>
+  </div>`;
+}
+
+function topNav(title){
+  return `<header class="topnav">
+    <div class="topnav-in">
+      <div class="brand">
+        <div class="logo-badge">${logoImg()}</div>
+        <div>
+          <div class="brand-title">${esc(title)}</div>
+          <div class="brand-sub">كلية الإمام الهادي • علوم الحاسوب</div>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <input id="qInput" value="${esc(searchQ)}" placeholder="بحث في الإعلانات والمصادر…">
+      </div>
+      <div class="top-actions">
+        <button class="btn ghost" data-act="out">خروج</button>
+      </div>
+    </div>
+  </header>`;
+}
 
 function rAuth(){
   const login=tab==="login";
-  app.innerHTML=header()+`<div class="card"><h2 class="ttl">${login?"تسجيل الدخول":"إنشاء حساب جديد"}</h2>`
+  const last=savedId();
+  const rem=Math.ceil((lockUntil-Date.now())/1000);
+  app.innerHTML=authHero()+`<div class="box"><h2 class="center">${login?"تسجيل الدخول":"إنشاء حساب جديد"}</h2>`
   +(login
-   ?'<label>الاسم</label><input id="f1" autocomplete="off"><label>الرقم الجامعي</label><input id="f2" type="password" autocomplete="off"><button class="btn full" data-act="login">دخول</button><div class="swt"><span>ليس لديك حساب؟</span><a data-act="tab" data-v="reg">إنشاء حساب</a></div>'
-   :'<label>الاسم</label><input id="f1" autocomplete="off"><label>الرقم الجامعي</label><input id="f2" inputmode="numeric" autocomplete="off"><button class="btn full" data-act="reg">إرسال طلب الانضمام</button><div class="swt"><span>لديك حساب؟</span><a data-act="tab" data-v="login">تسجيل الدخول</a></div><p class="sub" style="margin:10px 0 0">سيصل طلبك إلى المسؤول وتدخل بعد موافقته.</p>')
+   ?`<label>الرقم الجامعي أو اسم المسؤول</label><input id="f1" value="${esc(last)}" autocomplete="off">`
+     +pwField("f2","كلمة السر")
+     +`<button id="loginBtn" class="btn full" data-act="login" ${rem>0?"disabled":""}>${rem>0?`انتظر ${rem} ثانية…`:"دخول"}</button>
+      <div class="swt"><span>ليس لديك حساب؟</span><a data-act="tab" data-v="reg">إنشاء حساب</a>${last?`<a data-act="clearid">مسح الرقم المحفوظ</a>`:""}</div>`
+   :`<label>الاسم الكامل</label><input id="f1" autocomplete="off">
+     <label>الرقم الجامعي</label><input id="f2" inputmode="numeric" autocomplete="off">
+     <label>المستوى الدراسي</label><select id="f3"><option value="المستوى الأول">المستوى الأول</option><option value="المستوى الثاني">المستوى الثاني</option><option value="المستوى الثالث">المستوى الثالث</option><option value="المستوى الرابع">المستوى الرابع</option></select>`
+     +pwField("f4","كلمة السر (6 أحرف على الأقل)")
+     +pwField("f5","تأكيد كلمة السر")
+     +`<button class="btn full" data-act="reg">إرسال طلب الانضمام</button>
+      <div class="swt"><span>لديك حساب؟</span><a data-act="tab" data-v="login">تسجيل الدخول</a></div>
+      <p class="muted" style="margin:10px 0 0">سيصل طلبك إلى المسؤول وتدخل بعد موافقته.</p>`)
   +noteHtml()+"</div>";
 }
+
 function rWait(){
   const st=me.status;
-  const m=st==="approved"?["تمت الموافقة على طلبك! سجّل الدخول الآن.","good"]:st==="rejected"?["تم رفض طلبك من المسؤول.","err"]:["تم إرسال طلبك إلى المسؤول، بانتظار الموافقة…","warn"];
-  app.innerHTML=header()+`<div class="card"><h2>مرحباً ${esc(me.name)}</h2><div class="note ${m[1]}" style="margin-top:0">${m[0]}</div><button class="btn ghost full" data-act="out">العودة لتسجيل الدخول</button></div>`;
+  const m=st==="approved"?["تمت الموافقة على طلبك! سجّل الدخول الآن.","good"]:st==="rejected"?["تم رفض أو إيقاف حسابك من المسؤول. يمكنك التواصل عبر الإدارة.","err"]:["تم إرسال طلبك إلى المسؤول، بانتظار الموافقة…","warn"];
+  app.innerHTML=authHero()+`<div class="box"><h2>مرحباً ${esc(me.name)}</h2><div class="note ${m[1]}" style="margin-top:0">${m[0]}</div><button class="btn ghost full" data-act="out">العودة لتسجيل الدخول</button></div>`;
 }
+
 function rWelcome(){
-  app.innerHTML=header()+`<div class="card"><div class="note good" style="margin-top:0"><b>✅ تمت الموافقة على دخولك</b><br>أهلاً بك ${esc(me.name)} في منصة طلاب علوم الحاسوب.</div>
+  app.innerHTML=authHero()+`<div class="box"><div class="note good" style="margin-top:0"><b>✅ تمت الموافقة على دخولك</b><br>أهلاً بك ${esc(me.name)} في منصة طلاب علوم الحاسوب.</div>
   <div class="note warn"><b>⚠️ تحذير بشأن السلوك</b><ul class="warn"><li>احترم زملاءك وأساتذتك في كل ما تنشره.</li><li>يُمنع التنمر أو الإساءة أو الألفاظ الجارحة.</li><li>يُمنع الغش أو تبادل الحلول في الاختبارات والتقييمات.</li><li>يحق للمسؤول إيقاف أي حساب يخالف هذه القواعد.</li></ul></div>
   <button class="btn full" data-act="agree">أوافق وأتعهد بالالتزام</button><button class="btn ghost full" data-act="out">خروج</button></div>`;
 }
-const IC={
- home:"M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z",
- people:"M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z",
- video:"M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z",
- apps:"M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z",
- bell:"M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z",
- chat:"M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z",
- search:"M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z",
- plus:"M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z",
- like:"M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z",
- comment:"M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z",
- share:"M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z",
- image:"M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z",
- pin:"M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
- code:"M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z",
- star:"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z",
- save:"M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z",
- cal:"M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z",
- flag:"M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z",
- book:"M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z",
- out:"M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"
-};
-const ic=(n,sz)=>`<svg viewBox="0 0 24 24" width="${sz||22}" height="${sz||22}" fill="currentColor" aria-hidden="true"><path d="${IC[n]}"/></svg>`;
-const PAL=["#2f6fe4","#e0457b","#0f9d7a","#f08a24","#7c4dff","#00a3c4","#c2410c","#4b5fd6"];
-const av=(name,sz)=>{const c=PAL[(name.codePointAt(0)||0)%PAL.length];return `<span class="av" style="width:${sz||40}px;height:${sz||40}px;background:${c};font-size:${Math.round((sz||40)*.42)}px">${esc(name.trim().charAt(0)||"؟")}</span>`};
-const SAMPLE=["أحمد","سارة","محمد","ليلى","عمر","هدى","خالد","نور"];
 
 function rHome(){
-  const n=me.name;
-  const side=(t,items)=>`<div class="sd-h">${t}</div>`+items.map(x=>`<a class="sd-i"><span class="sd-ic">${ic(x[0],18)}</span>${x[1]}</a>`).join("");
-  app.innerHTML=`
-  <div class="topbar">
-    <div class="tb-start"><div class="search"><span>${ic("search",18)}</span><input placeholder="ابحث في المنصة" aria-label="بحث"></div></div>
-    <nav class="tb-nav" aria-label="التنقل">
-      <a class="on" title="الرئيسية">${ic("home")}</a><a title="الزملاء">${ic("people")}</a><a title="الدروس">${ic("video")}</a><a title="المواد">${ic("apps")}</a>
-    </nav>
-    <div class="tb-end"><a class="ib" title="الإشعارات">${ic("bell",20)}<i class="dot"></i></a><a class="ib" title="الرسائل">${ic("chat",20)}</a><a class="ib" data-act="out" title="خروج">${ic("out",20)}</a>${av(n,36)}</div>
-  </div>
-  <div class="home-grid">
-    <aside class="side card">
-      <div class="me">${av(n,42)}<b>${esc(n)}</b></div>
-      ${side("الصفحات",[["flag","إعلانات الكلية"],["book","المحاضرات"]])}
-      ${side("المجموعات",[["people","مجتمع البرمجة"],["code","الذكاء الاصطناعي"],["people","الأمن السيبراني"]])}<a class="more">عرض المزيد ▾</a>
-      ${side("المواد",[["code","هياكل البيانات"],["code","قواعد البيانات"],["code","نظم التشغيل"]])}<a class="more">عرض المزيد ▾</a>
-      ${side("استكشف",[["people","المجموعات"],["star","المفضلة"],["save","المحفوظات"],["cal","الفعاليات"],["flag","الصفحات"]])}
+  const q=searchQ.trim().toLowerCase();
+  const fAnn=q?announcements.filter(a=>`${a.title||""} ${a.body||""}`.toLowerCase().includes(q)):announcements;
+  const fRes=q?resources.filter(r=>`${r.title||""} ${r.desc||""} ${r.level||""}`.toLowerCase().includes(q)):resources;
+
+  const annCards=fAnn.length
+    ?fAnn.map(a=>`<div class="feed-card"><div class="feed-head"><span class="feed-title">${esc(a.title)}</span><span class="feed-meta">${fmtDate(a.at)}</span></div><div class="muted" style="margin:0">${esc(a.body)}</div></div>`).join("")
+    :'<div class="empty">لا توجد إعلانات مطابقة حالياً.</div>';
+
+  const resCards=fRes.length
+    ?fRes.map(r=>`<div class="feed-card"><div class="feed-head"><span class="feed-title">${esc(r.title)}</span><span class="pill">${esc(r.level||"عام")}</span></div><div class="muted" style="margin:0 0 8px">${esc(r.desc||"")}</div>${r.url?`<a class="btn soft" href="${esc(r.url)}" target="_blank" rel="noopener">فتح المصدر</a>`:""}</div>`).join("")
+    :'<div class="empty">لا توجد ملخصات أو مصادر مضافة بعد.</div>';
+
+  app.innerHTML=topNav(`أهلاً ${me.name}`)+`<div class="three-col">
+    <aside>
+      <div class="box">
+        <h2>👤 بيانات الطالب</h2>
+        <div style="font-weight:700;margin-bottom:4px">${esc(me.name)}</div>
+        <div class="feed-meta">الرقم الجامعي: ${esc(me.num)}</div>
+        <div class="feed-meta">المستوى: ${esc(me.level||"غير محدد")}</div>
+        ${me.lastLoginAt?`<div class="feed-meta" style="margin-top:4px">آخر دخول: ${fmtDate(me.lastLoginAt)}</div>`:""}
+      </div>
+      <div class="box">
+        <h2>🧭 أقسام المنصة</h2>
+        <a class="nav-item" href="#sec-ann"><span>📢 إعلانات القسم</span><span class="pill">${announcements.length}</span></a>
+        <a class="nav-item" href="#sec-res"><span>📚 ملخصات ومصادر</span><span class="pill">${resources.length}</span></a>
+        <a class="nav-item" href="#sec-msg"><span>✉️ إرسال اقتراح</span><span class="pill">تواصل</span></a>
+      </div>
     </aside>
-    <main class="center">
-      <section class="card stories">
-        <div class="story add"><div class="s-img">${av(n,64)}<span class="s-plus">${ic("plus",16)}</span></div><small>قصتك</small></div>
-        ${SAMPLE.slice(0,5).map(x=>`<div class="story"><div class="s-img ring">${av(x,64)}</div><small>${x}</small></div>`).join("")}
-      </section>
-      <section class="card post-box">
-        <div class="pb-top">${av(n,40)}<div class="pb-in">بماذا تفكر يا ${esc(n)}؟</div></div>
-        <div class="pb-acts"><span class="pa c1">${ic("image",18)} صورة</span><span class="pa c2">${ic("video",18)} فيديو</span><span class="pa c3">${ic("code",18)} كود</span><span class="pa c4">${ic("pin",18)} الموقع</span></div>
-      </section>
-      <div class="feed-tabs"><a class="on">الأشهر</a><a>الأحدث</a><a>الأكثر مشاهدة</a></div>
-      <article class="card feed">
-        <div class="fd-h">${av("إ",40)}<div><b>إدارة المنصة</b><small>كلية الإمام الهادي · الآن</small></div></div>
-        <p>مرحباً بكم في منصة طلاب علوم الحاسوب. هنا سنشارك المحاضرات والإعلانات والنقاشات.</p>
-        <div class="fd-f"><a>${ic("like",18)} أعجبني</a><a>${ic("comment",18)} تعليق</a><a>${ic("share",18)} مشاركة</a></div>
-      </article>
-      <article class="card feed">
-        <div class="fd-h">${av("سارة",40)}<div><b>سارة</b><small>منذ ساعتين</small></div></div>
-        <p>هل من أحد جرّب حل تمرين الأشجار الثنائية؟ أحتاج أن نتناقش في الفكرة.</p>
-        <div class="fd-f"><a>${ic("like",18)} أعجبني</a><a>${ic("comment",18)} تعليق</a><a>${ic("share",18)} مشاركة</a></div>
-      </article>
+
+    <main>
+      ${noteHtml()}
+      <section id="sec-ann" class="box"><h2>📢 إعلانات القسم</h2>${annCards}</section>
+      <section id="sec-res" class="box"><h2>📚 ملخصات ومصادر المواد</h2>${resCards}</section>
     </main>
-    <aside class="rside">
-      <div class="card"><div class="rs-h"><b>الفعاليات القادمة</b><a>عرض الكل</a></div>
-        <div class="ev-ban">${ic("cal",34)}</div>
-        <div class="ev-row"><div class="ev-d"><small>ديسمبر</small><b>15</b></div><div><b>ورشة عمل: أساسيات البرمجة</b><small>قاعة الكلية</small></div></div>
-        <button class="btn full ghost" style="margin-top:8px">أنا مهتم</button></div>
-      <div class="card"><div class="rs-h"><b>طلبات الزمالة</b><a>عرض الكل</a></div>
-        <div class="fr">${av("خالد",44)}<div><b>خالد</b><small>3 زملاء مشتركين</small><div class="fr-b"><button class="btn">تأكيد</button><button class="btn ghost">حذف</button></div></div></div></div>
-      <div class="card"><div class="rs-h"><b>إنشاء صفحة ومجموعة</b></div>
-        <div class="grp">${av("م",44)}<div><b>مجتمع علوم الحاسوب</b><small>الطلاب</small></div><button class="btn">انضم</button></div></div>
-      <div class="card"><div class="rs-h"><b>جهات الاتصال</b><a>${ic("search",16)}</a></div>
-        ${SAMPLE.slice(1,6).map((x,i)=>`<div class="ct">${av(x,34)}<div><b>${x}</b><small class="${i%2?"off":"on"}">${i%2?"غير متصل":"متصل"}</small></div></div>`).join("")}</div>
+
+    <aside class="right-rail">
+      <section id="sec-msg" class="box">
+        <h2>✉️ إرسال اقتراح أو ملاحظة</h2>
+        <label>الموضوع</label><input id="mTitle" placeholder="مثال: طلب ملخص خوارزميات">
+        <label>الرسالة</label><textarea id="mBody" placeholder="اكتب رسالتك بوضوح…"></textarea>
+        <button class="btn full" data-act="sendmsg">إرسال الرسالة</button>
+      </section>
+      <div class="box">
+        <h2>📌 تنبيهات التخصص</h2>
+        <p class="muted" style="margin:0">التزم بقواعد السلوك الجامعي وشارك زملاءك المصادر الموثوقة.</p>
+      </div>
     </aside>
   </div>`;
 }
+
 function rAdmin(){
   const pend=students.filter(s=>s.status==="pending").sort((a,b)=>a.at-b.at);
   const appr=students.filter(s=>s.status==="approved"),rej=students.filter(s=>s.status==="rejected"),cap=cfg.capacity;
-  const rows=(l,b)=>l.length?l.map(s=>`<div class="row"><div><b>${esc(s.name)}</b><small>الرقم: ${esc(s.num)}</small></div><div class="acts">${b(s)}</div></div>`).join(""):'<div class="empty">لا يوجد</div>';
+  const rows=(l,b)=>l.length?l.map(s=>`<div class="row"><div><b>${esc(s.name)}</b><div class="feed-meta">الرقم: ${esc(s.num)}${s.level?" • "+esc(s.level):""}${s.acceptedRules?" • متعهد":""}${s.lastLoginAt?" • دخول: "+fmtDate(s.lastLoginAt):""}</div></div><div class="acts">${b(s)}</div></div>`).join(""):'<div class="empty">لا يوجد</div>';
   const ok=s=>`<button class="btn ok" data-act="approve" data-id="${esc(s.id)}">موافقة</button>`;
   const del=s=>`<button class="btn ghost" data-act="del" data-id="${esc(s.id)}">حذف</button>`;
   const no=(s,t)=>`<button class="btn no" data-act="reject" data-id="${esc(s.id)}">${t}</button>`;
-  app.innerHTML=`<div class="bar"><h2 style="margin:0">🛡️ لوحة المسؤول (${esc(me.name)})</h2><button class="btn ghost" data-act="out">خروج</button></div>
-  <div class="stats"><div class="stat"><b>${pend.length}</b><span>بانتظار القرار</span></div><div class="stat"><b>${appr.length} / ${cap}</b><span>المقبولون / السعة</span></div><div class="stat"><b>${rej.length}</b><span>المرفوضون</span></div></div>${noteHtml()}
-  <div class="card"><h2>📨 طلبات التسجيل</h2>${rows(pend,s=>ok(s)+no(s,"منع"))}</div>
-  <div class="card"><h2>✅ المقبولون</h2>${rows(appr,s=>no(s,"إيقاف"))}</div>
-  <div class="card"><h2>🚫 المرفوضون</h2>${rows(rej,s=>ok(s)+del(s))}${rej.length?'<button class="btn no full" data-act="delall">حذف كل المرفوضين ('+rej.length+')</button>':""}</div>
-  <div class="card"><h2>👥 عدد المقبولين الأقصى</h2><div class="inl"><div><input id="cap" type="number" min="1" value="${cap}"></div><button class="btn" data-act="cap">حفظ</button></div></div>`
-  +(me.main?`<div class="card"><h2>➕ إضافة مسؤول جديد</h2><p class="sub">هذا الحق خاص بالمسؤول الرئيسي فقط. كلمة السر 6 أحرف على الأقل.</p><label>اسم المستخدم</label><input id="an" autocomplete="off"><label>كلمة السر</label><input id="ap" type="password" autocomplete="off"><button class="btn full" data-act="addadmin">إضافة</button><div style="margin-top:12px"><b>المسؤولون:</b> ${MAIN_USER} (رئيسي)${admins.map(a=>"، "+esc(a.u)).join("")}</div></div>`:"");
+
+  const annRows=announcements.length
+    ?announcements.map(a=>`<div class="row"><div><b>${esc(a.title)}</b><div class="feed-meta">${esc(a.body)}</div></div><div class="acts"><button class="btn no" data-act="delann" data-id="${esc(a.id)}">حذف</button></div></div>`).join("")
+    :'<div class="empty">لا توجد إعلانات</div>';
+
+  const resRows=resources.length
+    ?resources.map(r=>`<div class="row"><div><b>${esc(r.title)} <span class="pill">${esc(r.level||"عام")}</span></b><div class="feed-meta">${esc(r.url||r.desc||"")}</div></div><div class="acts"><button class="btn no" data-act="delres" data-id="${esc(r.id)}">حذف</button></div></div>`).join("")
+    :'<div class="empty">لا توجد مصادر</div>';
+
+  const msgRows=messages.length
+    ?messages.map(m=>`<div class="row"><div><b>${esc(m.title)}</b><div class="feed-meta">من: ${esc(m.senderName)} (${esc(m.senderNum)}) • ${fmtDate(m.at)}</div><div class="muted" style="margin:4px 0 0">${esc(m.body)}</div></div><div class="acts"><button class="btn ghost" data-act="delmsg" data-id="${esc(m.id)}">حذف</button></div></div>`).join("")
+    :'<div class="empty">لا توجد رسائل من الطلاب</div>';
+
+  app.innerHTML=topNav(`لوحة المسؤول (${me.name})`)+`<div class="three-col">
+    <aside>
+      <div class="box">
+        <h2>📊 ملخص النظام</h2>
+        <div class="stats-row">
+          <div class="mini-stat"><b>${pend.length}</b><span>انتظار</span></div>
+          <div class="mini-stat"><b>${appr.length}/${cap}</b><span>السعة</span></div>
+          <div class="mini-stat"><b>${rej.length}</b><span>مرفوض</span></div>
+        </div>
+        <a class="nav-item" href="#adm-req"><span>📨 طلبات التسجيل</span><span class="pill">${pend.length}</span></a>
+        <a class="nav-item" href="#adm-pub"><span>📢 الإعلانات والمصادر</span><span class="pill">${announcements.length+resources.length}</span></a>
+        <a class="nav-item" href="#adm-msg"><span>✉️ رسائل الطلاب</span><span class="pill">${messages.length}</span></a>
+      </div>
+    </aside>
+
+    <main>
+      ${noteHtml()}
+      <section id="adm-req" class="box"><h2>📨 طلبات التسجيل</h2>${rows(pend,s=>ok(s)+no(s,"منع"))}</section>
+      <section class="box"><h2>✅ المقبولون</h2>${rows(appr,s=>no(s,"إيقاف"))}</section>
+      <section class="box"><h2>🚫 المرفوضون</h2>${rows(rej,s=>ok(s)+del(s))}${rej.length?'<button class="btn no full" data-act="delall">حذف كل المرفوضين ('+rej.length+')</button>':""}</section>
+      <section id="adm-pub" class="box"><h2>📢 نشر إعلان جديد</h2>
+        <label>عنوان الإعلان</label><input id="aTitle" autocomplete="off">
+        <label>نص الإعلان</label><textarea id="aBody" autocomplete="off"></textarea>
+        <button class="btn full" data-act="addann">نشر الإعلان</button>
+        <div style="margin-top:12px">${annRows}</div>
+      </section>
+      <section class="box"><h2>📚 إضافة ملخص أو مصدر دراسي</h2>
+        <label>اسم المادة أو الملخص</label><input id="rTitle" autocomplete="off">
+        <label>المستوى</label><select id="rLevel"><option value="عام">عام</option><option value="المستوى الأول">المستوى الأول</option><option value="المستوى الثاني">المستوى الثاني</option><option value="المستوى الثالث">المستوى الثالث</option><option value="المستوى الرابع">المستوى الرابع</option></select>
+        <label>الرابط (اختياري)</label><input id="rUrl" placeholder="https://..." autocomplete="off">
+        <label>وصف مختصر</label><input id="rDesc" autocomplete="off">
+        <button class="btn full" data-act="addres">إضافة المصدر</button>
+        <div style="margin-top:12px">${resRows}</div>
+      </section>
+    </main>
+
+    <aside class="right-rail">
+      <section id="adm-msg" class="box"><h2>✉️ رسائل الطلاب (${messages.length})</h2>${msgRows}</section>
+      <section class="box"><h2>👥 عدد المقبولين الأقصى</h2><div class="inl"><div><input id="cap" type="number" min="1" value="${cap}"></div><button class="btn" data-act="cap">حفظ</button></div></section>
+      ${me.main?`<section class="box"><h2>➕ إضافة مسؤول جديد</h2><p class="muted">هذا الحق خاص بالمسؤول الرئيسي فقط. كلمة السر 6 أحرف على الأقل.</p><label>اسم المستخدم</label><input id="an" autocomplete="off"><label>كلمة السر</label><input id="ap" type="password" autocomplete="off"><button class="btn full" data-act="addadmin">إضافة</button><div style="margin-top:12px"><b>المسؤولون:</b> ${MAIN_USER} (رئيسي)${admins.map(a=>"، "+esc(a.u)).join("")}</div></section>`:""}
+    </aside>
+  </div>`;
+}
+
+function startStudentSubs(){
+  clearSubs();
+  unsubs.push(onSnapshot(collection(db,"announcements"),s=>{announcements=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"resources"),s=>{resources=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
 }
 
 function startAdminSubs(){
@@ -278,48 +603,136 @@ function startAdminSubs(){
   unsubs.push(onSnapshot(collection(db,"students"),s=>{students=s.docs.map(d=>({...d.data(),id:d.id}));if(view==="admin")render()},err));
   unsubs.push(onSnapshot(doc(db,"config","main"),s=>{if(s.exists()&&s.data().capacity)cfg=s.data();if(view==="admin")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"admins"),s=>{admins=s.docs.map(d=>d.data());if(view==="admin")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"announcements"),s=>{announcements=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="admin")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"resources"),s=>{resources=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="admin")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"messages"),s=>{messages=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="admin")render()},()=>{}));
 }
-function watchStudent(id){
+
+function watchStudent(uid){
   clearSubs();
-  unsubs.push(onSnapshot(doc(db,"students",id),s=>{if(s.exists()){me.status=s.data().status;if(view==="wait")rWait()}},()=>{}));
+  unsubs.push(onSnapshot(doc(db,"students",uid),s=>{if(s.exists()){me={...me,...s.data()};if(view==="wait")rWait()}},()=>{}));
 }
+
 async function adminLogin(user,pw){
-  const cr=await signInWithEmailAndPassword(auth,user+DOMAIN,pw);
+  const cr=await signInWithEmailAndPassword(auth,user+ADMIN_DOMAIN,pw);
   const main=user===MAIN_USER;
   if(!main){try{const d=await getDoc(doc(db,"admins",cr.user.uid));if(!d.exists())throw 0}catch(e){await signOut(auth);throw new Error("not-admin")}}
   me={name:user,main};view="admin";startAdminSubs();render();
 }
 
+app.addEventListener("input",ev=>{
+  if(ev.target.id==="qInput"){
+    searchQ=ev.target.value;
+    if(view==="home")rHome();
+  }
+});
+
 app.addEventListener("click",async ev=>{
+  const eye=ev.target.closest("[data-eye]");
+  if(eye){
+    const inp=document.getElementById(eye.dataset.eye);
+    if(inp){inp.type=inp.type==="password"?"text":"password";eye.textContent=inp.type==="password"?"👁️":"🙈"}
+    return;
+  }
   const el=ev.target.closest("[data-act]");if(!el||busy)return;
-  const a=el.dataset.act,f1=document.getElementById("f1"),f2=document.getElementById("f2");
+  const a=el.dataset.act,f1=document.getElementById("f1"),f2=document.getElementById("f2"),f3=document.getElementById("f3"),f4=document.getElementById("f4"),f5=document.getElementById("f5");
   setNote(null);busy=true;
   try{
     if(a==="tab"){tab=el.dataset.v;render()}
+    else if(a==="clearid"){saveId("");render()}
     else if(a==="out"){clearSubs();await signOut(auth);me=null;view="auth";tab="login";render()}
-    else if(a==="agree"){view="home";render()}
+    else if(a==="agree"){
+      if(me?.uid){
+        await updateDoc(doc(db,"students",me.uid),{acceptedRules:true,acceptedAt:Date.now()});
+        me.acceptedRules=true;
+      }
+      view="home";startStudentSubs();render();
+    }
     else if(a==="reg"){
-      const n=f1.value.trim(),num=f2.value.trim();
-      if(!n||!num){setNote("أدخل الاسم والرقم.");return render()}
+      const n=f1.value.trim(),num=f2.value.trim(),lvl=f3.value,pw=f4.value.trim(),pw2=f5.value.trim();
+      if(!n||!num||!pw||!pw2){setNote("أدخل الاسم والرقم الجامعي وكلمة السر وتأكيدها.");return render()}
       if(!/^[A-Za-z0-9_.-]+$/.test(num)){setNote("الرقم يجب أن يحتوي أرقاماً أو حروفاً إنجليزية فقط.");return render()}
-      const ex=await getDoc(doc(db,"students",num));
-      if(ex.exists()){const st=ex.data().status;setNote(st==="approved"?"هذا الرقم مقبول مسبقاً، سجّل الدخول.":st==="rejected"?"تم رفض هذا الرقم سابقاً.":"طلبك مرسل مسبقاً وبانتظار المسؤول.","warn");return render()}
-      await setDoc(doc(db,"students",num),{name:n,num,status:"pending",at:Date.now()});
-      me={name:n,num,status:"pending"};view="wait";watchStudent(num);render();
+      if(pw.length<6){setNote("كلمة السر يجب أن تكون 6 أحرف على الأقل.");return render()}
+      if(pw!==pw2){setNote("كلمتا السر غير متطابقتين.");return render()}
+      const cr=await createUserWithEmailAndPassword(auth,num+STUDENT_DOMAIN,pw);
+      const data={uid:cr.user.uid,name:n,num,level:lvl,status:"pending",acceptedRules:false,at:Date.now()};
+      await setDoc(doc(db,"students",cr.user.uid),data);
+      saveId(num);
+      me=data;view="wait";watchStudent(cr.user.uid);render();
     }
     else if(a==="login"){
+      if(isLocked()){setNote("تم إيقاف المحاولات مؤقتاً بسبب تكرار الخطأ، انتظر قليلاً.");return render()}
       const n=f1.value.trim(),pw=f2.value.trim();
-      if(!n||!pw){setNote("أدخل الاسم والرقم.");return render()}
-      let s=null;
-      if(/^[A-Za-z0-9_.-]+$/.test(pw)){const d=await getDoc(doc(db,"students",pw));if(d.exists()&&d.data().name.trim().toLowerCase()===n.toLowerCase())s=d.data()}
-      if(s){me={name:s.name,num:s.num,status:s.status};
-        if(s.status==="approved"){view="welcome"}else{view="wait";watchStudent(s.num)}
-        return render()}
-      try{await adminLogin(n.toLowerCase(),pw)}catch(e){setNote("الاسم أو الرقم غير صحيح، أو لم تسجّل بعد.");render()}
+      if(!n||!pw){setNote("أدخل الرقم الجامعي أو اسم المسؤول وكلمة السر.");return render()}
+      let loggedIn=false;
+      if(/^[A-Za-z0-9_.-]+$/.test(n) && pw.length>=6){
+        try{
+          const cr=await signInWithEmailAndPassword(auth,n+STUDENT_DOMAIN,pw);
+          const snap=await getDoc(doc(db,"students",cr.user.uid));
+          if(snap.exists()){
+            const s=snap.data();
+            const now=Date.now();
+            await updateDoc(doc(db,"students",cr.user.uid),{lastLoginAt:now}).catch(()=>{});
+            saveId(n);
+            failCount=0;
+            me={...s,lastLoginAt:now};
+            if(s.status==="approved"){
+              if(s.acceptedRules){view="home";startStudentSubs()}
+              else{view="welcome"}
+            }else{view="wait";watchStudent(cr.user.uid)}
+            loggedIn=true;
+            return render();
+          }
+          await signOut(auth);
+        }catch(_e){}
+      }
+      if(!loggedIn){
+        try{
+          await adminLogin(n.toLowerCase(),pw);
+          failCount=0;
+        }catch(e){
+          failCount++;
+          if(failCount>=4){lockUntil=Date.now()+20000;setNote("محاولات خاطئة متكررة. تم تفعيل مؤقت تهدئة لمدة 20 ثانية.");}
+          else{setNote(friendlyAuthError(e));}
+          render();
+        }
+      }
     }
+    else if(a==="sendmsg"){
+      const title=document.getElementById("mTitle").value.trim(),body=document.getElementById("mBody").value.trim();
+      if(!title||!body){setNote("اكتب الموضوع ونص الرسالة.");return render()}
+      await addDoc(collection(db,"messages"),{uid:me.uid,senderName:me.name,senderNum:me.num,title,body,at:Date.now()});
+      setNote("تم إرسال رسالتك إلى المسؤول بنجاح.","good");render();
+    }
+    else if(a==="addann"){
+      const title=document.getElementById("aTitle").value.trim(),body=document.getElementById("aBody").value.trim();
+      if(!title||!body){setNote("أدخل عنوان الإعلان ونصه.");return render()}
+      await addDoc(collection(db,"announcements"),{title,body,at:Date.now()});
+      setNote("تم نشر الإعلان.","good");render();
+    }
+    else if(a==="delann"){await deleteDoc(doc(db,"announcements",el.dataset.id))}
+    else if(a==="addres"){
+      const title=document.getElementById("rTitle").value.trim(),level=document.getElementById("rLevel").value,url=document.getElementById("rUrl").value.trim(),desc=document.getElementById("rDesc").value.trim();
+      if(!title){setNote("أدخل اسم المادة أو الملخص.");return render()}
+      await addDoc(collection(db,"resources"),{title,level,url,desc,at:Date.now()});
+      setNote("تمت إضافة المصدر.","good");render();
+    }
+    else if(a==="delres"){await deleteDoc(doc(db,"resources",el.dataset.id))}
+    else if(a==="delmsg"){await deleteDoc(doc(db,"messages",el.dataset.id))}
     else if(a==="approve"){
-      if(count("approved")>=cfg.capacity){setNote(`وصلت للحد الأقصى (${cfg.capacity}). ارفع العدد الأقصى أولاً.`);return render()}
-      await updateDoc(doc(db,"students",el.dataset.id),{status:"approved"});
+      const targetId=el.dataset.id;
+      const studentRef=doc(db,"students",targetId);
+      const cfgRef=doc(db,"config","main");
+      await runTransaction(db,async tx=>{
+        const [stSnap,cfgSnap]=await Promise.all([tx.get(studentRef),tx.get(cfgRef)]);
+        if(!stSnap.exists())throw new Error("الطالب غير موجود.");
+        const cap=cfgSnap.exists()&&Number(cfgSnap.data().capacity)>0?Number(cfgSnap.data().capacity):cfg.capacity;
+        const currentApproved=count("approved")+(stSnap.data().status==="approved"?-1:0);
+        if(stSnap.data().status!=="approved"&&currentApproved>=cap){
+          throw new Error(`وصلت للحد الأقصى (${cap}). ارفع العدد الأقصى أولاً.`);
+        }
+        tx.update(studentRef,{status:"approved"});
+      });
     }
     else if(a==="reject"){await updateDoc(doc(db,"students",el.dataset.id),{status:"rejected"})}
     else if(a==="del"){if(confirm("حذف هذا الطلب نهائياً؟"))await deleteDoc(doc(db,"students",el.dataset.id))}
@@ -336,17 +749,16 @@ app.addEventListener("click",async ev=>{
       if(u===MAIN_USER){setNote("هذا الاسم محجوز.");return render()}
       const second=initializeApp(firebaseConfig,"second"+Date.now());
       const a2=getAuth(second);
-      const cr=await createUserWithEmailAndPassword(a2,u+DOMAIN,p);
+      const cr=await createUserWithEmailAndPassword(a2,u+ADMIN_DOMAIN,p);
       await signOut(a2);
       await setDoc(doc(db,"admins",cr.user.uid),{u,uid:cr.user.uid});
       setNote("تمت إضافة المسؤول "+u,"good");render();
     }
-  }catch(e){setNote("حدث خطأ: "+(e.code||e.message||"غير معروف"));render()}
+  }catch(e){setNote("حدث خطأ: "+friendlyAuthError(e));render()}
   finally{busy=false}
 });
 render();
 
-/* ===== سطر الكتابة المتحركة ===== */
 (function(){
   const ph=['> while(alive){ learn(); }','> git commit -m "new idea"','> print("Hello, CS!")','> sudo make me_a_dev'];
   let pi=0,ci=0,del=false,hold=0;
