@@ -139,7 +139,6 @@ body{
 }
 @media (max-width:1024px){.admin-layout{grid-template-columns:1fr}}
 
-/* واجهة المنصة الدراسية بأسلوب Harmash */
 .course-tabs{
   display:flex;
   gap:6px;
@@ -487,93 +486,13 @@ const ADMIN_DOMAIN = "@platform.local";
 const STUDENT_DOMAIN = "@students.platform.local";
 const LAST_ID_KEY = "cs_platform_last_id";
 const LOGO_SRC = "./logo.png";
-
-// 7 مواد دراسية بدروس منظمة بأسلوب Harmash
-const SEVEN_SUBJECTS = [
-  {
-    id:"s1",
-    tab:"قواعد البيانات",
-    title:"تعلم قواعد البيانات",
-    lessons:[
-      { t:"مفهوم البيانات", body:"البيانات هي حقائق أو قياسات أو قيم خام (نصوص، أرقام، تواريخ) يتم تسجيلها ليتم تنظيمها ومعالجتها واستخراج معلومات مفيدة منها." },
-      { t:"مفهوم قواعد البيانات", body:"قاعدة البيانات هي مجموعة منظمة من البيانات المترابطة تُدار عبر نظام إدارة قواعد البيانات (DBMS) لتسهيل الإدخال والاستعلام والحماية والتحديث." },
-      { t:"ما هو SQL", body:"لغة الاستعلام البنيوية (SQL) هي اللغة القياسية للتعامل مع قواعد البيانات العلائقية مثل إنشاء الجداول (CREATE) والاستعلام (SELECT) والإضافة والتعديل والحذف." },
-      { t:"ماذا سأتعلم من هذه الدورة؟", body:"ستتعلم تصميم الجداول والمفاتيح الأساسية والأجنبية، وكتابة استعلامات SELECT وJOIN، وتطبيق مبادئ التسوية (Normalization)." }
-    ]
-  },
-  {
-    id:"s2",
-    tab:"البرمجة وهياكل البيانات",
-    title:"تعلم البرمجة وهياكل البيانات",
-    lessons:[
-      { t:"مفهوم الخوارزمية والبرنامج", body:"الخوارزمية هي سلسلة خطوات واضحة ومحددة لحل مشكلة، والبرنامج هو تنفيذ هذه الخوارزمية بلغة برمجة يفهمها الحاسوب." },
-      { t:"المصفوفات والقوائم", body:"تخزن المصفوفة عناصر متتالية في الذاكرة للوصول السريع بالفهرس، بينما توفر القوائم مرونة أكبر في الإضافة والحذف." },
-      { t:"المكدس والطابور", body:"المكدس (Stack) يعمل بمبدأ LIFO (الداخل أخيراً يخرج أولاً)، بينما الطابور (Queue) يعمل بمبدأ FIFO (الداخل أولاً يخرج أولاً)." },
-      { t:"الأشجار والبحث والترتيب", body:"تُستخدم الأشجار لتمثيل البيانات الهرمية، وتُقاس كفاءة خوارزميات البحث والترتيب بزمن التنفيذ (Big-O)." }
-    ]
-  },
-  {
-    id:"s3",
-    tab:"الخوارزميات",
-    title:"تعلم تحليل وتصميم الخوارزميات",
-    lessons:[
-      { t:"تحليل التعقيد الزمني والمكاني", body:"يساعد تحليل الخوارزميات على مقارنة الحلول من حيث استهلاك الوقت والذاكرة عند زيادة حجم المدخلات." },
-      { t:"التقسيم والفتح (Divide & Conquer)", body:"تقسيم المسألة الكبيرة إلى مسائل فرعية أصغر، وحل كل منها ثم دمج النتائج كما في الترتيب بالدمج (Merge Sort)." },
-      { t:"البرمجة الديناميكية", body:"تخزين نتائج المسائل الفرعية المتكررة لتجنب إعادة حسابها وتحسين الأداء بشكل كبير." },
-      { t:"الخوارزميات الجشعة والرسوم البيانية", body:"اتخاذ أفضل خيار محلي في كل خطوة عند ملاءمته، ودراسة أقصر المسارات في الرسوم البيانية (Graphs)." }
-    ]
-  },
-  {
-    id:"s4",
-    tab:"شبكات الحاسوب",
-    title:"تعلم شبكات الحاسوب",
-    lessons:[
-      { t:"أساسيات الشبكات وأنواعها", body:"ربط الأجهزة لتبادل البيانات والموارد عبر الشبكات المحلية (LAN) والواسعة (WAN)." },
-      { t:"نموذج OSI ونموذج TCP/IP", body:"تقسيم عملية الاتصال إلى طبقات واضحة تبدأ من الطبقة الفيزيائية وتصل إلى طبقة التطبيقات." },
-      { t:"عناوين IP والتوجيه", body:"تحديد هوية الأجهزة على الشبكة وتوجيه الحزم عبر المسارات المناسبة للوصول إلى الوجهة." },
-      { t:"بروتوكولات النقل TCP وUDP", body:"يضمن TCP وصول البيانات بالترتيب وبدون فقدان، بينما يركز UDP على السرعة وانخفاض التأخير." }
-    ]
-  },
-  {
-    id:"s5",
-    tab:"نظم التشغيل",
-    title:"تعلم نظم التشغيل",
-    lessons:[
-      { t:"دور نظام التشغيل", body:"يعمل نظام التشغيل كوسيط بين العتاد والبرمجيات لإدارة المعالج والذاكرة والملفات والأجهزة الطرفية." },
-      { t:"العمليات والخيوط (Processes & Threads)", body:"العملية برنامج قيد التنفيذ، والخيوط وحدات تنفيذ خفيفة داخل العملية لرفع التوازي والاستجابة." },
-      { t:"إدارة الذاكرة والصفحات", body:"تنظيم توزيع الذاكرة العشوائية والذاكرة الافتراضية ومنع تداخل البرامج." },
-      { t:"التزامن والجمود (Deadlock)", body:"تنسيق الوصول للموارد المشتركة وتفادي حالة توقف العمليات بانتظار بعضها إلى الأبد." }
-    ]
-  },
-  {
-    id:"s6",
-    tab:"هندسة البرمجيات",
-    title:"تعلم هندسة البرمجيات",
-    lessons:[
-      { t:"دورة حياة تطوير البرمجيات (SDLC)", body:"مراحل بناء النظام من جمع المتطلبات والتحليل والتصميم والبرمجة إلى الاختبار والصيانة." },
-      { t:"جمع المتطلبات ونمذجة النظام", body:"تحديد المتطلبات الوظيفية وغير الوظيفية وتوثيقها بدقة قبل كتابة الكود." },
-      { t:"معمارية البرمجيات وأنماط التصميم", body:"هيكلة النظام إلى وحدات مستقلة قابلة للتوسع والصيانة." },
-      { t:"الاختبار وضمان الجودة", body:"التحقق من خلو النظام من الأخطاء ومطابقته للمتطلبات قبل وبعد الإطلاق." }
-    ]
-  },
-  {
-    id:"s7",
-    tab:"الذكاء الاصطناعي",
-    title:"تعلم الذكاء الاصطناعي وتعلم الآلة",
-    lessons:[
-      { t:"مقدمة في الذكاء الاصطناعي", body:"بناء أنظمة قادرة على الاستدلال والبحث واتخاذ القرار وحل المشكلات المعقدة." },
-      { t:"خوارزميات البحث وحل المشكلات", body:"استكشاف فضاء الحلول للوصول إلى حالة الهدف بأقل تكلفة ممكنة." },
-      { t:"التعلم الموجه وغير الموجه", body:"تدريب النماذج على بيانات موسومة للتنبؤ والتصنيف، أو اكتشاف الأنماط في البيانات غير الموسومة." },
-      { t:"تقييم النماذج والشبكات العصبونية", body:"قياس دقة النموذج على بيانات اختبار وتجنب فرط التخصيص (Overfitting)." }
-    ]
-  }
-];
+const MAX_COURSE_SUBJECTS = 7;
 
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp), db = getFirestore(fbApp);
 
-let students=[],admins=[],announcements=[],resources=[],messages=[],groups=[],groupPosts=[],groupReplies=[],cfg={capacity:15},me=null,view="auth",tab="login",studentPage="posts",note=null,unsubs=[],busy=false,searchQ="";
-let activeSubjectId="s1", activeLessonIdx=0;
+let students=[],admins=[],announcements=[],resources=[],messages=[],groups=[],groupPosts=[],groupReplies=[],courseSubjects=[],courseLessons=[],cfg={capacity:15},me=null,view="auth",tab="login",studentPage="posts",note=null,unsubs=[],busy=false,searchQ="";
+let activeSubjectId="", activeLessonIdx=0;
 let selectedGroupId="all";
 let showAllRes=false,showAllAnn=false,showAllGrp=false;
 let failCount=0,lockUntil=0;
@@ -695,7 +614,7 @@ function rChoose(){
       <div class="choice-card" data-act="go_subjects">
         <div class="choice-icon">📚</div>
         <div class="choice-title">المنصة الدراسية</div>
-        <div class="choice-desc">الاطلاع على المواد الدراسية السبع ودروسها</div>
+        <div class="choice-desc">الاطلاع على المواد الدراسية ودروسها</div>
       </div>
     </div>
     <button class="btn ghost full" data-act="out">خروج</button>
@@ -703,38 +622,39 @@ function rChoose(){
 }
 
 function rSubjectsPage(){
+  if(!courseSubjects.length){
+    return `<section class="box">
+      <div class="course-nav-bar">
+        <button class="course-btn-navy" data-act="go_posts">‹ الرئيسية</button>
+      </div>
+      <div class="empty" style="padding:28px 12px">
+        المواد الدراسية فارغة حالياً — سيقوم المسؤول بإضافتها وتجهيز دروسها قريباً.
+      </div>
+    </section>`;
+  }
+
   const q=searchQ.trim().toLowerCase();
-  const subj = SEVEN_SUBJECTS.find(s => s.id === activeSubjectId) || SEVEN_SUBJECTS[0];
-
-  const baseLessons = [...subj.lessons];
-  const extraRes = resources.filter(r =>
-    `${r.title||""} ${r.desc||""} ${r.level||""}`.toLowerCase().includes(subj.tab.toLowerCase())
-  );
-  extraRes.forEach(r => {
-    baseLessons.push({
-      t: r.title || "مصدر إضافي",
-      body: r.desc || "ملخص أو مصدر مضاف للمادة.",
-      url: r.url || ""
-    });
-  });
-
+  const subj = courseSubjects.find(s => s.id === activeSubjectId) || courseSubjects[0];
+  const subjLessonsAll = courseLessons.filter(l => l.subjectId === subj.id);
   const lessons = q
-    ? baseLessons.filter(l => `${l.t} ${l.body}`.toLowerCase().includes(q))
-    : baseLessons;
+    ? subjLessonsAll.filter(l => `${l.title||""} ${l.body||""}`.toLowerCase().includes(q))
+    : subjLessonsAll;
 
   const safeIdx = lessons.length ? Math.min(activeLessonIdx, lessons.length - 1) : 0;
-  const currentLesson = lessons[safeIdx] || { t:"لا توجد دروس مطابقة", body:"جرّب كلمة بحث أخرى أو عد إلى بداية الدورة.", url:"" };
+  const currentLesson = lessons[safeIdx] || null;
 
-  const tabsHtml = SEVEN_SUBJECTS.map(s =>
-    `<button class="course-tab ${s.id === subj.id ? "active" : ""}" data-act="pick_subj" data-id="${esc(s.id)}">${esc(s.tab)}</button>`
+  const tabsHtml = courseSubjects.map(s =>
+    `<button class="course-tab ${s.id === subj.id ? "active" : ""}" data-act="pick_subj" data-id="${esc(s.id)}">${esc(s.tabName || s.title)}</button>`
   ).join("");
 
-  const listHtml = lessons.map((l, idx) =>
-    `<div class="lesson-link-item ${idx === safeIdx ? "active" : ""}" data-act="pick_lesson" data-idx="${idx}">
-      <span>${esc(l.t)}</span>
-      <span>‹</span>
-    </div>`
-  ).join("");
+  const listHtml = lessons.length
+    ? lessons.map((l, idx) =>
+        `<div class="lesson-link-item ${idx === safeIdx ? "active" : ""}" data-act="pick_lesson" data-idx="${idx}">
+          <span>${esc(l.title)}</span>
+          <span>‹</span>
+        </div>`
+      ).join("")
+    : `<div class="empty">لا توجد دروس مضافة لهذه المادة بعد.</div>`;
 
   return `<section class="box">
     <div class="course-tabs">${tabsHtml}</div>
@@ -745,15 +665,19 @@ function rSubjectsPage(){
     </div>
 
     <h2 style="margin:12px 0 6px;font-size:1.3rem">${esc(subj.title)}</h2>
+    ${subj.url ? `<div style="margin-bottom:10px"><a class="btn soft" href="${esc(subj.url)}" target="_blank" rel="noopener">فتح رابط المادة</a></div>` : ""}
+
     <div class="lesson-panel">
-      <div class="feed-meta" style="margin-bottom:4px">الدرس ${safeIdx + 1} من ${lessons.length || 1}</div>
-      <h3 style="margin:0 0 8px;font-size:1.05rem;color:var(--ink)">${esc(currentLesson.t)}</h3>
-      <div style="white-space:pre-line;font-size:.94rem;color:var(--ink)">${esc(currentLesson.body)}</div>
-      ${currentLesson.url ? `<div style="margin-top:12px"><a class="btn soft" href="${esc(currentLesson.url)}" target="_blank" rel="noopener">فتح الملف / المصدر</a></div>` : ""}
+      ${currentLesson ? `
+        <div class="feed-meta" style="margin-bottom:4px">الدرس ${safeIdx + 1} من ${lessons.length}</div>
+        <h3 style="margin:0 0 8px;font-size:1.05rem;color:var(--ink)">${esc(currentLesson.title)}</h3>
+        <div style="white-space:pre-line;font-size:.94rem;color:var(--ink)">${esc(currentLesson.body||"")}</div>
+        ${currentLesson.url ? `<div style="margin-top:12px"><a class="btn soft" href="${esc(currentLesson.url)}" target="_blank" rel="noopener">فتح الملف / المصدر</a></div>` : ""}
+      ` : `<div class="empty">لم تتم إضافة دروس لهذه المادة بعد.</div>`}
     </div>
 
     <div class="lesson-list-box">
-      ${listHtml || `<div class="empty">لا توجد دروس مطابقة للبحث.</div>`}
+      ${listHtml}
     </div>
   </section>`;
 }
@@ -832,8 +756,8 @@ function rHome(){
         <span>💬 مكان المنشورات</span>
       </a>
       <a class="rail-item" data-act="go_subjects">
-        <span>📚 المنصة الدراسية (7 مواد)</span>
-        <span class="pill">7</span>
+        <span>📚 المنصة الدراسية</span>
+        <span class="pill">${courseSubjects.length}/${MAX_COURSE_SUBJECTS}</span>
       </a>
 
       <div class="rail-sec-title">👥 القروبات والمجتمعات</div>
@@ -904,6 +828,29 @@ function rAdmin(){
     ? groups.map(g => `<div class="row"><div><b>${esc(g.name)}</b><div class="feed-meta">${esc(g.desc||"")}</div></div><div class="acts"><button class="btn no" data-act="delgrp" data-id="${esc(g.id)}">حذف القروب</button></div></div>`).join("")
     : '<div class="empty">لا توجد قروبات مضافة</div>';
 
+  const subjOptions = courseSubjects.length
+    ? courseSubjects.map(s => `<option value="${esc(s.id)}">${esc(s.title)} (${esc(s.tabName||"")})</option>`).join("")
+    : `<option value="">أضف مادة أولاً</option>`;
+
+  const courseManageRows = courseSubjects.length
+    ? courseSubjects.map(s => {
+        const subLessons = courseLessons.filter(l => l.subjectId === s.id);
+        const lessonItems = subLessons.length
+          ? subLessons.map(l => `<div class="row" style="padding:6px 0;margin-inline-start:12px">
+              <div>• <b>${esc(l.title)}</b><div class="feed-meta">${esc((l.body||"").slice(0,90))}${(l.body||"").length>90?"…":""}</div></div>
+              <div class="acts"><button class="btn ghost" style="padding:4px 9px;font-size:.78rem" data-act="dellesson" data-id="${esc(l.id)}">حذف الدرس</button></div>
+            </div>`).join("")
+          : `<div class="feed-meta" style="margin-inline-start:12px">لا توجد دروس في هذه المادة بعد</div>`;
+        return `<div class="feed-card">
+          <div class="feed-head">
+            <div><span class="feed-title">${esc(s.title)}</span> <span class="pill">تبويب: ${esc(s.tabName||s.title)}</span></div>
+            <button class="btn no" style="padding:4px 9px;font-size:.78rem" data-act="delsubj" data-id="${esc(s.id)}">حذف المادة</button>
+          </div>
+          ${lessonItems}
+        </div>`;
+      }).join("")
+    : `<div class="empty">لم يتم إنشاء أي مادة بعد (${courseSubjects.length}/${MAX_COURSE_SUBJECTS}).</div>`;
+
   const annRows=announcements.length
     ?announcements.map(a=>`<div class="row"><div><b>${esc(a.title)}</b><div class="feed-meta">${esc(a.body)}</div></div><div class="acts"><button class="btn no" data-act="delann" data-id="${esc(a.id)}">حذف</button></div></div>`).join("")
     :'<div class="empty">لا توجد إعلانات</div>';
@@ -926,6 +873,7 @@ function rAdmin(){
           <div class="mini-stat"><b>${rej.length}</b><span>مرفوض</span></div>
         </div>
         <a class="rail-item" href="#adm-req"><span>📨 طلبات التسجيل</span><span class="pill">${pend.length}</span></a>
+        <a class="rail-item" href="#adm-courses"><span>📚 إدارة المواد السبعة</span><span class="pill">${courseSubjects.length}/${MAX_COURSE_SUBJECTS}</span></a>
         <a class="rail-item" href="#adm-grp"><span>👥 إدارة القروبات</span><span class="pill">${groups.length}</span></a>
         <a class="rail-item" href="#adm-pub"><span>📢 الإعلانات والمصادر</span><span class="pill">${announcements.length+resources.length}</span></a>
         <a class="rail-item" href="#adm-msg"><span>✉️ رسائل الطلاب</span><span class="pill">${messages.length}</span></a>
@@ -936,6 +884,32 @@ function rAdmin(){
       ${noteHtml()}
       <section id="adm-req" class="box"><h2>📨 طلبات التسجيل</h2>${rows(pend,s=>ok(s)+no(s,"منع"))}</section>
       <section class="box"><h2>✅ المقبولون</h2>${rows(appr,s=>no(s,"إيقاف"))}</section>
+
+      <section id="adm-courses" class="box">
+        <h2>📚 إنشاء وإدارة المواد الدراسية (${courseSubjects.length}/${MAX_COURSE_SUBJECTS})</h2>
+        <label>اسم التبويب المختصر (مثل: SQL أو قواعد البيانات)</label>
+        <input id="csTab" placeholder="مثال: SQL" autocomplete="off">
+        <label>عنوان المادة / الدورة (مثل: تعلم قواعد البيانات)</label>
+        <input id="csTitle" placeholder="مثال: تعلم قواعد البيانات" autocomplete="off">
+        <label>رابط مصدر اختياري للمادة</label>
+        <input id="csUrl" placeholder="https://..." autocomplete="off">
+        <button class="btn full" data-act="addsubj" ${courseSubjects.length>=MAX_COURSE_SUBJECTS?"disabled":""}>إنشاء مادة جديدة</button>
+
+        <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+
+        <h2 style="margin-top:0">➕ إضافة درس داخل مادة</h2>
+        <label>اختر المادة</label>
+        <select id="clSubj">${subjOptions}</select>
+        <label>عنوان الدرس (مثل: مفهوم البيانات)</label>
+        <input id="clTitle" placeholder="مثال: مفهوم البيانات" autocomplete="off">
+        <label>شرح الدرس</label>
+        <textarea id="clBody" placeholder="اكتب شرح الدرس بالتفصيل…"></textarea>
+        <label>رابط ملف أو مصدر للدرس (اختياري)</label>
+        <input id="clUrl" placeholder="https://..." autocomplete="off">
+        <button class="btn full" data-act="addlesson">إضافة الدرس</button>
+
+        <div style="margin-top:16px">${courseManageRows}</div>
+      </section>
 
       <section id="adm-grp" class="box">
         <h2>➕ إنشاء قروب جديد للطلاب</h2>
@@ -977,6 +951,8 @@ function startStudentSubs(){
   unsubs.push(onSnapshot(collection(db,"groups"),s=>{groups=s.docs.map(d=>({...d.data(),id:d.id}));if(view==="home")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"group_posts"),s=>{groupPosts=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"group_replies"),s=>{groupReplies=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));if(view==="home")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"course_subjects"),s=>{courseSubjects=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));if(!activeSubjectId&&courseSubjects.length)activeSubjectId=courseSubjects[0].id;if(view==="home")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"course_lessons"),s=>{courseLessons=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));if(view==="home")render()},()=>{}));
 }
 
 function startAdminSubs(){
@@ -989,6 +965,8 @@ function startAdminSubs(){
   unsubs.push(onSnapshot(collection(db,"resources"),s=>{resources=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="admin")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"messages"),s=>{messages=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="admin")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"groups"),s=>{groups=s.docs.map(d=>({...d.data(),id:d.id}));if(view==="admin")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"course_subjects"),s=>{courseSubjects=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));if(view==="admin")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"course_lessons"),s=>{courseLessons=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));if(view==="admin")render()},()=>{}));
 }
 
 function watchStudent(uid){
@@ -1027,6 +1005,38 @@ app.addEventListener("click",async ev=>{
     else if(a==="pick_subj"){activeSubjectId=el.dataset.id;activeLessonIdx=0;render()}
     else if(a==="pick_lesson"){activeLessonIdx=parseInt(el.dataset.idx,10)||0;render()}
     else if(a==="next_lesson"){activeLessonIdx=(activeLessonIdx||0)+1;render()}
+    else if(a==="addsubj"){
+      if(courseSubjects.length>=MAX_COURSE_SUBJECTS){setNote(`الحد الأقصى هو ${MAX_COURSE_SUBJECTS} مواد.`,"warn");return render()}
+      const tabName=document.getElementById("csTab").value.trim();
+      const title=document.getElementById("csTitle").value.trim();
+      const url=document.getElementById("csUrl").value.trim();
+      if(!title){setNote("أدخل عنوان المادة.");return render()}
+      await addDoc(collection(db,"course_subjects"),{tabName:tabName||title,title,url,at:Date.now()});
+      setNote("تم إنشاء المادة بنجاح.","good");render();
+    }
+    else if(a==="delsubj"){
+      if(confirm("حذف هذه المادة وكل دروسها؟")){
+        const subId=el.dataset.id;
+        const relatedLessons=courseLessons.filter(l=>l.subjectId===subId);
+        for(const l of relatedLessons) await deleteDoc(doc(db,"course_lessons",l.id));
+        await deleteDoc(doc(db,"course_subjects",subId));
+        setNote("تم حذف المادة.","good");render();
+      }
+    }
+    else if(a==="addlesson"){
+      const subjectId=document.getElementById("clSubj").value;
+      const title=document.getElementById("clTitle").value.trim();
+      const body=document.getElementById("clBody").value.trim();
+      const url=document.getElementById("clUrl").value.trim();
+      if(!subjectId){setNote("أنشئ مادة أولاً قبل إضافة درس.");return render()}
+      if(!title){setNote("أدخل عنوان الدرس.");return render()}
+      await addDoc(collection(db,"course_lessons"),{subjectId,title,body,url,at:Date.now()});
+      setNote("تمت إضافة الدرس بنجاح.","good");render();
+    }
+    else if(a==="dellesson"){
+      await deleteDoc(doc(db,"course_lessons",el.dataset.id));
+      setNote("تم حذف الدرس.","good");render();
+    }
     else if(a==="selectgrp"){studentPage="posts";selectedGroupId=el.dataset.id;view="home";startStudentSubs();render()}
     else if(a==="togres"){showAllRes=!showAllRes;render()}
     else if(a==="togann"){showAllAnn=!showAllAnn;render()}
