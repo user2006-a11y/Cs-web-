@@ -13,7 +13,6 @@ body{background:#d7e5ff;color:var(--tx);font-family:"Segoe UI",Tahoma,Arial,sans
 .scene svg{width:100%;height:100%;display:block}
 .wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:22px 14px 40px}
 .hero{text-align:center;margin:6px 0 22px;animation:rise .6s ease both}
-.logo{font-size:2.2rem;display:inline-block;animation:float 3.2s ease-in-out infinite}
 h1{font-size:1.3rem;margin:4px 0 2px;color:#0c1f4a}
 h2{font-size:1.1rem;margin:0 0 10px;color:#0c1f4a}
 h2.ttl{text-align:center;font-size:1.25rem;letter-spacing:.5px;margin-bottom:6px}
@@ -45,7 +44,6 @@ input:focus{outline:none;border-bottom-color:#3f72cf;box-shadow:0 2px 0 0 #3f72c
 .empty{color:var(--mut);text-align:center;padding:10px}
 ul.warn{margin:8px 0 0;padding-inline-start:20px}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @keyframes blink{50%{opacity:0}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
@@ -55,7 +53,6 @@ body.home{background:#edf2fb}body.home .scene{display:none}
 .home .card{background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid #dbe5f6;border-radius:14px;box-shadow:0 1px 4px rgba(20,50,110,.07);padding:14px;animation:none}
 .topbar{position:sticky;top:0;z-index:20;margin:0 -12px 14px;padding:8px 14px;background:#fff;box-shadow:0 1px 6px rgba(20,50,110,.12);display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
 .tb-start{display:flex;align-items:center;gap:10px;flex:1 1 260px;min-width:0}
-.tb-logo{height:44px;width:auto;flex:none}
 .search{display:flex;align-items:center;gap:6px;background:#eef3fb;border-radius:22px;padding:0 12px;flex:1;min-width:0;color:#5c6f94}
 .search input{border:0;background:none;padding:9px 2px;color:#10244d;font:inherit;min-width:0;border-radius:0}
 .search input:focus{box-shadow:none;border:0}
@@ -92,10 +89,7 @@ body.home{background:#edf2fb}body.home .scene{display:none}
 .feed-tabs a{padding-bottom:4px;cursor:pointer}.feed-tabs a.on{color:#2f6fe4;border-bottom:2px solid #2f6fe4}
 .fd-h{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .fd-h b{display:block}.fd-h small{color:#7a8bb0}
-.fd-logo{height:40px;width:auto}
 .feed p{margin:6px 0 10px;color:#10244d}
-.fd-img{background:#eef3fb;border-radius:10px;padding:14px;display:flex;justify-content:center}
-.fd-img img{height:130px;width:auto}
 .fd-f{display:flex;justify-content:space-around;border-top:1px solid #e3eaf7;margin-top:10px;padding-top:8px}
 .fd-f a{display:flex;align-items:center;gap:6px;color:#5c6f94;font-size:.88rem;cursor:pointer}
 .rs-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;color:#10244d}
@@ -105,7 +99,7 @@ body.home{background:#edf2fb}body.home .scene{display:none}
 .ev-d{background:#e6efff;border-radius:10px;padding:4px 10px;text-align:center;color:#2f6fe4;flex:none}.ev-d small{color:#2f6fe4}.ev-d b{display:block;font-size:1.2rem}
 .fr{display:flex;gap:10px}.fr small{display:block;color:#7a8bb0}
 .fr-b{display:flex;gap:6px;margin-top:6px}.fr-b .btn{padding:6px 14px;font-size:.82rem}
-.grp{display:flex;align-items:center;gap:10px}.grp img{height:44px}.grp div{flex:1}.grp small{display:block;color:#7a8bb0}.grp .btn{padding:6px 14px;font-size:.82rem}
+.grp{display:flex;align-items:center;gap:10px}.grp div{flex:1}.grp small{display:block;color:#7a8bb0}.grp .btn{padding:6px 14px;font-size:.82rem}
 .ct{display:flex;align-items:center;gap:10px;padding:6px 0}.ct small{display:block;font-size:.76rem}
 .ct small.on{color:#0b7a5c}.ct small.off{color:#9aa8c4}
 .home .btn{background:#2f6fe4;border-radius:8px}.home .btn.ghost{background:#fff;color:#2f6fe4;border:1px solid #cfdcf3}
@@ -147,8 +141,6 @@ const firebaseConfig = {
   appId: "1:534570832709:web:90784f0c546d2a1f6de42c"
 };
 /* ================================================================ */
-const LOGO="logo.png";
-(function(){const l=document.createElement("link");l.rel="icon";l.href=LOGO;document.head.appendChild(l)})();
 const MAIN_USER = "abdo";           // المسؤول الرئيسي
 const DOMAIN = "@platform.local";   // نطاق وهمي لأسماء المسؤولين
 const fbApp = initializeApp(firebaseConfig);
@@ -163,7 +155,7 @@ const count=st=>students.filter(s=>s.status===st).length;
 const clearSubs=()=>{unsubs.forEach(u=>u());unsubs=[]};
 
 function render(){document.body.classList.toggle("home",view==="home");({auth:rAuth,welcome:rWelcome,admin:rAdmin,home:rHome,wait:rWait})[view]();window.scrollTo(0,0)}
-const header=()=>`<div class="hero"><img class="logo" src="${LOGO}" alt="شعار كلية الإمام الهادي"><h1>منصة طلاب علوم الحاسوب</h1><div class="sub" style="margin:0">كلية الإمام الهادي</div><div class="code" dir="ltr"><span id="typed"></span><i class="caret"></i></div><p class="sub">مساحة لزملاء التخصص في الجامعة</p></div>`;
+const header=()=>`<div class="hero"><h1>منصة طلاب علوم الحاسوب</h1><div class="sub" style="margin:0">كلية الإمام الهادي</div><div class="code" dir="ltr"><span id="typed"></span><i class="caret"></i></div><p class="sub">مساحة لزملاء التخصص في الجامعة</p></div>`;
 
 function rAuth(){
   const login=tab==="login";
@@ -215,7 +207,7 @@ function rHome(){
   const side=(t,items)=>`<div class="sd-h">${t}</div>`+items.map(x=>`<a class="sd-i"><span class="sd-ic">${ic(x[0],18)}</span>${x[1]}</a>`).join("");
   app.innerHTML=`
   <div class="topbar">
-    <div class="tb-start"><img class="tb-logo" src="${LOGO}" alt="شعار كلية الإمام الهادي"><div class="search"><span>${ic("search",18)}</span><input placeholder="ابحث في المنصة" aria-label="بحث"></div></div>
+    <div class="tb-start"><div class="search"><span>${ic("search",18)}</span><input placeholder="ابحث في المنصة" aria-label="بحث"></div></div>
     <nav class="tb-nav" aria-label="التنقل">
       <a class="on" title="الرئيسية">${ic("home")}</a><a title="الزملاء">${ic("people")}</a><a title="الدروس">${ic("video")}</a><a title="المواد">${ic("apps")}</a>
     </nav>
@@ -240,9 +232,8 @@ function rHome(){
       </section>
       <div class="feed-tabs"><a class="on">الأشهر</a><a>الأحدث</a><a>الأكثر مشاهدة</a></div>
       <article class="card feed">
-        <div class="fd-h"><img class="fd-logo" src="${LOGO}" alt=""><div><b>إدارة المنصة</b><small>كلية الإمام الهادي · الآن</small></div></div>
+        <div class="fd-h">${av("إ",40)}<div><b>إدارة المنصة</b><small>كلية الإمام الهادي · الآن</small></div></div>
         <p>مرحباً بكم في منصة طلاب علوم الحاسوب. هنا سنشارك المحاضرات والإعلانات والنقاشات.</p>
-        <div class="fd-img"><img src="${LOGO}" alt=""></div>
         <div class="fd-f"><a>${ic("like",18)} أعجبني</a><a>${ic("comment",18)} تعليق</a><a>${ic("share",18)} مشاركة</a></div>
       </article>
       <article class="card feed">
@@ -259,7 +250,7 @@ function rHome(){
       <div class="card"><div class="rs-h"><b>طلبات الزمالة</b><a>عرض الكل</a></div>
         <div class="fr">${av("خالد",44)}<div><b>خالد</b><small>3 زملاء مشتركين</small><div class="fr-b"><button class="btn">تأكيد</button><button class="btn ghost">حذف</button></div></div></div></div>
       <div class="card"><div class="rs-h"><b>إنشاء صفحة ومجموعة</b></div>
-        <div class="grp"><img src="${LOGO}" alt=""><div><b>مجتمع علوم الحاسوب</b><small>الطلاب</small></div><button class="btn">انضم</button></div></div>
+        <div class="grp">${av("م",44)}<div><b>مجتمع علوم الحاسوب</b><small>الطلاب</small></div><button class="btn">انضم</button></div></div>
       <div class="card"><div class="rs-h"><b>جهات الاتصال</b><a>${ic("search",16)}</a></div>
         ${SAMPLE.slice(1,6).map((x,i)=>`<div class="ct">${av(x,34)}<div><b>${x}</b><small class="${i%2?"off":"on"}">${i%2?"غير متصل":"متصل"}</small></div></div>`).join("")}</div>
     </aside>
@@ -272,7 +263,7 @@ function rAdmin(){
   const ok=s=>`<button class="btn ok" data-act="approve" data-id="${esc(s.id)}">موافقة</button>`;
   const del=s=>`<button class="btn ghost" data-act="del" data-id="${esc(s.id)}">حذف</button>`;
   const no=(s,t)=>`<button class="btn no" data-act="reject" data-id="${esc(s.id)}">${t}</button>`;
-  app.innerHTML=`<div class="bar"><h2 style="margin:0;display:flex;align-items:center;gap:8px"><img src="${LOGO}" alt="" style="height:34px"> لوحة المسؤول (${esc(me.name)})</h2><button class="btn ghost" data-act="out">خروج</button></div>
+  app.innerHTML=`<div class="bar"><h2 style="margin:0">🛡️ لوحة المسؤول (${esc(me.name)})</h2><button class="btn ghost" data-act="out">خروج</button></div>
   <div class="stats"><div class="stat"><b>${pend.length}</b><span>بانتظار القرار</span></div><div class="stat"><b>${appr.length} / ${cap}</b><span>المقبولون / السعة</span></div><div class="stat"><b>${rej.length}</b><span>المرفوضون</span></div></div>${noteHtml()}
   <div class="card"><h2>📨 طلبات التسجيل</h2>${rows(pend,s=>ok(s)+no(s,"منع"))}</div>
   <div class="card"><h2>✅ المقبولون</h2>${rows(appr,s=>no(s,"إيقاف"))}</div>
