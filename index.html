@@ -98,7 +98,8 @@ h2.center{text-align:center;font-size:1.2rem;margin-bottom:8px}
 
 label{display:block;font-size:.84rem;color:var(--muted);margin:12px 0 4px;font-weight:700}
 input,select,textarea{width:100%;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:12px;padding:10px 13px;font:inherit;font-size:.92rem;transition:.25s}
-textarea{min-height:76px;resize:vertical}
+textarea{min-height:84px;resize:vertical}
+textarea.lesson-editor{min-height:180px}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);background:var(--surface);box-shadow:0 0 0 4px rgba(29,78,216,.15)}
 .pw-wrap{position:relative;display:flex;align-items:center}
 .pw-wrap input{padding-inline-end:40px}
@@ -123,12 +124,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);ba
 .course-tab.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 18px -6px var(--glow)}
 .course-nav-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0;flex-wrap:wrap}
 .lesson-panel{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:10px}
-.lesson-pdf-box{margin-top:8px}
-.lesson-pdf-frame{width:100%;height:600px;border:1px solid var(--line);border-radius:12px;background:#fff;display:block}
-.quiz-section{margin-top:24px;padding-top:18px;border-top:2px dashed var(--line)}
+.lesson-body-text{white-space:pre-line;font-size:.98rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:10px}
+.quiz-section{margin-top:22px;padding-top:18px;border-top:2px solid var(--line)}
 .quiz-q-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:12px}
-.quiz-opt-item{display:flex;align-items:center;gap:8px;margin:6px 0;cursor:pointer;font-size:.9rem}
-.media-upload-hint{font-size:.76rem;color:var(--muted);margin-top:4px}
+.my-sub-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:14px}
+.admin-reply-box{background:var(--ok-bg);border:1px solid #bfe5d1;color:var(--ok);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:.88rem}
 .lesson-list-box{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:12px}
 .lesson-link-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-size:.9rem;font-weight:600;border-radius:10px;transition:.25s}
 .lesson-link-item:last-child{border-bottom:0}
@@ -215,18 +215,15 @@ const MAX_COURSE_SUBJECTS = 7;
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp), db = getFirestore(fbApp);
 
-let students=[],admins=[],announcements=[],resources=[],messages=[],groups=[],groupPosts=[],groupReplies=[],courseSubjects=[],courseLessons=[],cfg={capacity:15},me=null,view="auth",tab="login",studentPage="posts",note=null,unsubs=[],busy=false,searchQ="";
+let students=[],admins=[],announcements=[],resources=[],messages=[],groups=[],groupPosts=[],groupReplies=[],courseSubjects=[],courseLessons=[],examSubmissions=[],cfg={capacity:15},me=null,view="auth",tab="login",studentPage="posts",note=null,unsubs=[],busy=false,searchQ="";
 let activeSubjectId="", activeLessonIdx=0;
 let selectedGroupId="all";
 let showAllRes=false,showAllAnn=false,showAllGrp=false;
 let profileMenuOpen=false;
 let failCount=0,lockUntil=0;
-let draftPdfData="";
-let quizAnswers={};
-let quizResult=null;
+let draftAnswers={};
 const app=document.getElementById("app");
 const esc=s=>{const d=document.createElement("div");d.textContent=String(s==null?"":s);return d.innerHTML};
-const safePdfUrl=u=>{const s=String(u||"").trim();return /^(https?:\/\/|data:application\/pdf)/i.test(s)?s:""};
 const fmtDate=t=>t?new Date(t).toLocaleString("ar-EG",{dateStyle:"short",timeStyle:"short"}):"";
 const setNote=(t,k)=>{note=t?{t,k:k||"err"}:null};
 const noteHtml=()=>note?`<div class="note ${note.k}">${esc(note.t)}</div>`:"";
@@ -237,26 +234,6 @@ const saveId=v=>{try{if(v)localStorage.setItem(LAST_ID_KEY,v);else localStorage.
 const pwField=(id,label,ph="")=>`<label>${label}</label><div class="pw-wrap"><input id="${id}" type="password" placeholder="${esc(ph)}" autocomplete="off"><button type="button" class="eye-btn" data-eye="${id}" aria-label="إظهار كلمة السر">👁️</button></div>`;
 const isLocked=()=>Date.now()<lockUntil;
 const logoImg=(alt="شعار كلية الإمام الهادي")=>`<img src="${LOGO_SRC}" alt="${esc(alt)}" onerror="this.outerHTML='<span>🎓</span>'">`;
-
-function readPdfFile(file, maxBytes){
-  return new Promise((resolve, reject)=>{
-    if(!file){resolve("");return}
-    if(file.size > maxBytes){
-      reject(new Error(`حجم ملف PDF أكبر من الحد المسموح للرفع المباشر (${(maxBytes/1024).toFixed(0)} KB). استخدم رابط PDF مباشر بدلاً من ذلك.`));
-      return;
-    }
-    const reader=new FileReader();
-    reader.onload=()=>{
-      let res=String(reader.result||"");
-      if(res.startsWith("data:") && !res.startsWith("data:application/pdf")){
-        res=res.replace(/^data:[^;]+/, "data:application/pdf");
-      }
-      resolve(res);
-    };
-    reader.onerror=()=>reject(new Error("تعذّر قراءة ملف PDF."));
-    reader.readAsDataURL(file);
-  });
-}
 
 setInterval(()=>{
   if(view==="auth" && tab==="login" && lockUntil>0){
@@ -391,50 +368,54 @@ function rChoose(){
       <div class="choice-card" data-act="go_subjects">
         <div class="choice-icon">📚</div>
         <div class="choice-title">المنصة الدراسية</div>
-        <div class="choice-desc">الاطلاع على الدروس، ملفات PDF، والامتحانات</div>
+        <div class="choice-desc">الاطلاع على الدروس وامتحاناتها</div>
       </div>
     </div>
     <button class="btn ghost full" data-act="out">خروج</button>
   </div>`;
 }
 
-function renderLessonQuiz(lesson){
-  const quiz = lesson?.quiz || [];
-  if(!quiz.length){
-    return `<div class="quiz-section">
-      <h3 style="margin:0 0 6px;color:var(--navy)">📝 امتحان نهاية الدرس</h3>
-      <div class="empty">لا يوجد امتحان مضاف لنهائية هذا الدرس حالياً.</div>
-    </div>`;
+function renderLessonExam(lesson){
+  const questions = (lesson?.questions || []).filter(q => String(q||"").trim());
+  const mySub = examSubmissions.find(s => s.lessonId === lesson.id && s.studentUid === me.uid);
+
+  if(!questions.length && !mySub){
+    return "";
   }
 
-  const qCards = quiz.map((q, qIdx) => {
-    const selected = quizAnswers[qIdx];
-    const optsHtml = (q.options || []).map((opt, oIdx) => `
-      <label class="quiz-opt-item">
-        <input type="radio" name="qz_${qIdx}" value="${oIdx}" ${selected===oIdx?"checked":""} data-qidx="${qIdx}" data-oidx="${oIdx}">
-        <span>${esc(opt)}</span>
-      </label>
-    `).join("");
+  const qInputsHtml = questions.map((qText, idx) => `
+    <div class="quiz-q-card">
+      <div style="font-weight:700;margin-bottom:6px">س${idx+1}: ${esc(qText)}</div>
+      <textarea id="ans_${idx}" placeholder="اكتب إجابتك هنا…" autocomplete="off">${esc(draftAnswers[idx]||"")}</textarea>
+    </div>
+  `).join("");
 
-    return `<div class="quiz-q-card">
-      <div style="font-weight:700;margin-bottom:6px">س${qIdx+1}: ${esc(q.question)}</div>
-      ${optsHtml}
-    </div>`;
-  }).join("");
-
-  const resBox = quizResult ? `
-    <div class="note ${quizResult.passed?"good":"warn"}" style="margin-bottom:12px">
-      <b>النتيجة: ${quizResult.score} من ${quizResult.total} (${quizResult.pct}%)</b><br>
-      ${quizResult.passed ? "تهانينا! لقد اجتزت امتحان هذا الدرس بنجاح." : "حاول مراجعة ملف الـ PDF وإعادة المحاولة."}
+  const mySubHtml = mySub ? `
+    <div class="my-sub-box">
+      <div class="feed-head">
+        <b>إجاباتك المرسلة (${fmtDate(mySub.at)})</b>
+      </div>
+      ${(mySub.answers || []).map((a, i) => `
+        <div style="margin-top:6px;font-size:.9rem">
+          <b>س${i+1}:</b> ${esc(mySub.questions?.[i]||"")}<br>
+          <span class="muted" style="color:var(--ink)">إجابتك: ${esc(a||"")}</span>
+        </div>
+      `).join("")}
+      ${mySub.adminReply ? `
+        <div class="admin-reply-box">
+          <b>رد المسؤول:</b> ${esc(mySub.adminReply)}
+        </div>
+      ` : `<div class="feed-meta" style="margin-top:8px">بانتظار رد المسؤول…</div>`}
     </div>
   ` : "";
 
   return `<div class="quiz-section">
-    <h3 style="margin:0 0 6px;color:var(--navy)">📝 امتحان نهاية الدرس</h3>
-    <p class="muted" style="margin:0 0 12px">بعد قراءة محتوى الدرس أعلاه، أجب عن الأسئلة التالية لاختبار فهمك:</p>
-    ${resBox}
-    ${qCards}
-    <button class="btn full" data-act="submitquiz">إرسال إجابات الامتحان</button>
+    <h3 style="margin:0 0 10px;color:var(--navy)">📝 امتحان الدرس</h3>
+    ${questions.length ? `
+      ${qInputsHtml}
+      <button class="btn full" data-act="submitexam" data-lessonid="${esc(lesson.id)}">إرسال الإجابات</button>
+    ` : ""}
+    ${mySubHtml}
   </div>`;
 }
 
@@ -445,7 +426,7 @@ function rSubjectsPage(){
         <button class="course-btn-navy" data-act="go_posts">‹ الرئيسية</button>
       </div>
       <div class="empty" style="padding:28px 12px">
-        المواد الدراسية فارغة حالياً — سيقوم المسؤول بإضافتها وتجهيز ملفات PDF قريباً.
+        المواد الدراسية فارغة حالياً — سيقوم المسؤول بإضافتها وتجهيز دروسها وامتحاناتها قريباً.
       </div>
     </section>`;
   }
@@ -454,12 +435,11 @@ function rSubjectsPage(){
   const subj = courseSubjects.find(s => s.id === activeSubjectId) || courseSubjects[0];
   const subjLessonsAll = courseLessons.filter(l => l.subjectId === subj.id);
   const lessons = q
-    ? subjLessonsAll.filter(l => `${l.title||""}`.toLowerCase().includes(q))
+    ? subjLessonsAll.filter(l => `${l.title||""} ${l.body||""}`.toLowerCase().includes(q))
     : subjLessonsAll;
 
   const safeIdx = lessons.length ? Math.min(activeLessonIdx, lessons.length - 1) : 0;
   const currentLesson = lessons[safeIdx] || null;
-  const pdfSrc = currentLesson ? safePdfUrl(currentLesson.pdfUrl) : "";
 
   const tabsHtml = courseSubjects.map(s =>
     `<button class="course-tab ${s.id === subj.id ? "active" : ""}" data-act="pick_subj" data-id="${esc(s.id)}">${esc(s.tabName || s.title)}</button>`
@@ -468,32 +448,28 @@ function rSubjectsPage(){
   const listHtml = lessons.length
     ? lessons.map((l, idx) =>
         `<div class="lesson-link-item ${idx === safeIdx ? "active" : ""}" data-act="pick_lesson" data-idx="${idx}">
-          <span>📄 ${esc(l.title)} ${l.quiz?.length ? "📝" : ""}</span>
+          <span>📘 ${esc(l.title)} ${l.questions?.length ? "📝" : ""}</span>
           <span>‹</span>
         </div>`
       ).join("")
-    : `<div class="empty">لا توجد ملفات PDF مضافة لهذه المادة بعد.</div>`;
+    : `<div class="empty">لا توجد دروس مضافة لهذه المادة بعد.</div>`;
 
   return `<section class="box">
     <div class="course-tabs">${tabsHtml}</div>
 
     <div class="course-nav-bar">
       <button class="course-btn-navy" data-act="go_posts">‹ الرئيسية</button>
-      <button class="course-btn-navy" data-act="next_lesson" ${safeIdx >= lessons.length - 1 ? "disabled" : ""}>الملف التالي ‹</button>
+      <button class="course-btn-navy" data-act="next_lesson" ${safeIdx >= lessons.length - 1 ? "disabled" : ""}>الدرس التالي ‹</button>
     </div>
 
     <h2 style="margin:12px 0 6px;font-size:1.3rem">${esc(subj.title)}</h2>
 
     <div class="lesson-panel">
       ${currentLesson ? `
-        <div class="feed-meta" style="margin-bottom:4px">درس ${safeIdx + 1} من ${lessons.length}</div>
-        <h3 style="margin:0 0 8px;font-size:1.05rem;color:var(--ink)">${esc(currentLesson.title)}</h3>
-        ${pdfSrc ? `
-          <div class="lesson-pdf-box">
-            <iframe class="lesson-pdf-frame" src="${esc(pdfSrc)}" title="${esc(currentLesson.title)}"></iframe>
-          </div>
-        ` : `<div class="empty">لا يوجد ملف PDF مرفق بهذا العنصر.</div>`}
-        ${renderLessonQuiz(currentLesson)}
+        <div class="feed-meta" style="margin-bottom:4px">الدرس ${safeIdx + 1} من ${lessons.length}</div>
+        <h3 style="margin:0 0 8px;font-size:1.08rem;color:var(--ink)">${esc(currentLesson.title)}</h3>
+        ${currentLesson.body ? `<div class="lesson-body-text">${esc(currentLesson.body)}</div>` : `<div class="empty">لا يوجد نص للدرس بعد.</div>`}
+        ${renderLessonExam(currentLesson)}
       ` : `<div class="empty">لم تتم إضافة دروس لهذه المادة بعد.</div>`}
     </div>
 
@@ -658,7 +634,7 @@ function rAdmin(){
         const subLessons = courseLessons.filter(l => l.subjectId === s.id);
         const lessonItems = subLessons.length
           ? subLessons.map(l => `<div class="row" style="padding:6px 0;margin-inline-start:12px">
-              <div>📄 <b>${esc(l.title)}</b> ${l.quiz?.length ? `<span class="pill">امتحان (${l.quiz.length} أسئلة)</span>` : ""}</div>
+              <div>📘 <b>${esc(l.title)}</b> ${l.questions?.length ? `<span class="pill">${l.questions.length} أسئلة</span>` : ""}</div>
               <div class="acts"><button class="btn ghost" style="padding:4px 9px;font-size:.78rem" data-act="dellesson" data-id="${esc(l.id)}">حذف</button></div>
             </div>`).join("")
           : `<div class="feed-meta" style="margin-inline-start:12px">لا توجد دروس في هذه المادة بعد</div>`;
@@ -671,6 +647,30 @@ function rAdmin(){
         </div>`;
       }).join("")
     : `<div class="empty">لم يتم إنشاء أي مادة بعد (${courseSubjects.length}/${MAX_COURSE_SUBJECTS}).</div>`;
+
+  const subRows = examSubmissions.length
+    ? examSubmissions.map(sub => {
+        const ansList = (sub.answers || []).map((ans, idx) => `
+          <div style="margin-top:6px;font-size:.86rem">
+            <b>س${idx+1}:</b> ${esc(sub.questions?.[idx]||"")}<br>
+            <span class="muted" style="color:var(--ink)">الإجابة: ${esc(ans||"")}</span>
+          </div>
+        `).join("");
+        return `<div class="feed-card">
+          <div class="feed-head">
+            <div><b>${esc(sub.studentName)}</b> <span class="pill">${esc(sub.lessonTitle||"درس")}</span></div>
+            <span class="feed-meta">${fmtDate(sub.at)}</span>
+          </div>
+          ${ansList}
+          <label style="margin-top:10px">ردك على إجابات الطالب</label>
+          <input id="exrep_${esc(sub.id)}" value="${esc(sub.adminReply||"")}" placeholder="اكتب ردك أو ملاحظتك للطالب…" autocomplete="off">
+          <div class="acts" style="margin-top:8px">
+            <button class="btn ok" data-act="replyexam" data-id="${esc(sub.id)}">حفظ الرد</button>
+            <button class="btn ghost" data-act="delexam" data-id="${esc(sub.id)}">حذف</button>
+          </div>
+        </div>`;
+      }).join("")
+    : `<div class="empty">لا توجد إجابات مرسلة من الطلاب بعد</div>`;
 
   const annRows=announcements.length
     ?announcements.map(a=>`<div class="row"><div><b>${esc(a.title)}</b><div class="feed-meta">${esc(a.body)}</div></div><div class="acts"><button class="btn no" data-act="delann" data-id="${esc(a.id)}">حذف</button></div></div>`).join("")
@@ -694,7 +694,8 @@ function rAdmin(){
           <div class="mini-stat"><b>${rej.length}</b><span>مرفوض</span></div>
         </div>
         <a class="rail-item" href="#adm-req"><span>📨 طلبات التسجيل</span><span class="pill">${pend.length}</span></a>
-        <a class="rail-item" href="#adm-courses"><span>📚 إدارة المواد السبعة</span><span class="pill">${courseSubjects.length}/${MAX_COURSE_SUBJECTS}</span></a>
+        <a class="rail-item" href="#adm-courses"><span>📚 إدارة المواد والدروس</span><span class="pill">${courseSubjects.length}/${MAX_COURSE_SUBJECTS}</span></a>
+        <a class="rail-item" href="#adm-exams"><span>📬 إجابات الامتحانات</span><span class="pill">${examSubmissions.length}</span></a>
         <a class="rail-item" href="#adm-grp"><span>👥 إدارة القروبات</span><span class="pill">${groups.length}</span></a>
         <a class="rail-item" href="#adm-pub"><span>📢 الإعلانات والمصادر</span><span class="pill">${announcements.length+resources.length}</span></a>
         <a class="rail-item" href="#adm-msg"><span>✉️ رسائل الطلاب</span><span class="pill">${messages.length}</span></a>
@@ -716,31 +717,29 @@ function rAdmin(){
 
         <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
 
-        <h2 style="margin-top:0">➕ إضافة درس مع ملف PDF وامتحان</h2>
+        <h2 style="margin-top:0">➕ كتابة درس وأسئلة الامتحان</h2>
         <label>اختر المادة</label>
         <select id="clSubj">${subjOptions}</select>
         <label>عنوان الدرس</label>
-        <input id="clTitle" placeholder="مثال: محاضرة 1 - مقدمة" autocomplete="off">
+        <input id="clTitle" placeholder="مثال: الدرس الأول - أساسيات البرمجة" autocomplete="off">
+        <label>محتوى الدرس</label>
+        <textarea id="clBody" class="lesson-editor" placeholder="اكتب شرح الدرس هنا…"></textarea>
 
-        <label>📄 رفع ملف PDF من الجهاز أو وضع رابط PDF</label>
-        <input id="clPdfFile" type="file" accept="application/pdf,.pdf" style="background:#fff">
-        <input id="clPdfUrl" placeholder="أو ضع رابط PDF مباشر: https://.../file.pdf" style="margin-top:8px" autocomplete="off">
-        <div class="media-upload-hint">رفع الملف مباشرة يدعم حتى 700 KB، ولملفات PDF الكبيرة استخدم رابط مباشر.</div>
+        <label>السؤال 1</label>
+        <input id="eq1" placeholder="اكتب السؤال الأول للدرس…" autocomplete="off">
+        <label>السؤال 2</label>
+        <input id="eq2" placeholder="اكتب السؤال الثاني للدرس…" autocomplete="off">
+        <label>السؤال 3</label>
+        <input id="eq3" placeholder="اكتب السؤال الثالث للدرس…" autocomplete="off">
 
-        <hr style="border:0;border-top:1px dashed var(--line);margin:14px 0">
-        <h3 style="margin:0 0 6px;font-size:1rem;color:var(--navy)">📝 سؤال الامتحان الأول للدرس (اختياري)</h3>
-        <label>نص السؤال</label>
-        <input id="qzQ1" placeholder="مثال: ما هو الأمر المستخدم لاسترجاع البيانات؟" autocomplete="off">
-        <label>الخيار 1</label><input id="qzO1" placeholder="SELECT" autocomplete="off">
-        <label>الخيار 2</label><input id="qzO2" placeholder="INSERT" autocomplete="off">
-        <label>الخيار 3</label><input id="qzO3" placeholder="UPDATE" autocomplete="off">
-        <label>الخيار 4</label><input id="qzO4" placeholder="DELETE" autocomplete="off">
-        <label>رقم الخيار الصحيح (1 أو 2 أو 3 أو 4)</label>
-        <input id="qzAns1" type="number" min="1" max="4" placeholder="1" autocomplete="off">
-
-        <button class="btn full" data-act="addlesson">إضافة الدرس والامتحان</button>
+        <button class="btn full" data-act="addlesson">حفظ الدرس والامتحان</button>
 
         <div style="margin-top:16px">${courseManageRows}</div>
+      </section>
+
+      <section id="adm-exams" class="box">
+        <h2>📬 إجابات الطلاب على الامتحانات (${examSubmissions.length})</h2>
+        ${subRows}
       </section>
 
       <section id="adm-grp" class="box">
@@ -803,6 +802,7 @@ function startStudentSubs(){
     if(view==="home")render();
   },()=>{}));
   unsubs.push(onSnapshot(collection(db,"course_lessons"),s=>{courseLessons=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));if(view==="home")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"exam_submissions"),s=>{examSubmissions=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="home")render()},()=>{}));
 }
 
 function startAdminSubs(){
@@ -817,6 +817,7 @@ function startAdminSubs(){
   unsubs.push(onSnapshot(collection(db,"groups"),s=>{groups=s.docs.map(d=>({...d.data(),id:d.id}));if(view==="admin")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"course_subjects"),s=>{courseSubjects=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));if(view==="admin")render()},()=>{}));
   unsubs.push(onSnapshot(collection(db,"course_lessons"),s=>{courseLessons=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.at||0)-(b.at||0));if(view==="admin")render()},()=>{}));
+  unsubs.push(onSnapshot(collection(db,"exam_submissions"),s=>{examSubmissions=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.at||0)-(a.at||0));if(view==="admin")render()},()=>{}));
 }
 
 function watchStudent(uid){
@@ -835,22 +836,9 @@ app.addEventListener("input",ev=>{
   if(ev.target.id==="qInput"){
     searchQ=ev.target.value;
     if(view==="home")rHome();
-  }
-});
-
-app.addEventListener("change",async ev=>{
-  if(ev.target.id==="clPdfFile"){
-    try{
-      draftPdfData=await readPdfFile(ev.target.files?.[0], 700*1024);
-    }catch(e){
-      ev.target.value="";
-      setNote(e.message,"warn");
-      render();
-    }
-  }else if(ev.target.name && ev.target.name.startsWith("qz_")){
-    const qIdx = parseInt(ev.target.dataset.qidx, 10);
-    const oIdx = parseInt(ev.target.dataset.oidx, 10);
-    quizAnswers[qIdx] = oIdx;
+  }else if(ev.target.id && ev.target.id.startsWith("ans_")){
+    const idx = parseInt(ev.target.id.replace("ans_",""), 10);
+    draftAnswers[idx] = ev.target.value;
   }
 });
 
@@ -879,24 +867,43 @@ app.addEventListener("click",async ev=>{
   try{
     if(a==="go_choose"){view="choose";render()}
     else if(a==="go_posts"){studentPage="posts";view="home";startStudentSubs();render()}
-    else if(a==="go_subjects"){studentPage="subjects";activeLessonIdx=0;quizAnswers={};quizResult=null;view="home";startStudentSubs();render()}
-    else if(a==="pick_subj"){activeSubjectId=el.dataset.id;activeLessonIdx=0;quizAnswers={};quizResult=null;render()}
-    else if(a==="pick_lesson"){activeLessonIdx=parseInt(el.dataset.idx,10)||0;quizAnswers={};quizResult=null;render()}
-    else if(a==="next_lesson"){activeLessonIdx=(activeLessonIdx||0)+1;quizAnswers={};quizResult=null;render()}
-    else if(a==="submitquiz"){
-      const subj=courseSubjects.find(s=>s.id===activeSubjectId)||courseSubjects[0];
-      const subjLessonsAll=courseLessons.filter(l=>l.subjectId===subj?.id);
-      const currentLesson=subjLessonsAll[activeLessonIdx]||null;
-      const quiz=currentLesson?.quiz||[];
-      if(!quiz.length)return;
-
-      let score=0;
-      quiz.forEach((q, idx)=>{
-        if(quizAnswers[idx] === q.correct) score++;
+    else if(a==="go_subjects"){studentPage="subjects";activeLessonIdx=0;draftAnswers={};view="home";startStudentSubs();render()}
+    else if(a==="pick_subj"){activeSubjectId=el.dataset.id;activeLessonIdx=0;draftAnswers={};render()}
+    else if(a==="pick_lesson"){activeLessonIdx=parseInt(el.dataset.idx,10)||0;draftAnswers={};render()}
+    else if(a==="next_lesson"){activeLessonIdx=(activeLessonIdx||0)+1;draftAnswers={};render()}
+    else if(a==="submitexam"){
+      const lessonId=el.dataset.lessonid;
+      const lesson=courseLessons.find(l=>l.id===lessonId);
+      const questions=(lesson?.questions||[]).filter(q=>String(q||"").trim());
+      const answers=questions.map((_, idx)=>{
+        const box=document.getElementById("ans_"+idx);
+        return box ? box.value.trim() : (draftAnswers[idx]||"").trim();
       });
-      const pct = Math.round((score / quiz.length) * 100);
-      quizResult = { score, total: quiz.length, pct, passed: pct >= 50 };
-      render();
+      if(!answers.some(x=>x)){setNote("اكتب إجابتك قبل الإرسال.");return render()}
+      await addDoc(collection(db,"exam_submissions"),{
+        lessonId,
+        lessonTitle: lesson?.title || "درس",
+        studentUid: me.uid,
+        studentName: me.name,
+        studentNum: me.num || "",
+        questions,
+        answers,
+        adminReply: "",
+        at: Date.now()
+      });
+      draftAnswers={};
+      setNote("تم إرسال إجاباتك إلى المسؤول.","good");render();
+    }
+    else if(a==="replyexam"){
+      const subId=el.dataset.id;
+      const inp=document.getElementById("exrep_"+subId);
+      const replyText=inp ? inp.value.trim() : "";
+      await updateDoc(doc(db,"exam_submissions",subId),{adminReply:replyText,repliedAt:Date.now()});
+      setNote("تم حفظ ردك للطالب.","good");render();
+    }
+    else if(a==="delexam"){
+      await deleteDoc(doc(db,"exam_submissions",el.dataset.id));
+      setNote("تم حذف الإجابة.","good");render();
     }
     else if(a==="addsubj"){
       if(courseSubjects.length>=MAX_COURSE_SUBJECTS){setNote(`الحد الأقصى هو ${MAX_COURSE_SUBJECTS} مواد.`,"warn");return render()}
@@ -907,7 +914,7 @@ app.addEventListener("click",async ev=>{
       setNote("تم إنشاء المادة بنجاح.","good");render();
     }
     else if(a==="delsubj"){
-      if(confirm("حذف هذه المادة وكل ملفات PDF والأسئلة التابعة لها؟")){
+      if(confirm("حذف هذه المادة وكل دروسها؟")){
         const subId=el.dataset.id;
         const relatedLessons=courseLessons.filter(l=>l.subjectId===subId);
         for(const l of relatedLessons) await deleteDoc(doc(db,"course_lessons",l.id));
@@ -918,43 +925,25 @@ app.addEventListener("click",async ev=>{
     else if(a==="addlesson"){
       const subjectId=document.getElementById("clSubj").value;
       const title=document.getElementById("clTitle").value.trim();
-      const pdfUrlInput=document.getElementById("clPdfUrl").value.trim();
-      const pdfFileInput=document.getElementById("clPdfFile");
+      const body=document.getElementById("clBody").value.trim();
+      const q1=document.getElementById("eq1").value.trim();
+      const q2=document.getElementById("eq2").value.trim();
+      const q3=document.getElementById("eq3").value.trim();
 
-      const q1=document.getElementById("qzQ1")?.value.trim()||"";
-      const o1=document.getElementById("qzO1")?.value.trim()||"";
-      const o2=document.getElementById("qzO2")?.value.trim()||"";
-      const o3=document.getElementById("qzO3")?.value.trim()||"";
-      const o4=document.getElementById("qzO4")?.value.trim()||"";
-      const ans1=parseInt(document.getElementById("qzAns1")?.value||"1",10)-1;
+      if(!subjectId){setNote("أنشئ مادة أولاً قبل إضافة درس.");return render()}
+      if(!title){setNote("أدخل عنوان الدرس.");return render()}
+      if(!body){setNote("اكتب محتوى الدرس.");return render()}
 
-      const pdfUrl = draftPdfData || (pdfFileInput?.files?.[0] ? await readPdfFile(pdfFileInput.files[0], 700*1024) : pdfUrlInput);
-
-      if(!subjectId){setNote("أنشئ مادة أولاً قبل رفع ملف PDF.");return render()}
-      if(!title){setNote("أدخل عنوان ملف PDF.");return render()}
-      if(!safePdfUrl(pdfUrl)){setNote("ارفع ملف PDF صالح أو أدخل رابط PDF صحيح يبدأ بـ https://");return render()}
-
-      let quiz=[];
-      if(q1 && o1 && o2){
-        const options=[o1,o2];
-        if(o3)options.push(o3);
-        if(o4)options.push(o4);
-        quiz.push({
-          question: q1,
-          options,
-          correct: Math.min(Math.max(ans1,0), options.length-1)
-        });
-      }
+      const questions=[q1,q2,q3].filter(x=>x);
 
       await addDoc(collection(db,"course_lessons"),{
         subjectId,
         title,
-        pdfUrl,
-        quiz,
+        body,
+        questions,
         at:Date.now()
       });
-      draftPdfData="";
-      setNote("تم رفع الدرس والامتحان بنجاح.","good");render();
+      setNote("تم حفظ الدرس بنجاح.","good");render();
     }
     else if(a==="dellesson"){
       await deleteDoc(doc(db,"course_lessons",el.dataset.id));
