@@ -99,9 +99,7 @@ h2.center{text-align:center;font-size:1.2rem;margin-bottom:8px}
 label{display:block;font-size:.84rem;color:var(--muted);margin:12px 0 4px;font-weight:700}
 input,select,textarea{width:100%;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:12px;padding:10px 13px;font:inherit;font-size:.92rem;transition:.25s}
 textarea{min-height:76px;resize:vertical}
-textarea.code-input{font-family:ui-monospace,Menlo,Consolas,monospace;min-height:110px;direction:ltr;text-align:left;background:#0b1330;color:#e2e8f0;border-color:#1e293b}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);background:var(--surface);box-shadow:0 0 0 4px rgba(29,78,216,.15)}
-textarea.code-input:focus{background:#0b1330;color:#f8fafc;border-color:#3b82f6}
 .pw-wrap{position:relative;display:flex;align-items:center}
 .pw-wrap input{padding-inline-end:40px}
 .eye-btn{position:absolute;inset-inline-end:6px;background:transparent;border:0;cursor:pointer;font-size:1rem;padding:4px}
@@ -125,13 +123,8 @@ textarea.code-input:focus{background:#0b1330;color:#f8fafc;border-color:#3b82f6}
 .course-tab.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 18px -6px var(--glow)}
 .course-nav-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0;flex-wrap:wrap}
 .lesson-panel{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:10px}
-.lesson-media-box{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
-.lesson-img{max-width:100%;width:100%;max-height:420px;object-fit:contain;border-radius:12px;border:1px solid var(--line);background:#fff;display:block;margin-top:8px}
-.lesson-audio{width:100%;margin-top:8px}
-.lesson-code-wrap{margin-top:12px;background:#0b1330;color:#e2e8f0;border-radius:12px;padding:12px;border:1px solid #1e293b}
-.lesson-code-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-size:.8rem;color:#94a3b8}
-.lesson-code-pre{margin:0;white-space:pre-wrap;word-break:break-word;direction:ltr;text-align:left;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86rem;line-height:1.5}
-.lesson-pdf-frame{width:100%;height:340px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-top:10px}
+.lesson-pdf-box{margin-top:12px}
+.lesson-pdf-frame{width:100%;height:520px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-top:10px}
 .media-upload-hint{font-size:.76rem;color:var(--muted);margin-top:4px}
 .lesson-list-box{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:12px}
 .lesson-link-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-size:.9rem;font-weight:600;border-radius:10px;transition:.25s}
@@ -225,10 +218,10 @@ let selectedGroupId="all";
 let showAllRes=false,showAllAnn=false,showAllGrp=false;
 let profileMenuOpen=false;
 let failCount=0,lockUntil=0;
-let draftImageData="", draftAudioData="", draftPdfData="";
+let draftPdfData="";
 const app=document.getElementById("app");
 const esc=s=>{const d=document.createElement("div");d.textContent=String(s==null?"":s);return d.innerHTML};
-const safeUrl=u=>{const s=String(u||"").trim();return /^(https?:\/\/|data:image\/|data:audio\/|data:application\/pdf)/i.test(s)?s:""};
+const safePdfUrl=u=>{const s=String(u||"").trim();return /^(https?:\/\/|data:application\/pdf)/i.test(s)?s:""};
 const fmtDate=t=>t?new Date(t).toLocaleString("ar-EG",{dateStyle:"short",timeStyle:"short"}):"";
 const setNote=(t,k)=>{note=t?{t,k:k||"err"}:null};
 const noteHtml=()=>note?`<div class="note ${note.k}">${esc(note.t)}</div>`:"";
@@ -240,16 +233,22 @@ const pwField=(id,label,ph="")=>`<label>${label}</label><div class="pw-wrap"><in
 const isLocked=()=>Date.now()<lockUntil;
 const logoImg=(alt="شعار كلية الإمام الهادي")=>`<img src="${LOGO_SRC}" alt="${esc(alt)}" onerror="this.outerHTML='<span>🎓</span>'">`;
 
-function readFileAsDataUrl(file, maxBytes, label){
+function readPdfFile(file, maxBytes){
   return new Promise((resolve, reject)=>{
     if(!file){resolve("");return}
     if(file.size > maxBytes){
-      reject(new Error(`حجم ملف ${label} كبير لتخزينه مباشرة في قاعدة البيانات (الحد الأقصى ${(maxBytes/1024).toFixed(0)} KB). استخدم رابطاً مباشراً بدلاً من ذلك.`));
+      reject(new Error(`حجم ملف PDF أكبر من الحد المسموح للرفع المباشر (${(maxBytes/1024).toFixed(0)} KB). استخدم رابط PDF مباشر بدلاً من ذلك.`));
       return;
     }
     const reader=new FileReader();
-    reader.onload=()=>resolve(String(reader.result||""));
-    reader.onerror=()=>reject(new Error(`تعذّر قراءة ملف ${label}.`));
+    reader.onload=()=>{
+      let res=String(reader.result||"");
+      if(res.startsWith("data:") && !res.startsWith("data:application/pdf")){
+        res=res.replace(/^data:[^;]+/, "data:application/pdf");
+      }
+      resolve(res);
+    };
+    reader.onerror=()=>reject(new Error("تعذّر قراءة ملف PDF."));
     reader.readAsDataURL(file);
   });
 }
@@ -387,61 +386,11 @@ function rChoose(){
       <div class="choice-card" data-act="go_subjects">
         <div class="choice-icon">📚</div>
         <div class="choice-title">المنصة الدراسية</div>
-        <div class="choice-desc">الاطلاع على المواد الدراسية ودروسها</div>
+        <div class="choice-desc">الاطلاع على المواد الدراسية وملفات PDF</div>
       </div>
     </div>
     <button class="btn ghost full" data-act="out">خروج</button>
   </div>`;
-}
-
-function renderLessonMedia(l, idx){
-  const imgSrc = safeUrl(l.imageUrl);
-  const audioSrc = safeUrl(l.audioUrl);
-  const pdfSrc = safeUrl(l.pdfUrl);
-  const codeText = String(l.code || "").trim();
-  const extraLink = safeUrl(l.url);
-
-  let html = "";
-
-  if(imgSrc){
-    html += `<div class="lesson-media-box">
-      <div class="feed-meta">🖼️ صورة توضيحية للدرس</div>
-      <img class="lesson-img" src="${esc(imgSrc)}" alt="${esc(l.title||"صورة الدرس")}" loading="lazy">
-    </div>`;
-  }
-
-  if(audioSrc){
-    html += `<div class="lesson-media-box">
-      <div class="feed-meta">🎧 مقطع صوتي للدرس</div>
-      <audio class="lesson-audio" controls preload="metadata" src="${esc(audioSrc)}"></audio>
-    </div>`;
-  }
-
-  if(codeText){
-    html += `<div class="lesson-code-wrap">
-      <div class="lesson-code-head">
-        <span>💻 كود الدرس</span>
-        <button type="button" class="btn soft" style="padding:4px 10px;font-size:.76rem" data-act="copycode" data-lidx="${idx}">نسخ الكود</button>
-      </div>
-      <pre class="lesson-code-pre"><code>${esc(codeText)}</code></pre>
-    </div>`;
-  }
-
-  if(pdfSrc){
-    html += `<div class="lesson-media-box">
-      <div class="feed-meta">📄 ملف PDF للدرس</div>
-      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-        <a class="btn soft" href="${esc(pdfSrc)}" target="_blank" rel="noopener">فتح / تحميل ملف PDF</a>
-      </div>
-      ${/^https?:\/\//i.test(pdfSrc) ? `<iframe class="lesson-pdf-frame" src="${esc(pdfSrc)}" title="معاينة ملف PDF"></iframe>` : ""}
-    </div>`;
-  }
-
-  if(extraLink){
-    html += `<div style="margin-top:12px"><a class="btn soft" href="${esc(extraLink)}" target="_blank" rel="noopener">فتح رابط إضافي</a></div>`;
-  }
-
-  return html;
 }
 
 function rSubjectsPage(){
@@ -451,7 +400,7 @@ function rSubjectsPage(){
         <button class="course-btn-navy" data-act="go_posts">‹ الرئيسية</button>
       </div>
       <div class="empty" style="padding:28px 12px">
-        المواد الدراسية فارغة حالياً — سيقوم المسؤول بإضافتها وتجهيز دروسها قريباً.
+        المواد الدراسية فارغة حالياً — سيقوم المسؤول بإضافتها وتجهيز ملفات PDF قريباً.
       </div>
     </section>`;
   }
@@ -460,11 +409,12 @@ function rSubjectsPage(){
   const subj = courseSubjects.find(s => s.id === activeSubjectId) || courseSubjects[0];
   const subjLessonsAll = courseLessons.filter(l => l.subjectId === subj.id);
   const lessons = q
-    ? subjLessonsAll.filter(l => `${l.title||""} ${l.body||""} ${l.code||""}`.toLowerCase().includes(q))
+    ? subjLessonsAll.filter(l => `${l.title||""}`.toLowerCase().includes(q))
     : subjLessonsAll;
 
   const safeIdx = lessons.length ? Math.min(activeLessonIdx, lessons.length - 1) : 0;
   const currentLesson = lessons[safeIdx] || null;
+  const pdfSrc = currentLesson ? safePdfUrl(currentLesson.pdfUrl) : "";
 
   const tabsHtml = courseSubjects.map(s =>
     `<button class="course-tab ${s.id === subj.id ? "active" : ""}" data-act="pick_subj" data-id="${esc(s.id)}">${esc(s.tabName || s.title)}</button>`
@@ -473,30 +423,33 @@ function rSubjectsPage(){
   const listHtml = lessons.length
     ? lessons.map((l, idx) =>
         `<div class="lesson-link-item ${idx === safeIdx ? "active" : ""}" data-act="pick_lesson" data-idx="${idx}">
-          <span>${esc(l.title)}</span>
+          <span>📄 ${esc(l.title)}</span>
           <span>‹</span>
         </div>`
       ).join("")
-    : `<div class="empty">لا توجد دروس مضافة لهذه المادة بعد.</div>`;
+    : `<div class="empty">لا توجد ملفات PDF مضافة لهذه المادة بعد.</div>`;
 
   return `<section class="box">
     <div class="course-tabs">${tabsHtml}</div>
 
     <div class="course-nav-bar">
       <button class="course-btn-navy" data-act="go_posts">‹ الرئيسية</button>
-      <button class="course-btn-navy" data-act="next_lesson" ${safeIdx >= lessons.length - 1 ? "disabled" : ""}>الدرس التالي ‹</button>
+      <button class="course-btn-navy" data-act="next_lesson" ${safeIdx >= lessons.length - 1 ? "disabled" : ""}>الملف التالي ‹</button>
     </div>
 
     <h2 style="margin:12px 0 6px;font-size:1.3rem">${esc(subj.title)}</h2>
-    ${safeUrl(subj.url) ? `<div style="margin-bottom:10px"><a class="btn soft" href="${esc(safeUrl(subj.url))}" target="_blank" rel="noopener">فتح رابط المادة</a></div>` : ""}
 
     <div class="lesson-panel">
       ${currentLesson ? `
-        <div class="feed-meta" style="margin-bottom:4px">الدرس ${safeIdx + 1} من ${lessons.length}</div>
+        <div class="feed-meta" style="margin-bottom:4px">ملف ${safeIdx + 1} من ${lessons.length}</div>
         <h3 style="margin:0 0 8px;font-size:1.05rem;color:var(--ink)">${esc(currentLesson.title)}</h3>
-        ${currentLesson.body ? `<div style="white-space:pre-line;font-size:.94rem;color:var(--ink)">${esc(currentLesson.body)}</div>` : ""}
-        ${renderLessonMedia(currentLesson, safeIdx)}
-      ` : `<div class="empty">لم تتم إضافة دروس لهذه المادة بعد.</div>`}
+        ${pdfSrc ? `
+          <div class="lesson-pdf-box">
+            <a class="btn soft" href="${esc(pdfSrc)}" target="_blank" rel="noopener">فتح / تحميل ملف PDF</a>
+            <iframe class="lesson-pdf-frame" src="${esc(pdfSrc)}" title="${esc(currentLesson.title)}"></iframe>
+          </div>
+        ` : `<div class="empty">لا يوجد ملف PDF مرفق بهذا العنصر.</div>`}
+      ` : `<div class="empty">لم تتم إضافة ملفات PDF لهذه المادة بعد.</div>`}
     </div>
 
     <div class="lesson-list-box">
@@ -562,7 +515,7 @@ function rHome(){
     :'<div class="empty">لا توجد إعلانات حالياً.</div>';
 
   const resCards=resources.length
-    ?resources.map(r=>`<div class="feed-card"><div class="feed-head"><span class="feed-title">${esc(r.title)}</span><span class="pill">${esc(r.level||"عام")}</span></div><div class="muted" style="margin:0 0 8px">${esc(r.desc||"")}</div>${safeUrl(r.url)?`<a class="btn soft" href="${esc(safeUrl(r.url))}" target="_blank" rel="noopener">فتح المصدر</a>`:""}</div>`).join("")
+    ?resources.map(r=>`<div class="feed-card"><div class="feed-head"><span class="feed-title">${esc(r.title)}</span><span class="pill">${esc(r.level||"عام")}</span></div><div class="muted" style="margin:0 0 8px">${esc(r.desc||"")}</div>${r.url?`<a class="btn soft" href="${esc(r.url)}" target="_blank" rel="noopener">فتح المصدر</a>`:""}</div>`).join("")
     :'<div class="empty">لا توجد مصادر مضافة بعد.</div>';
 
   const leftSideHtml=`<aside class="left-rail">
@@ -659,18 +612,11 @@ function rAdmin(){
     ? courseSubjects.map(s => {
         const subLessons = courseLessons.filter(l => l.subjectId === s.id);
         const lessonItems = subLessons.length
-          ? subLessons.map(l => {
-              const tags=[];
-              if(l.imageUrl)tags.push("صورة");
-              if(l.audioUrl)tags.push("صوت");
-              if(l.code)tags.push("كود");
-              if(l.pdfUrl)tags.push("PDF");
-              return `<div class="row" style="padding:6px 0;margin-inline-start:12px">
-                <div>• <b>${esc(l.title)}</b> ${tags.length?`<span class="pill">${esc(tags.join(" • "))}</span>`:""}<div class="feed-meta">${esc((l.body||"").slice(0,90))}${(l.body||"").length>90?"…":""}</div></div>
-                <div class="acts"><button class="btn ghost" style="padding:4px 9px;font-size:.78rem" data-act="dellesson" data-id="${esc(l.id)}">حذف الدرس</button></div>
-              </div>`;
-            }).join("")
-          : `<div class="feed-meta" style="margin-inline-start:12px">لا توجد دروس في هذه المادة بعد</div>`;
+          ? subLessons.map(l => `<div class="row" style="padding:6px 0;margin-inline-start:12px">
+              <div>📄 <b>${esc(l.title)}</b></div>
+              <div class="acts"><button class="btn ghost" style="padding:4px 9px;font-size:.78rem" data-act="dellesson" data-id="${esc(l.id)}">حذف</button></div>
+            </div>`).join("")
+          : `<div class="feed-meta" style="margin-inline-start:12px">لا توجد ملفات PDF في هذه المادة بعد</div>`;
         return `<div class="feed-card">
           <div class="feed-head">
             <div><span class="feed-title">${esc(s.title)}</span> <span class="pill">تبويب: ${esc(s.tabName||s.title)}</span></div>
@@ -721,41 +667,22 @@ function rAdmin(){
         <input id="csTab" placeholder="مثال: SQL" autocomplete="off">
         <label>عنوان المادة / الدورة (مثل: تعلم قواعد البيانات)</label>
         <input id="csTitle" placeholder="مثال: تعلم قواعد البيانات" autocomplete="off">
-        <label>رابط مصدر اختياري للمادة</label>
-        <input id="csUrl" placeholder="https://..." autocomplete="off">
         <button class="btn full" data-act="addsubj" ${courseSubjects.length>=MAX_COURSE_SUBJECTS?"disabled":""}>إنشاء مادة جديدة</button>
 
         <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
 
-        <h2 style="margin-top:0">➕ إضافة درس داخل مادة</h2>
+        <h2 style="margin-top:0">➕ رفع ملف PDF داخل مادة</h2>
         <label>اختر المادة</label>
         <select id="clSubj">${subjOptions}</select>
-        <label>عنوان الدرس (مثل: مفهوم البيانات)</label>
-        <input id="clTitle" placeholder="مثال: مفهوم البيانات" autocomplete="off">
-        <label>شرح الدرس</label>
-        <textarea id="clBody" placeholder="اكتب شرح الدرس بالتفصيل…"></textarea>
+        <label>عنوان ملف PDF</label>
+        <input id="clTitle" placeholder="مثال: محاضرة 1 - مقدمة" autocomplete="off">
 
-        <label>🖼️ صورة للدرس (رابط صورة أو رفع ملف صورة)</label>
-        <input id="clImgUrl" placeholder="https://.../image.png" autocomplete="off">
-        <input id="clImgFile" type="file" accept="image/*" style="margin-top:6px;background:#fff">
-        <div class="media-upload-hint">يمكنك وضع رابط صورة مباشر أو رفع صورة صغيرة (حتى 450 KB).</div>
+        <label>📄 رفع ملف PDF من الجهاز أو وضع رابط PDF</label>
+        <input id="clPdfFile" type="file" accept="application/pdf,.pdf" style="background:#fff">
+        <input id="clPdfUrl" placeholder="أو ضع رابط PDF مباشر: https://.../file.pdf" style="margin-top:8px" autocomplete="off">
+        <div class="media-upload-hint">رفع الملف مباشرة يدعم حتى 700 KB، وللملفات الأكبر ضع رابط PDF مباشر.</div>
 
-        <label>🎧 مقطع صوتي للدرس (رابط صوت أو رفع ملف صوتي)</label>
-        <input id="clAudioUrl" placeholder="https://.../audio.mp3" autocomplete="off">
-        <input id="clAudioFile" type="file" accept="audio/*" style="margin-top:6px;background:#fff">
-        <div class="media-upload-hint">يفضّل رابط صوت مباشر للمقاطع الطويلة، أو ملف صوتي صغير (حتى 650 KB).</div>
-
-        <label>💻 كود برمجي للدرس</label>
-        <textarea id="clCode" class="code-input" placeholder="SELECT * FROM students;"></textarea>
-
-        <label>📄 ملف PDF للدرس (رابط PDF أو رفع ملف PDF)</label>
-        <input id="clPdfUrl" placeholder="https://.../lecture.pdf" autocomplete="off">
-        <input id="clPdfFile" type="file" accept="application/pdf,.pdf" style="margin-top:6px;background:#fff">
-        <div class="media-upload-hint">يفضّل رابط PDF مباشر، أو ملف PDF صغير (حتى 650 KB).</div>
-
-        <label>رابط مصدر إضافي للدرس (اختياري)</label>
-        <input id="clUrl" placeholder="https://..." autocomplete="off">
-        <button class="btn full" data-act="addlesson">إضافة الدرس</button>
+        <button class="btn full" data-act="addlesson">إضافة ملف PDF</button>
 
         <div style="margin-top:16px">${courseManageRows}</div>
       </section>
@@ -856,18 +783,14 @@ app.addEventListener("input",ev=>{
 });
 
 app.addEventListener("change",async ev=>{
-  try{
-    if(ev.target.id==="clImgFile"){
-      draftImageData=await readFileAsDataUrl(ev.target.files?.[0], 450*1024, "الصورة");
-    }else if(ev.target.id==="clAudioFile"){
-      draftAudioData=await readFileAsDataUrl(ev.target.files?.[0], 650*1024, "الصوت");
-    }else if(ev.target.id==="clPdfFile"){
-      draftPdfData=await readFileAsDataUrl(ev.target.files?.[0], 650*1024, "PDF");
+  if(ev.target.id==="clPdfFile"){
+    try{
+      draftPdfData=await readPdfFile(ev.target.files?.[0], 700*1024);
+    }catch(e){
+      ev.target.value="";
+      setNote(e.message,"warn");
+      render();
     }
-  }catch(e){
-    ev.target.value="";
-    setNote(e.message,"warn");
-    render();
   }
 });
 
@@ -900,30 +823,16 @@ app.addEventListener("click",async ev=>{
     else if(a==="pick_subj"){activeSubjectId=el.dataset.id;activeLessonIdx=0;render()}
     else if(a==="pick_lesson"){activeLessonIdx=parseInt(el.dataset.idx,10)||0;render()}
     else if(a==="next_lesson"){activeLessonIdx=(activeLessonIdx||0)+1;render()}
-    else if(a==="copycode"){
-      const q=searchQ.trim().toLowerCase();
-      const subj=courseSubjects.find(s=>s.id===activeSubjectId)||courseSubjects[0];
-      const subjLessonsAll=courseLessons.filter(l=>l.subjectId===subj?.id);
-      const lessons=q?subjLessonsAll.filter(l=>`${l.title||""} ${l.body||""} ${l.code||""}`.toLowerCase().includes(q)):subjLessonsAll;
-      const idx=parseInt(el.dataset.lidx,10)||0;
-      const codeStr=lessons[idx]?.code||"";
-      if(codeStr){
-        await navigator.clipboard?.writeText(codeStr).catch(()=>{});
-        setNote("تم نسخ الكود.","good");
-        render();
-      }
-    }
     else if(a==="addsubj"){
       if(courseSubjects.length>=MAX_COURSE_SUBJECTS){setNote(`الحد الأقصى هو ${MAX_COURSE_SUBJECTS} مواد.`,"warn");return render()}
       const tabName=document.getElementById("csTab").value.trim();
       const title=document.getElementById("csTitle").value.trim();
-      const url=document.getElementById("csUrl").value.trim();
       if(!title){setNote("أدخل عنوان المادة.");return render()}
-      await addDoc(collection(db,"course_subjects"),{tabName:tabName||title,title,url,at:Date.now()});
+      await addDoc(collection(db,"course_subjects"),{tabName:tabName||title,title,at:Date.now()});
       setNote("تم إنشاء المادة بنجاح.","good");render();
     }
     else if(a==="delsubj"){
-      if(confirm("حذف هذه المادة وكل دروسها؟")){
+      if(confirm("حذف هذه المادة وكل ملفات PDF التابعة لها؟")){
         const subId=el.dataset.id;
         const relatedLessons=courseLessons.filter(l=>l.subjectId===subId);
         for(const l of relatedLessons) await deleteDoc(doc(db,"course_lessons",l.id));
@@ -934,46 +843,27 @@ app.addEventListener("click",async ev=>{
     else if(a==="addlesson"){
       const subjectId=document.getElementById("clSubj").value;
       const title=document.getElementById("clTitle").value.trim();
-      const body=document.getElementById("clBody").value.trim();
-      const imgUrlInput=document.getElementById("clImgUrl").value.trim();
-      const audioUrlInput=document.getElementById("clAudioUrl").value.trim();
-      const code=document.getElementById("clCode").value;
       const pdfUrlInput=document.getElementById("clPdfUrl").value.trim();
-      const url=document.getElementById("clUrl").value.trim();
-
-      const imgFileInput=document.getElementById("clImgFile");
-      const audioFileInput=document.getElementById("clAudioFile");
       const pdfFileInput=document.getElementById("clPdfFile");
 
-      const imageUrl = draftImageData || (imgFileInput?.files?.[0] ? await readFileAsDataUrl(imgFileInput.files[0], 450*1024, "الصورة") : imgUrlInput);
-      const audioUrl = draftAudioData || (audioFileInput?.files?.[0] ? await readFileAsDataUrl(audioFileInput.files[0], 650*1024, "الصوت") : audioUrlInput);
-      const pdfUrl = draftPdfData || (pdfFileInput?.files?.[0] ? await readFileAsDataUrl(pdfFileInput.files[0], 650*1024, "PDF") : pdfUrlInput);
+      const pdfUrl = draftPdfData || (pdfFileInput?.files?.[0] ? await readPdfFile(pdfFileInput.files[0], 700*1024) : pdfUrlInput);
 
-      if(!subjectId){setNote("أنشئ مادة أولاً قبل إضافة درس.");return render()}
-      if(!title){setNote("أدخل عنوان الدرس.");return render()}
-      if(!body && !imageUrl && !audioUrl && !String(code||"").trim() && !pdfUrl && !url){
-        setNote("أدخل شرحاً أو صورة أو صوتاً أو كوداً أو ملف PDF للدرس.");return render()
-      }
+      if(!subjectId){setNote("أنشئ مادة أولاً قبل رفع ملف PDF.");return render()}
+      if(!title){setNote("أدخل عنوان ملف PDF.");return render()}
+      if(!safePdfUrl(pdfUrl)){setNote("ارفع ملف PDF صالح أو أدخل رابط PDF صحيح يبدأ بـ https://");return render()}
 
       await addDoc(collection(db,"course_lessons"),{
         subjectId,
         title,
-        body,
-        imageUrl,
-        audioUrl,
-        code:String(code||"").trim(),
         pdfUrl,
-        url,
         at:Date.now()
       });
-      draftImageData="";
-      draftAudioData="";
       draftPdfData="";
-      setNote("تمت إضافة الدرس بنجاح.","good");render();
+      setNote("تم رفع ملف PDF بنجاح.","good");render();
     }
     else if(a==="dellesson"){
       await deleteDoc(doc(db,"course_lessons",el.dataset.id));
-      setNote("تم حذف الدرس.","good");render();
+      setNote("تم حذف الملف.","good");render();
     }
     else if(a==="selectgrp"){studentPage="posts";selectedGroupId=el.dataset.id;view="home";startStudentSubs();render()}
     else if(a==="togres"){showAllRes=!showAllRes;render()}
